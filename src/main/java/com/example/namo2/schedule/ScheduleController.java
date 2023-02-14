@@ -4,6 +4,7 @@ import com.example.namo2.config.BaseException;
 import com.example.namo2.config.BaseResponse;
 import com.example.namo2.config.BaseResponseStatus;
 import com.example.namo2.entity.Period;
+import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.PostScheduleRes;
 import com.example.namo2.schedule.dto.ScheduleDto;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -46,4 +49,16 @@ public class ScheduleController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("")
+    public BaseResponse<List<GetScheduleRes>> findUserSchedule() {
+        try {
+            List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule(1L);
+            return new BaseResponse<>(userSchedule);
+        } catch (BaseException baseException) {
+            return new BaseResponse(baseException.getStatus());
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return new BaseResponse<>(BaseResponseStatus.SCHEDULE_ILLEGAL_ARGUMENT_FAILURE);
+        }
+    }
 }
