@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,4 +24,11 @@ public class Palette {
 
     @Column(nullable = false, length = 15)
     private String color;
+
+    @Builder
+    public Palette(Long id, String belong, String color) {
+        this.id = id;
+        this.belong = belong;
+        this.color = color;
+    }
 }

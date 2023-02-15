@@ -58,4 +58,11 @@ public class Schedule {
                 .category(category)
                 .build();
     }
+
+    public void updateSchedule(String name, Period period, Point point, Category category) {
+        this.name = name;
+        this.period.updatePeriod(period.getStartDate(), period.getEndDate(), period.getAlarmDate());
+        this.point = point;
+        this.category = category;
+    }
 }
