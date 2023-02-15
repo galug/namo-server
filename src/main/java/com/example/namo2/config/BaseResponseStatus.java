@@ -28,7 +28,13 @@ public enum BaseResponseStatus {
      */
     NOT_FOUND_CATEGORY_FAILURE(false, 4001, "카테고리를 찾을 수 없습니다."),
 
+    /**
+     * utils 관련 오류
+     * 7000 번 대
+     */
 
+    FILE_NAME_EXCEPTION(false, 7010, "파일 확장자가 잘못되었습니다."),
+    S3_FAILURE(false, 7020, "파일 업로드 과정에서 오류가 발생하였습니다."),
     /**
      * 알수 없는 오류
      * 8000

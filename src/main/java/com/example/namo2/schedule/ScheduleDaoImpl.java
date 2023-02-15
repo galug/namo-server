@@ -6,6 +6,7 @@ import com.example.namo2.schedule.dto.QGetScheduleRes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.namo2.entity.QCategory.category;
@@ -22,7 +23,7 @@ public class ScheduleDaoImpl implements ScheduleDaoCustom {
 
 
     @Override
-    public List<GetScheduleRes> findSchedulesByUserId(User user) {
+    public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         return queryFactory
                 .select(new QGetScheduleRes(schedule.id, schedule.name, schedule.period.startDate,
                         schedule.period.endDate, schedule.period.alarmDate, schedule.point,
@@ -30,7 +31,7 @@ public class ScheduleDaoImpl implements ScheduleDaoCustom {
                 .from(schedule)
                 .join(schedule.category, category)
                 .join(category.palette, palette)
-                .where(schedule.user.eq(user))
+                .where(schedule.user.eq(user).and(schedule.period.startDate.before(endDate).and(schedule.period.endDate.after(startDate))))
                 .fetch();
     }
 }

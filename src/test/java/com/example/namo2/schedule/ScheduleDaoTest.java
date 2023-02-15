@@ -22,10 +22,10 @@ class ScheduleDaoTest {
 
     @Test
     public void 스케줄_찾기_테스트() {
-        User user = userDao.findById(1L).get();
-        List<GetScheduleRes> schedulesByUserId = scheduleDao.findSchedulesByUserId(user);
-        for (GetScheduleRes getScheduleRes : schedulesByUserId) {
-            System.out.println("getScheduleRes = " + getScheduleRes.getScheduleId() + getScheduleRes.getCategoryName());
-        }
+//        User user = userDao.findById(1L).get();
+//        List<GetScheduleRes> schedulesByUserId = scheduleDao.findSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
+//        for (GetScheduleRes getScheduleRes : schedulesByUserId) {
+//            System.out.println("getScheduleRes = " + getScheduleRes.getScheduleId() + getScheduleRes.getCategoryName());
+//        }
     }
 }

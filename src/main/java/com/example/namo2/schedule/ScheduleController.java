@@ -10,7 +10,9 @@ import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.ScheduleDto;
 import com.example.namo2.utils.Converter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.data.geo.Point;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -48,11 +51,15 @@ public class ScheduleController {
         }
     }
 
+    /**
+     * Todo: 그룹 스케줄 조회에 대한 처리가 필요할 예정
+     */
     @ResponseBody
-    @GetMapping("")
-    public BaseResponse<List<GetScheduleRes>> findUserSchedule() {
+    @GetMapping("/{month}")
+    public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month")String month) {
         try {
-            List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule(1L);
+            List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+            List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule(1L, localDateTimes);
             return new BaseResponse<>(userSchedule);
         } catch (BaseException baseException) {
             return new BaseResponse(baseException.getStatus());
@@ -66,6 +73,17 @@ public class ScheduleController {
             ScheduleDto scheduleDto = new ScheduleDto(postScheduleReq);
             ScheduleIdRes scheduleIdRes = scheduleService.updateSchedule(scheduleId, scheduleDto);
             return new BaseResponse<>(scheduleIdRes);
+        } catch (BaseException baseException) {
+            return new BaseResponse(baseException.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{schedule}")
+    public BaseResponse<String> deleteUserSchedule(@PathVariable("schedule") Long scheduleId) {
+        try {
+            scheduleService.deleteSchedule(scheduleId);
+            return new BaseResponse<>("삭제에 성공하였습니다.");
         } catch (BaseException baseException) {
             return new BaseResponse(baseException.getStatus());
         }
