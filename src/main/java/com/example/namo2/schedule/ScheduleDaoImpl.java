@@ -29,7 +29,7 @@ public class ScheduleDaoImpl implements ScheduleDaoCustom {
                         category.id, category.name, category.palette.color))
                 .from(schedule)
                 .join(schedule.category, category)
-                .leftJoin(category.palette, palette)
+                .join(category.palette, palette)
                 .where(schedule.user.eq(user))
                 .fetch();
     }

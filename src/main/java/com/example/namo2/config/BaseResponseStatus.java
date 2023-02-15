@@ -11,10 +11,29 @@ public enum BaseResponseStatus {
 
 
     /**
-     * Schedule 오류
+     * User 오류
      * 2000 번대
      */
-    SCHEDULE_ILLEGAL_ARGUMENT_FAILURE(false, 2012, "잘못된 유저 id 혹은 category id 를 전달하였습니다.");
+    NOT_FOUND_USER_FAILURE(false, 2001, "유저를 찾을 수 없습니다."),
+
+    /**
+     * schedule 오류
+     * 3000 번대
+     */
+    NOT_FOUND_SCHEDULE_FAILURE(false, 3001, "스케줄을 찾을 수 없습니다."),
+
+    /**
+     * 카테고리 오류
+     * 4000번 대
+     */
+    NOT_FOUND_CATEGORY_FAILURE(false, 4001, "카테고리를 찾을 수 없습니다."),
+
+
+    /**
+     * 알수 없는 오류
+     * 8000
+     */
+    JPA_FAILURE(false, 8000, "jpa 오류가 발생했습니다.");
 
     private final boolean isSuccess;
     private final int code;

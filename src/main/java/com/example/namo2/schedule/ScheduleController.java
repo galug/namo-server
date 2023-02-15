@@ -6,12 +6,14 @@ import com.example.namo2.config.BaseResponseStatus;
 import com.example.namo2.entity.Period;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
-import com.example.namo2.schedule.dto.PostScheduleRes;
+import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.ScheduleDto;
 import com.example.namo2.utils.Converter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/schedule")
+@RequestMapping("/schedules")
 public class ScheduleController {
     private final ScheduleService scheduleService;
     private final Converter converter;
@@ -34,18 +36,15 @@ public class ScheduleController {
 
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostScheduleRes> createSchedule(@RequestBody PostScheduleReq postScheduleReq) {
+    public BaseResponse<ScheduleIdRes> createSchedule(@RequestBody PostScheduleReq postScheduleReq) {
         try {
-            Period period = new Period(postScheduleReq.getStartDate(), postScheduleReq.getEndDate(), postScheduleReq.getAlarm());
-            Point point = new Point(postScheduleReq.getX(), postScheduleReq.getY());
-            ScheduleDto scheduleDto = new ScheduleDto(postScheduleReq.getName(), period, point);
+            ScheduleDto scheduleDto = new ScheduleDto(postScheduleReq);
 
-            PostScheduleRes postScheduleRes = scheduleService.createSchedule(scheduleDto, 1L, postScheduleReq.getCategoryId());
-            return new BaseResponse<>(postScheduleRes);
+            ScheduleIdRes scheduleIdRes = scheduleService.createSchedule(scheduleDto, 1L);
+            return new BaseResponse<>(scheduleIdRes);
         } catch (BaseException baseException) {
+            System.out.println("baseException.getStatus() = " + baseException.getStatus());
             return new BaseResponse(baseException.getStatus());
-        } catch (IllegalArgumentException illegalArgumentException) {
-            return new BaseResponse<>(BaseResponseStatus.SCHEDULE_ILLEGAL_ARGUMENT_FAILURE);
         }
     }
 
@@ -57,8 +56,18 @@ public class ScheduleController {
             return new BaseResponse<>(userSchedule);
         } catch (BaseException baseException) {
             return new BaseResponse(baseException.getStatus());
-        } catch (IllegalArgumentException illegalArgumentException) {
-            return new BaseResponse<>(BaseResponseStatus.SCHEDULE_ILLEGAL_ARGUMENT_FAILURE);
+        }
+    }
+
+    @ResponseBody
+    @PatchMapping("/{schedule}")
+    public BaseResponse<ScheduleIdRes> updateUserSchedule(@PathVariable("schedule") Long scheduleId, @RequestBody PostScheduleReq postScheduleReq) {
+        try {
+            ScheduleDto scheduleDto = new ScheduleDto(postScheduleReq);
+            ScheduleIdRes scheduleIdRes = scheduleService.updateSchedule(scheduleId, scheduleDto);
+            return new BaseResponse<>(scheduleIdRes);
+        } catch (BaseException baseException) {
+            return new BaseResponse(baseException.getStatus());
         }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -36,13 +37,16 @@ public class GetScheduleRes {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
                 .toInstant()
-                .getEpochSecond();;
+                .getEpochSecond();
+        ;
         this.endDate = endDate.atZone(ZoneId.systemDefault())
                 .toInstant()
                 .getEpochSecond();
-        this.alarmDate = alarmDate.atZone(ZoneId.systemDefault())
-                .toInstant()
-                .getEpochSecond();
+        this.alarmDate = Optional.ofNullable(alarmDate)
+                .map((date) -> date.atZone(ZoneId.systemDefault())
+                        .toInstant()
+                        .getEpochSecond())
+                .orElse(0L);
         this.point = point;
         this.categoryId = categoryId;
         this.categoryName = categoryName;

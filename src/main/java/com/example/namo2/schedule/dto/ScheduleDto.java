@@ -13,4 +13,15 @@ public class ScheduleDto {
     Period period;
 
     private Point point;
+
+    private Long categoryId;
+
+    public ScheduleDto(PostScheduleReq postScheduleReq) {
+        Period period = new Period(postScheduleReq.getStartDate(), postScheduleReq.getEndDate(), postScheduleReq.getAlarm());
+        Point point = new Point(postScheduleReq.getX(), postScheduleReq.getY());
+        this.name = postScheduleReq.getName();
+        this.period = period;
+        this.point = point;
+        this.categoryId = postScheduleReq.getCategoryId();
+    }
 }

@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostScheduleRes {
+public class ScheduleIdRes {
     private Long scheduleIdx;
 }
