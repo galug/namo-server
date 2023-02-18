@@ -29,6 +29,14 @@ public enum BaseResponseStatus {
     NOT_FOUND_CATEGORY_FAILURE(false, 4001, "카테고리를 찾을 수 없습니다."),
 
     /**
+     * 다이어리 오류
+     * 5000 번 대
+     */
+    NOT_FOUND_DIARY_FAILURE(false, 5001, "다이어리를 찾을 수 없습니다."),
+    DIARY_EXISTS_FAILURE(false, 5010, "이미 존재하는 다이어리 입니다."),
+
+
+    /**
      * utils 관련 오류
      * 7000 번 대
      */
