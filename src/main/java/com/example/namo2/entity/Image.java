@@ -8,10 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Image {
     @Id
     @GeneratedValue
@@ -21,6 +24,14 @@ public class Image {
     private String imgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_id")
-    private Diary diary;
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
+
+    @Builder
+    public Image(Long id, String imgUrl, Schedule schedule) {
+        this.id = id;
+        this.imgUrl = imgUrl;
+        this.schedule = schedule;
+        schedule.getImages().add(this);
+    }
 }

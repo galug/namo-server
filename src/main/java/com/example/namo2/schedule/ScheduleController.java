@@ -2,16 +2,13 @@ package com.example.namo2.schedule;
 
 import com.example.namo2.config.BaseException;
 import com.example.namo2.config.BaseResponse;
-import com.example.namo2.config.BaseResponseStatus;
-import com.example.namo2.entity.Period;
+import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.ScheduleDto;
 import com.example.namo2.utils.Converter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
-import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,8 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +55,7 @@ public class ScheduleController {
      */
     @ResponseBody
     @GetMapping("/{month}")
-    public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month")String month) {
+    public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month") String month) {
         try {
             List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
             List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule(1L, localDateTimes);
@@ -84,6 +83,39 @@ public class ScheduleController {
         try {
             scheduleService.deleteSchedule(scheduleId);
             return new BaseResponse<>("삭제에 성공하였습니다.");
+        } catch (BaseException baseException) {
+            return new BaseResponse(baseException.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/diary")
+    public BaseResponse<ScheduleIdRes> createDiary(@RequestPart(required = false) List<MultipartFile> imgs,
+                                                   @RequestPart String scheduleIdx,
+                                                   @RequestPart(required = false) String content) {
+        try {
+            ScheduleIdRes scheduleIdRes;
+            System.out.println("imgs = " + imgs);
+            if (imgs == null) {
+                scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleIdx), content);
+            } else {
+                scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleIdx), content, imgs);
+            }
+            return new BaseResponse<>(scheduleIdRes);
+        } catch (BaseException baseException) {
+            System.out.println("baseException.getStatus() = " + baseException.getStatus());
+            return new BaseResponse(baseException.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/diary/{month}")
+    public BaseResponse<List<DiaryDto>> findDiaryByMonth(@PathVariable("month") String month) {
+        try {
+            Long userId = 1L;
+            List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+            List<DiaryDto> diaries = scheduleService.findMonthDiary(userId, localDateTimes);
+            return new BaseResponse<>(diaries);
         } catch (BaseException baseException) {
             return new BaseResponse(baseException.getStatus());
         }
