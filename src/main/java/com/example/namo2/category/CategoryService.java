@@ -43,6 +43,7 @@ public class CategoryService {
         }
     }
 
+
     public CategoryIdRes update(Long categoryId, PostCategoryReq postcategoryReq) throws BaseException {
         Category category = categoryDao.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
@@ -51,6 +52,17 @@ public class CategoryService {
         try {
             category.update(postcategoryReq.getName(), postcategoryReq.isShare(), palette);
             return new CategoryIdRes(category.getId());
+        } catch (Exception exception) {
+            throw new BaseException(JPA_FAILURE);
+        }
+    }
+
+    /**
+     * TODO: 카테고리 삭제시 스케줄 기본 카테고리로 변경한다.
+     * */
+    public void delete(Long categoryId) throws BaseException {
+        try {
+            categoryDao.deleteById(categoryId);
         } catch (Exception exception) {
             throw new BaseException(JPA_FAILURE);
         }

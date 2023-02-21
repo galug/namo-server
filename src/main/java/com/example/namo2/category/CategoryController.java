@@ -10,6 +10,8 @@ import com.example.namo2.schedule.dto.ScheduleIdRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,19 @@ public class CategoryController {
         }
     }
 
+//    @ResponseBody
+//    @GetMapping("")
+//    @ApiOperation(value = "카테고리 조회")
+//    public BaseResponse<CategoryIdRes> findAllCategory() {
+//        try {
+//            CategoryIdRes categoryIdRes = categoryService.findAll(1L);
+//            return new BaseResponse<>(categoryIdRes);
+//        } catch (BaseException baseException) {
+//            System.out.println("baseException.getStatus() = " + baseException.getStatus());
+//            return new BaseResponse(baseException.getStatus());
+//        }
+//    }
+
     @ResponseBody
     @PatchMapping("/{category}")
     @ApiOperation(value = "카테고리 수정")
@@ -51,5 +66,17 @@ public class CategoryController {
         }
     }
 
+    @ResponseBody
+    @DeleteMapping("/{category}")
+    @ApiOperation(value = "카테고리 삭제")
+    public BaseResponse<String> deleteCategory(@PathVariable("category") Long categoryId) {
+        try {
+            categoryService.delete(categoryId);
+            return new BaseResponse<>("삭제에 성공하셨습니다.");
+        } catch (BaseException baseException) {
+            System.out.println("baseException.getStatus() = " + baseException.getStatus());
+            return new BaseResponse(baseException.getStatus());
+        }
+    }
 
 }
