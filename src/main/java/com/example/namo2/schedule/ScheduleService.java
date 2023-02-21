@@ -2,6 +2,7 @@ package com.example.namo2.schedule;
 
 import com.example.namo2.category.CategoryDao;
 import com.example.namo2.config.BaseException;
+import com.example.namo2.config.BaseResponseStatus;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.entity.Category;
 import com.example.namo2.entity.Image;
@@ -12,6 +13,7 @@ import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.ScheduleDto;
 import com.example.namo2.user.UserDao;
 import com.example.namo2.utils.FileUtils;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,7 +106,6 @@ public class ScheduleService {
     public ScheduleIdRes createDiary(Long scheduleId, String content, List<MultipartFile> imgs) throws BaseException {
         Schedule schedule = scheduleDao.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         schedule.updateDiaryContents(content);
-        System.out.println(imgs);
         try {
             List<String> urls = fileUtils.uploadImages(imgs);
             for (String url : urls) {
@@ -132,6 +133,20 @@ public class ScheduleService {
                         , schedule.getPeriod().getStartDate(), schedule.getContents(), images));
             }
             return diaries;
+        } catch (Exception e) {
+            throw new BaseException(JPA_FAILURE);
+        }
+    }
+
+    public void deleteDiary(Long scheduleId) throws BaseException {
+        Schedule schedule = scheduleDao.findScheduleAndImages(scheduleId);
+        try {
+            schedule.deleteDiary();
+            List<String> urls = schedule.getImages().stream()
+                    .map(Image::getImgUrl)
+                    .collect(Collectors.toList());
+            imageDao.deleteDiaryImages(schedule);
+            fileUtils.deleteImages(urls);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException(JPA_FAILURE);

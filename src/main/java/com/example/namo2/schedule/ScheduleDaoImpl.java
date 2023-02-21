@@ -47,8 +47,23 @@ public class ScheduleDaoImpl implements ScheduleDaoCustom {
                 .select(schedule)
                 .distinct()
                 .from(schedule)
-                .join(schedule.images, image).fetchJoin()
-                .where(schedule.user.eq(user).and(schedule.period.startDate.before(endDate).and(schedule.period.endDate.after(startDate)).and(schedule.hasDiary.isTrue())))
+                .leftJoin(schedule.images, image).fetchJoin()
+                .where(schedule.user.eq(user)
+                        .and(schedule.period.startDate.before(endDate)
+                                .and(schedule.period.endDate.after(startDate))
+                        .and(schedule.hasDiary.isTrue())
+                        ))
                 .fetch();
+    }
+
+    @Override
+    public Schedule findScheduleAndImages(Long scheduleId) {
+        return queryFactory
+                .select(schedule)
+                .distinct()
+                .from(schedule)
+                .leftJoin(schedule.images, image).fetchJoin()
+                .where(schedule.id.eq(scheduleId))
+                .fetchOne();
     }
 }

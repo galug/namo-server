@@ -12,4 +12,6 @@ public interface ScheduleDaoCustom {
     List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 
     List<Schedule> findScheduleDiaryByMonthDtoWithNotPaging(User user, LocalDateTime startDate, LocalDateTime endTime);
+
+    Schedule findScheduleAndImages(Long scheduleId);
 }
