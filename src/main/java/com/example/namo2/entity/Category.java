@@ -39,4 +39,10 @@ public class Category {
         this.share = share;
         this.palette = palette;
     }
+
+    public void update(String name, Boolean share, Palette palette) {
+        this.name = name;
+        this.share = share;
+        this.palette = palette;
+    }
 }
