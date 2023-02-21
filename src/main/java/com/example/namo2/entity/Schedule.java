@@ -74,4 +74,9 @@ public class Schedule {
         this.hasDiary = Boolean.TRUE;
         this.contents = contents;
     }
+
+    public void deleteDiary() {
+        this.hasDiary = Boolean.FALSE;
+        this.contents = null;
+    }
 }

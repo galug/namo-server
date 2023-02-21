@@ -68,8 +68,18 @@ public class FileUtils {
         return s3Uploader.getFileUrl(fileName);
     }
 
+    public void deleteImages(List<String> urls) throws BaseException {
+        try {
+            for (String url : urls) {
+                delete(url);
+            }
+        } catch (SdkClientException e) {
+            throw new BaseException(S3_FAILURE);
+        }
+    }
 
-    public void delete(String url) throws BaseException{
+
+    private void delete(String url) throws BaseException{
         try {
             int IndexOf = url.indexOf("memo");
             String key = url.substring(IndexOf);
