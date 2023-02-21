@@ -43,6 +43,7 @@ public class CategoryService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PALETTE_FAILURE));
         try {
             category.update(postcategoryReq.getName(), postcategoryReq.isShare(), palette);
+            return new CategoryIdRes(category.getId());
         } catch (Exception exception) {
             throw new BaseException(JPA_FAILURE);
         }
