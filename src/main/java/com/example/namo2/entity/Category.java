@@ -22,22 +22,28 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pallet_id")
+    private Palette palette;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(length = 20)
     private String name;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean share;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pallet_id")
-    private Palette palette;
 
     @Builder
-    public Category(Long id, String name, Boolean share, Palette palette) {
+    public Category(Long id, Palette palette, User user, String name, Boolean share) {
         this.id = id;
+        this.palette = palette;
+        this.user = user;
         this.name = name;
         this.share = share;
-        this.palette = palette;
     }
 
     public void update(String name, Boolean share, Palette palette) {
