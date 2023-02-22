@@ -36,19 +36,27 @@ public class Category {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean share;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private Boolean status;
 
     @Builder
-    public Category(Long id, Palette palette, User user, String name, Boolean share) {
+    public Category(Long id, Palette palette, User user, String name, Boolean share, Boolean status) {
         this.id = id;
         this.palette = palette;
         this.user = user;
         this.name = name;
         this.share = share;
+        this.status = status;
     }
+
 
     public void update(String name, Boolean share, Palette palette) {
         this.name = name;
         this.share = share;
         this.palette = palette;
+    }
+
+    public void delete() {
+        this.status = Boolean.FALSE;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.namo2.category;
 
+import com.example.namo2.category.dto.CategoryDto;
 import com.example.namo2.category.dto.CategoryIdRes;
 import com.example.namo2.category.dto.PostCategoryReq;
 import com.example.namo2.config.BaseException;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("categories")
@@ -40,18 +43,17 @@ public class CategoryController {
         }
     }
 
-//    @ResponseBody
-//    @GetMapping("")
-//    @ApiOperation(value = "카테고리 조회")
-//    public BaseResponse<CategoryIdRes> findAllCategory() {
-//        try {
-//            CategoryIdRes categoryIdRes = categoryService.findAll(1L);
-//            return new BaseResponse<>(categoryIdRes);
-//        } catch (BaseException baseException) {
-//            System.out.println("baseException.getStatus() = " + baseException.getStatus());
-//            return new BaseResponse(baseException.getStatus());
-//        }
-//    }
+    @ResponseBody
+    @GetMapping("")
+    @ApiOperation(value = "카테고리 조회")
+    public BaseResponse<List<CategoryDto>> findAllCategory() {
+        try {
+            List<CategoryDto> categories = categoryService.findAll(1L);
+            return new BaseResponse<>(categories);
+        } catch (BaseException baseException) {
+            return new BaseResponse(baseException.getStatus());
+        }
+    }
 
     @ResponseBody
     @PatchMapping("/{category}")
