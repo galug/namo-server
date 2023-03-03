@@ -1,4 +1,4 @@
-package com.example.namo2;
+package com.example.namo2.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
