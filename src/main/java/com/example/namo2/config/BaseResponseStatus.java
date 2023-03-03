@@ -27,6 +27,7 @@ public enum BaseResponseStatus {
      * 4000번 대
      */
     NOT_FOUND_CATEGORY_FAILURE(4001, "카테고리를 찾을 수 없습니다."),
+    NOT_FOUND_PALETTE_FAILURE(4011, "팔레트를 찾을 수 없습니다."),
 
     /**
      * 다이어리 오류
