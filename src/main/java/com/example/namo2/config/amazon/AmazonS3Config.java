@@ -1,4 +1,4 @@
-package com.example.namo2;
+package com.example.namo2.config.amazon;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

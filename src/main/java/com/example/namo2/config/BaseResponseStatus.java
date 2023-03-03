@@ -11,10 +11,13 @@ public enum BaseResponseStatus {
 
 
     /**
-     * User 오류
+     * User, Auth 오류
      * 2000 번대
      */
     NOT_FOUND_USER_FAILURE( 2001, "유저를 찾을 수 없습니다."),
+    SOCIAL_LOGIN_FAILURE(2005, "소셜 로그인에 실패하였습니다."),
+    EMPTY_ACCESS_KEY(2010, "AccessToken 이 비어있습니다."),
+    EXPIRATION_REFRESH_TOKEN(2020, "RefreshToken 이 만료되었습니다."),
 
     /**
      * schedule 오류
@@ -35,7 +38,6 @@ public enum BaseResponseStatus {
      */
     NOT_FOUND_DIARY_FAILURE(5001, "다이어리를 찾을 수 없습니다."),
     DIARY_EXISTS_FAILURE(5010, "이미 존재하는 다이어리 입니다."),
-
 
     /**
      * utils 관련 오류

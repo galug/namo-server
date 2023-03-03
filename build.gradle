@@ -32,6 +32,15 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
 
+    //spring security 추가
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // jwt 위한 라이브러리 추가
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     //querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // querydsl 라이브러리
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}" //  Querydsl 관련 코드 생성 기능 제공
