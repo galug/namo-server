@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class Group {
     @Id
     @GeneratedValue
-    @Column(name= "group_id")
+    @Column(name= "groups_id")
     private Long id;
 
     private String name;
