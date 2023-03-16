@@ -1,8 +1,7 @@
 package com.example.namo2.schedule;
 
 import com.example.namo2.category.CategoryDao;
-import com.example.namo2.config.BaseException;
-import com.example.namo2.config.BaseResponseStatus;
+import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.entity.Category;
 import com.example.namo2.entity.Image;
@@ -13,7 +12,6 @@ import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.ScheduleDto;
 import com.example.namo2.user.UserDao;
 import com.example.namo2.utils.FileUtils;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.config.BaseResponseStatus.JPA_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.JPA_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 
 @Service

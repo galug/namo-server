@@ -3,7 +3,7 @@ package com.example.namo2.category;
 import com.example.namo2.category.dto.CategoryDto;
 import com.example.namo2.category.dto.CategoryIdRes;
 import com.example.namo2.category.dto.PostCategoryReq;
-import com.example.namo2.config.BaseException;
+import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.entity.Category;
 import com.example.namo2.entity.Palette;
 import com.example.namo2.entity.User;
@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.config.BaseResponseStatus.JPA_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_PALETTE_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.JPA_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_PALETTE_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 @Service
 @RequiredArgsConstructor

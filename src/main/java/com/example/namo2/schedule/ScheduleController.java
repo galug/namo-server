@@ -1,7 +1,7 @@
 package com.example.namo2.schedule;
 
-import com.example.namo2.config.BaseException;
-import com.example.namo2.config.BaseResponse;
+import com.example.namo2.config.exception.BaseException;
+import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;

@@ -1,6 +1,6 @@
 package com.example.namo2.user;
 
-import com.example.namo2.config.BaseException;
+import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.entity.User;
 import com.example.namo2.user.dto.SignUpReq;
 import com.example.namo2.user.dto.SignUpRes;
@@ -16,9 +16,9 @@ import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.namo2.config.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
-import static com.example.namo2.config.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
-import static com.example.namo2.config.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
 
 @Slf4j
 @Service
@@ -103,38 +103,3 @@ public class UserService {
         return signUpRes;
     }
 }
-
-
-//public class UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-//    private final UserDao userDao;
-//
-//    @Override
-//    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-//        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-//        OAuth2User oAuth2User = delegate.loadUser(userRequest);
-//
-//        // Oauth2 서비스 id 구분 로직(naver kakao 구분)
-//        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-//        // OAuth2 로그인 진행시 키가 되는 필드 값
-//        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-//                .getUserInfoEndpoint().getUserNameAttributeName();
-//
-//        OAuthAttribute oAuthAttribute = OAuthAttribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-//
-//        return oAuthAttribute;
-//    }
-//
-//    public Long saveOrFind(OAuthAttribute attributes) {
-//        Optional<User> userByEmail = userDao.findUserByEmail(attributes.getEmail());
-//        if (userByEmail.isEmpty()) {
-//            User save = userDao.save(attributes.toEntity());
-//            return save.getId();
-//        }
-//        return userByEmail.get().getId();
-//    }
-//
-//    public void updateRefreshToken(Long userId, String refreshToken) throws BaseException {
-//        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-//        user.updateRefreshToken(refreshToken);
-//    }
-//}
