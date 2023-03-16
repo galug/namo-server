@@ -1,4 +1,4 @@
-package com.example.namo2.config;
+package com.example.namo2.config.response;
 
 import lombok.Getter;
 
@@ -17,6 +17,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_USER_FAILURE( 2001, "유저를 찾을 수 없습니다."),
     SOCIAL_LOGIN_FAILURE(2005, "소셜 로그인에 실패하였습니다."),
     EMPTY_ACCESS_KEY(2010, "AccessToken 이 비어있습니다."),
+    INVALID_TOKEN(2015, "토큰이 인증이 안됩니다."),
     EXPIRATION_REFRESH_TOKEN(2020, "RefreshToken 이 만료되었습니다."),
 
     /**

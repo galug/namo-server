@@ -1,11 +1,8 @@
-package com.example.namo2.config;
+package com.example.namo2.config.exception;
 
+import com.example.namo2.config.response.BaseResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.function.Supplier;
-
-import static com.example.namo2.config.BaseResponseStatus.JPA_FAILURE;
 
 @Getter
 @AllArgsConstructor

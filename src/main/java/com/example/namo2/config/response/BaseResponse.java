@@ -1,12 +1,11 @@
-package com.example.namo2.config;
+package com.example.namo2.config.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.example.namo2.config.BaseResponseStatus.SUCCESS;
+import static com.example.namo2.config.response.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor
