@@ -25,6 +25,6 @@ public class GroupSchedule {
     private Point point;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "groups_id")
     private Group group;
 }
