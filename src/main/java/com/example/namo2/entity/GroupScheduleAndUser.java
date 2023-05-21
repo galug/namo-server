@@ -7,8 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "moim_schedule_and_user")
 public class GroupScheduleAndUser {
     @Id
     @GeneratedValue
@@ -22,7 +24,7 @@ public class GroupScheduleAndUser {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_schedule_id")
+    @JoinColumn(name = "moim_schedule_id")
     private GroupSchedule groupSchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -7,18 +7,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 @Entity
+@Table(name = "moim_memo_location")
 public class GroupMemoLocation {
     @Id
     @GeneratedValue
-    @Column(name = "group_memo_location_id")
+    @Column(name = "moim_memo_location_id")
     private Long id;
 
     private String name;
 
+    @Column(name = "total_amount")
     private Integer totalAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_memo_id")
+    @JoinColumn(name = "moim_memo_id")
     private GroupMemo groupMemo;
 }

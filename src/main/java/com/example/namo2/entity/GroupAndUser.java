@@ -8,14 +8,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "moim_and_user")
 public class GroupAndUser {
     @Id
     @GeneratedValue
-    @Column(name = "group_user_id")
+    @Column(name = "moim_and_user_id")
     private Long id;
 
+    @Column(name="moim_custom_name")
     private String groupCustomName;
 
     private String color;
@@ -25,6 +28,6 @@ public class GroupAndUser {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groups_id")
+    @JoinColumn(name = "moim_id")
     private Group group;
 }

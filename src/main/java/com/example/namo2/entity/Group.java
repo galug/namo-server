@@ -10,17 +10,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "moim")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Group {
     @Id
     @GeneratedValue
-    @Column(name= "groups_id")
+    @Column(name= "moim_id")
     private Long id;
 
     private String name;
 
-    private String groupImgUrl;
+    @Column(name = "img_url")
+    private String imgUrl;
 
     private String code;
 }

@@ -7,17 +7,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-public class GroupMemoImg {
+@Table(name = "moim_memo_location_img")
+public class MoimMemoLocationImg {
     @Id
     @GeneratedValue
-    @Column(name = "group_memo_img_id")
+    @Column(name = "moim_memo_location_img_id")
     private Long id;
 
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_memo_location_idx")
+    @JoinColumn(name = "moim_memo_location_id")
     private GroupMemoLocation groupMemoLocation;
 }

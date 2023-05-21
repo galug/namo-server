@@ -8,13 +8,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.springframework.data.geo.Point;
 
 @Entity
+@Table(name = "moim_schedule")
 public class GroupSchedule {
     @Id
     @GeneratedValue
-    @Column(name = "group_schedule_id")
+    @Column(name = "moim_schedule_id")
     private Long id;
 
     private String name;
@@ -25,6 +28,6 @@ public class GroupSchedule {
     private Point point;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groups_id")
+    @JoinColumn(name = "moim_id")
     private Group group;
 }

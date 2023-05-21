@@ -8,15 +8,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "moim_memo")
 public class GroupMemo {
     @Id
     @GeneratedValue
-    @Column(name = "group_memo_id")
+    @Column(name = "moim_memo_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_schedule_id")
+    @JoinColumn(name = "moim_schedule_id")
     private GroupSchedule groupSchedule;
 }
