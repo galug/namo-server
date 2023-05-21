@@ -1,5 +1,6 @@
 package com.example.namo2.entity;
 
+import com.example.namo2.entity.enumerate.CategoryStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,19 +39,17 @@ public class Category {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean share;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    private CategoryStatus status;
 
     @Builder
-    public Category(Long id, Palette palette, User user, String name, Boolean share, Boolean status) {
-        this.id = id;
+    public Category(Palette palette, User user, String name, Boolean share) {
         this.palette = palette;
         this.user = user;
         this.name = name;
         this.share = share;
-        this.status = status;
+        this.status = CategoryStatus.ACTIVE;
     }
-
 
     public void update(String name, Boolean share, Palette palette) {
         this.name = name;
@@ -57,6 +58,6 @@ public class Category {
     }
 
     public void delete() {
-        this.status = Boolean.FALSE;
+        this.status = CategoryStatus.DELETE;
     }
 }

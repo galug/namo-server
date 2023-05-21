@@ -22,7 +22,7 @@ import static com.example.namo2.config.response.BaseResponseStatus.SOCIAL_LOGIN_
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
@@ -30,6 +30,7 @@ public class UserService {
     private final JwtUtils jwtUtils;
     private final SocialUtils socialUtils;
 
+    @Transactional(readOnly = false)
     public SignUpRes signupNaver(SignUpReq signUpReq) throws BaseException {
         try {
             HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpReq);
@@ -41,7 +42,7 @@ public class UserService {
             User user = User.builder()
                     .email((String) response.get("email"))
                     .name((String) response.get("name"))
-                    .birthDay((String) response.get("birthday"))
+                    .birthday((String) response.get("birthday"))
                     .build();
             User savedUser = saveOrFind(user);
             SignUpRes signUpRes = jwtUtils.generateTokens(savedUser.getId());
@@ -52,6 +53,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = false)
     public SignUpRes signupKakao(SignUpReq signUpReq) throws BaseException {
         try {
             HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpReq);
@@ -65,7 +67,7 @@ public class UserService {
             User user = User.builder()
                     .email((String) response.get("email"))
                     .name((String) response.get("nickname"))
-                    .birthDay((String) response.getOrDefault("birthday", null))
+                    .birthday((String) response.getOrDefault("birthday", null))
                     .build();
             User savedUser = saveOrFind(user);
             SignUpRes signUpRes = jwtUtils.generateTokens(savedUser.getId());
@@ -90,6 +92,7 @@ public class UserService {
         user.updateRefreshToken(refreshToken);
     }
 
+    @Transactional(readOnly = false)
     public SignUpRes reissueAccessToken(SignUpReq signUpReq) throws BaseException {
         if (!jwtUtils.validateToken(signUpReq.getRefreshToken())) {
             throw new BaseException(EXPIRATION_REFRESH_TOKEN);

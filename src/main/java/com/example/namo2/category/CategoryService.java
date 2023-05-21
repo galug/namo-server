@@ -41,7 +41,6 @@ public class CategoryService {
                     .user(user)
                     .palette(palette)
                     .share(postcategoryReq.isShare())
-                    .status(Boolean.TRUE)
                     .build();
             Category savedCategory = categoryDao.save(category);
             return new CategoryIdRes(savedCategory.getId());

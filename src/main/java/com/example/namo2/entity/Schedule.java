@@ -14,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.geo.Point;
 
 import java.util.ArrayList;
@@ -34,9 +33,9 @@ public class Schedule {
     @Embedded
     Period period;
 
-    private Point point;
+    private Point location;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Column(name = "has_diary", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean hasDiary;
 
     private String contents;
@@ -53,20 +52,19 @@ public class Schedule {
     private List<Image> images = new ArrayList<>();
 
     @Builder
-    public Schedule(Long id, String name, Period period, Point point, User user, Category category) {
+    public Schedule(Long id, String name, Period period, Point location, User user, Category category) {
         this.id = id;
         this.name = name;
         this.period = period;
-        this.point = point;
+        this.location = location;
         this.user = user;
         this.category = category;
-        hasDiary = false;
     }
 
     public void updateSchedule(String name, Period period, Point point, Category category) {
         this.name = name;
         this.period.updatePeriod(period.getStartDate(), period.getEndDate(), period.getAlarmDate());
-        this.point = point;
+        this.location = point;
         this.category = category;
     }
 

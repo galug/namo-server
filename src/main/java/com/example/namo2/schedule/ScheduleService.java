@@ -46,7 +46,7 @@ public class ScheduleService {
             Schedule schedule = Schedule.builder()
                     .name(scheduleDto.getName())
                     .period(scheduleDto.getPeriod())
-                    .point(scheduleDto.getPoint())
+                    .location(scheduleDto.getPoint())
                     .user(findUser)
                     .category(findCategory).build();
             Schedule saveSchedule = scheduleDao.save(schedule);

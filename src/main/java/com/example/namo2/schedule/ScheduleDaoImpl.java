@@ -32,7 +32,7 @@ public class ScheduleDaoImpl implements ScheduleDaoCustom {
     public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         return queryFactory
                 .select(new QGetScheduleRes(schedule.id, schedule.name, schedule.period.startDate,
-                        schedule.period.endDate, schedule.period.alarmDate, schedule.point,
+                        schedule.period.endDate, schedule.period.alarmDate, schedule.location,
                         category.id, category.name, category.palette.color))
                 .from(schedule)
                 .join(schedule.category, category)

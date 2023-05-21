@@ -15,10 +15,13 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Period {
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
+    @Column(name = "end_date")
     private LocalDateTime endDate;
 
+    @Column(name = "alarm_date")
     private LocalDateTime alarmDate;
 
     public Period(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime alarmDate) {
