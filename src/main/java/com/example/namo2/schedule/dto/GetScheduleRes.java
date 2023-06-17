@@ -1,11 +1,11 @@
 package com.example.namo2.schedule.dto;
 
-import com.example.namo2.entity.Period;
+
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.asm.Advice;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
+
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,7 +23,7 @@ public class GetScheduleRes {
 
     private Long alarmDate;
 
-    private Point point;
+    private PointDto point;
 
     private Long categoryId;
 
@@ -47,9 +47,20 @@ public class GetScheduleRes {
                         .toInstant()
                         .getEpochSecond())
                 .orElse(0L);
-        this.point = point;
+        this.point = new PointDto(point);
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.color = color;
+    }
+
+    @Getter @NoArgsConstructor
+    private static class PointDto {
+        private Double x;
+        private Double y;
+
+        public PointDto(Point point) {
+            this.x = point.getX();
+            this.y = point.getY();
+        }
     }
 }

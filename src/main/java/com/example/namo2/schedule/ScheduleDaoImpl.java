@@ -1,13 +1,9 @@
 package com.example.namo2.schedule;
 
-import com.example.namo2.entity.QImage;
 import com.example.namo2.entity.Schedule;
-import com.example.namo2.schedule.dto.DiaryDto;
-import com.example.namo2.entity.QSchedule;
 import com.example.namo2.entity.User;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.QGetScheduleRes;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;

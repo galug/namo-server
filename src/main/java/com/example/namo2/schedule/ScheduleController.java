@@ -6,7 +6,6 @@ import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
-import com.example.namo2.schedule.dto.ScheduleDto;
 import com.example.namo2.utils.Converter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,16 +43,9 @@ public class ScheduleController {
     @ResponseBody
     @PostMapping("")
     @ApiOperation(value = "스케줄 생성")
-    public BaseResponse<ScheduleIdRes> createSchedule(@RequestBody PostScheduleReq postScheduleReq) {
-        try {
-            ScheduleDto scheduleDto = new ScheduleDto(postScheduleReq);
-
-            ScheduleIdRes scheduleIdRes = scheduleService.createSchedule(scheduleDto, 1L);
-            return new BaseResponse<>(scheduleIdRes);
-        } catch (BaseException baseException) {
-            System.out.println("baseException.getStatus() = " + baseException.getStatus());
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<ScheduleIdRes> createSchedule(@Valid @RequestBody PostScheduleReq postScheduleReq, HttpServletRequest request) throws BaseException {
+        ScheduleIdRes scheduleIdRes = scheduleService.createSchedule(postScheduleReq, (Long) request.getAttribute("userId"));
+        return new BaseResponse<>(scheduleIdRes);
     }
 
     /**
@@ -60,27 +54,18 @@ public class ScheduleController {
     @ResponseBody
     @GetMapping("/{month}")
     @ApiOperation(value = "스케줄 월별 조회 ")
-    public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month") String month) {
-        try {
-            List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-            List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule(1L, localDateTimes);
-            return new BaseResponse<>(userSchedule);
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month") String month, HttpServletRequest request) throws BaseException {
+        List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+        List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule((Long) request.getAttribute("userId"), localDateTimes);
+        return new BaseResponse<>(userSchedule);
     }
 
     @ResponseBody
     @PatchMapping("/{schedule}")
     @ApiOperation(value = "스케줄 수정")
-    public BaseResponse<ScheduleIdRes> updateUserSchedule(@PathVariable("schedule") Long scheduleId, @RequestBody PostScheduleReq postScheduleReq) {
-        try {
-            ScheduleDto scheduleDto = new ScheduleDto(postScheduleReq);
-            ScheduleIdRes scheduleIdRes = scheduleService.updateSchedule(scheduleId, scheduleDto);
-            return new BaseResponse<>(scheduleIdRes);
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<ScheduleIdRes> updateUserSchedule(@PathVariable("schedule") Long scheduleId, @RequestBody PostScheduleReq postScheduleReq) throws BaseException {
+        ScheduleIdRes scheduleIdRes = scheduleService.updateSchedule(scheduleId, postScheduleReq);
+        return new BaseResponse<>(scheduleIdRes);
     }
 
     /**
@@ -89,13 +74,9 @@ public class ScheduleController {
     @ResponseBody
     @DeleteMapping("/{schedule}")
     @ApiOperation(value = "스케줄 삭제")
-    public BaseResponse<String> deleteUserSchedule(@PathVariable("schedule") Long scheduleId) {
-        try {
-            scheduleService.deleteSchedule(scheduleId);
-            return new BaseResponse<>("삭제에 성공하였습니다.");
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<String> deleteUserSchedule(@PathVariable("schedule") Long scheduleId) throws BaseException {
+        scheduleService.deleteSchedule(scheduleId);
+        return new BaseResponse<>("삭제에 성공하였습니다.");
     }
 
     @ResponseBody
@@ -103,32 +84,24 @@ public class ScheduleController {
     @ApiOperation(value = "스케줄 다이어리 생성")
     public BaseResponse<ScheduleIdRes> createDiary(@RequestPart(required = false) List<MultipartFile> imgs,
                                                    @RequestPart String scheduleId,
-                                                   @RequestPart(required = false) String content) {
-        try {
-            ScheduleIdRes scheduleIdRes;
-            if (imgs == null) {
-                scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content);
-            } else {
-                scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content, imgs);
-            }
-            return new BaseResponse<>(scheduleIdRes);
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
+                                                   @RequestPart(required = false) String content) throws BaseException {
+        ScheduleIdRes scheduleIdRes;
+        if (imgs == null) {
+            scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content);
+        } else {
+            scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content, imgs);
         }
+        return new BaseResponse<>(scheduleIdRes);
     }
 
     @ResponseBody
     @GetMapping("/diary/{month}")
     @ApiOperation(value = "스케줄 다이어리 조회")
-    public BaseResponse<List<DiaryDto>> findDiaryByMonth(@PathVariable("month") String month) {
-        try {
-            Long userId = 1L;
-            List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-            List<DiaryDto> diaries = scheduleService.findMonthDiary(userId, localDateTimes);
-            return new BaseResponse<>(diaries);
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<List<DiaryDto>> findDiaryByMonth(@PathVariable("month") String month) throws BaseException {
+        Long userId = 1L;
+        List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+        List<DiaryDto> diaries = scheduleService.findMonthDiary(userId, localDateTimes);
+        return new BaseResponse<>(diaries);
     }
 
     @ResponseBody
@@ -136,25 +109,17 @@ public class ScheduleController {
     @ApiOperation(value = "스케줄 다이어리 수정")
     public BaseResponse<String> updateDiary(@RequestPart(required = false) List<MultipartFile> imgs,
                                             @RequestPart String scheduleId,
-                                            @RequestPart(required = false) String content) {
-        try {
-            scheduleService.deleteDiary(Long.valueOf(scheduleId));
-            scheduleService.createDiary(Long.valueOf(scheduleId), content, imgs);
-            return new BaseResponse<>("수정에 성공하셨습니다.");
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+                                            @RequestPart(required = false) String content) throws BaseException {
+        scheduleService.deleteDiary(Long.valueOf(scheduleId));
+        scheduleService.createDiary(Long.valueOf(scheduleId), content, imgs);
+        return new BaseResponse<>("수정에 성공하셨습니다.");
     }
 
     @ResponseBody
     @DeleteMapping("/diary/{schedule}")
     @ApiOperation(value = "스케줄 다이어리 삭제")
-    public BaseResponse<String> deleteDiary(@PathVariable("schedule") Long scheduleId) {
-        try {
-            scheduleService.deleteDiary(scheduleId);
-            return new BaseResponse<>("삭제에 성공하셨습니다.");
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<String> deleteDiary(@PathVariable("schedule") Long scheduleId) throws BaseException {
+        scheduleService.deleteDiary(scheduleId);
+        return new BaseResponse<>("삭제에 성공하셨습니다.");
     }
 }
