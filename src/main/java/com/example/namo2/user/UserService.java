@@ -4,6 +4,7 @@ import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.entity.User;
 import com.example.namo2.user.dto.SignUpReq;
 import com.example.namo2.user.dto.SignUpRes;
+import com.example.namo2.user.dto.SocialSignUpReq;
 import com.example.namo2.utils.JwtUtils;
 import com.example.namo2.utils.SocialUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class UserService {
     private final SocialUtils socialUtils;
 
     @Transactional(readOnly = false)
-    public SignUpRes signupNaver(SignUpReq signUpReq) throws BaseException {
+    public SignUpRes signupNaver(SocialSignUpReq signUpReq) throws BaseException {
         try {
             HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpReq);
             socialUtils.validateSocialAccessToken(con);
@@ -54,7 +55,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public SignUpRes signupKakao(SignUpReq signUpReq) throws BaseException {
+    public SignUpRes signupKakao(SocialSignUpReq signUpReq) throws BaseException {
         try {
             HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpReq);
             socialUtils.validateSocialAccessToken(con);
