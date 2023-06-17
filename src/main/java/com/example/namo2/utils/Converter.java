@@ -1,7 +1,12 @@
 package com.example.namo2.utils;
 
+import com.example.namo2.config.exception.BaseException;
+import com.example.namo2.config.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.Template;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -22,5 +27,14 @@ public class Converter {
         LocalDateTime startMonth = LocalDate.of(ym.get(0), ym.get(1), 1).atStartOfDay();
         LocalDateTime localDateTime = startMonth.plusMonths(1L);
         return List.of(startMonth, localDateTime);
+    }
+
+    public Point convertPoint(double x, double y) {
+        try {
+            String pointWKT = String.format("POINT(%s %s)", x, y);
+            return (Point) new WKTReader().read(pointWKT);
+        } catch (ParseException e) {
+            throw new BaseException(BaseResponseStatus.INTERNET_SERVER_ERROR);
+        }
     }
 }
