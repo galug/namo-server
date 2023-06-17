@@ -52,6 +52,12 @@ dependencies {
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
 
+    // @Valid 를 위한 의존관계 추가
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // point 를 저장하기 위한
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.9.Final'
+
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

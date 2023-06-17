@@ -15,7 +15,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ public class Schedule {
     @Embedded
     Period period;
 
+    @Column(columnDefinition = "GEOMETRY")
     private Point location;
 
     @Column(name = "has_diary", nullable = false, columnDefinition = "TINYINT(1)")
@@ -49,7 +50,7 @@ public class Schedule {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
     @Builder
@@ -60,6 +61,7 @@ public class Schedule {
         this.location = location;
         this.user = user;
         this.category = category;
+        hasDiary = false;
     }
 
     public void updateSchedule(String name, Period period, Point point, Category category) {

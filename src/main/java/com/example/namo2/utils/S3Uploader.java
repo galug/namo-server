@@ -27,8 +27,6 @@ public class S3Uploader {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
-
-
     public  String getFileUrl(String fileName){
         return amazonS3Client.getUrl(bucket,fileName).toString();
     }

@@ -1,5 +1,7 @@
 package com.example.namo2.entity;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class User{
 
     @Column(name = "refresh_token")
     private String refreshToken;
+
 
     @Builder
     public User(Long id, String name, String email, String birthday, String refreshToken) {

@@ -27,6 +27,7 @@ import static com.example.namo2.config.response.BaseResponseStatus.EXPIRATION_RE
 @NoArgsConstructor
 @Component
 public class JwtUtils {
+    private static final String HEADER = "Authorization";
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -71,7 +72,7 @@ public class JwtUtils {
     }
 
     private String getAccessToken(HttpServletRequest request) throws BaseException {
-        String accessToken = request.getHeader("ACCESS-TOKEN");
+        String accessToken = request.getHeader(HEADER);
 
         if (accessToken == null || accessToken.length() == 0) {
             throw new BaseException(BaseResponseStatus.EMPTY_ACCESS_KEY);

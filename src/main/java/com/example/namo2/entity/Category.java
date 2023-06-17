@@ -26,7 +26,7 @@ public class Category {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pallet_id")
+    @JoinColumn(name = "palette_id")
     private Palette palette;
 
     @ManyToOne(fetch = FetchType.LAZY)
