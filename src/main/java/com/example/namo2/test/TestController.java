@@ -9,9 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController {
 
-    @GetMapping
+    @GetMapping("/log")
     @ResponseBody
-    public String test() {
+    public String testLog() {
         return "test";
     }
+
+    @GetMapping("/authenticate")
+    @ResponseBody
+    public String test() {
+        return "인증 완료";
+    }
+
 }

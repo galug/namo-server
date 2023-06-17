@@ -1,5 +1,6 @@
 package com.example.namo2.config.interceptor;
 
+import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.user.UserDao;
 import com.example.namo2.utils.JwtUtils;
@@ -28,13 +29,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!jwtUtils.validateRequest(request)) {
+        try {
+            Long userId = jwtUtils.resolveRequest(request);
+            request.setAttribute("userId", userId);
+            return true;
+        } catch (BaseException e) {
             Gson gson = new Gson();
-            String exception = gson.toJson(new BaseResponse(INVALID_TOKEN));
+            String exception = gson.toJson(new BaseResponse(e));
             response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(403);
             response.getWriter().print(exception);
             return false;
         }
-        return true;
     }
 }
