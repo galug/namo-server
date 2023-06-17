@@ -1,11 +1,12 @@
-package capstone.bapool.config.error;
+package com.example.namo2.config.exception;
 
 
+import com.example.namo2.config.response.BaseResponse;
+import com.example.namo2.config.response.BaseResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.debug(e.getMessage());
         e.printStackTrace();
-        StatusEnum errorStatus = StatusEnum.INTERNET_SERVER_ERROR;
+        BaseResponseStatus errorStatus = BaseResponseStatus.INTERNET_SERVER_ERROR;
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(makeErrorResponse(errorStatus.getCode(), errorStatus.getMessage()));
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorResponse> handleIOException(BaseException e) {
-        StatusEnum statusEnum = e.getStatusEnum();
+        BaseResponseStatus statusEnum = e.getStatus();
         log.debug(e.getMessage());
         e.printStackTrace();
         return ResponseEntity
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException e) {
-        StatusEnum statusEnum = e.getStatusEnum();
+        BaseResponseStatus statusEnum = e.getStatus();
 //        log.debug(e.getMessage());
         e.printStackTrace();
         return ResponseEntity

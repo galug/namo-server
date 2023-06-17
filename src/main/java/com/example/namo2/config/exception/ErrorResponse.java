@@ -1,4 +1,4 @@
-package capstone.bapool.config.error;
+package com.example.namo2.config.exception;
 
 import lombok.Builder;
 import lombok.Getter;
