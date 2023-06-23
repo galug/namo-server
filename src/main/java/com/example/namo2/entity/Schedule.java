@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.example.namo2.config.exception.BaseException;
+import com.example.namo2.config.response.BaseResponseStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,5 +81,11 @@ public class Schedule {
     public void deleteDiary() {
         this.hasDiary = Boolean.FALSE;
         this.contents = null;
+    }
+
+    public void existDairy() {
+        if (!hasDiary) {
+            throw new BaseException(BaseResponseStatus.NOT_FOUND_DIARY_FAILURE);
+        }
     }
 }

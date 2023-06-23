@@ -3,6 +3,7 @@ package com.example.namo2.schedule;
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.schedule.dto.DiaryDto;
+import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
@@ -63,7 +64,9 @@ public class ScheduleController {
     @ResponseBody
     @PatchMapping("/{schedule}")
     @ApiOperation(value = "스케줄 수정")
-    public BaseResponse<ScheduleIdRes> updateUserSchedule(@PathVariable("schedule") Long scheduleId, @RequestBody PostScheduleReq postScheduleReq) throws BaseException {
+    public BaseResponse<ScheduleIdRes> updateUserSchedule(
+            @PathVariable("schedule") Long scheduleId,
+            @RequestBody PostScheduleReq postScheduleReq) throws BaseException {
         ScheduleIdRes scheduleIdRes = scheduleService.updateSchedule(scheduleId, postScheduleReq);
         return new BaseResponse<>(scheduleIdRes);
     }
@@ -85,23 +88,30 @@ public class ScheduleController {
     public BaseResponse<ScheduleIdRes> createDiary(@RequestPart(required = false) List<MultipartFile> imgs,
                                                    @RequestPart String scheduleId,
                                                    @RequestPart(required = false) String content) throws BaseException {
-        ScheduleIdRes scheduleIdRes;
-        if (imgs == null) {
-            scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content);
-        } else {
-            scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content, imgs);
-        }
+        ScheduleIdRes scheduleIdRes = scheduleService.createDiary(Long.valueOf(scheduleId), content, imgs);
         return new BaseResponse<>(scheduleIdRes);
     }
 
     @ResponseBody
     @GetMapping("/diary/{month}")
-    @ApiOperation(value = "스케줄 다이어리 조회")
-    public BaseResponse<List<DiaryDto>> findDiaryByMonth(@PathVariable("month") String month) throws BaseException {
-        Long userId = 1L;
+    @ApiOperation(value = "스케줄 다이어리 월간 조회")
+    public BaseResponse<List<DiaryDto>> findDiaryByMonth(
+            @PathVariable("month") String month,
+            HttpServletRequest request) throws BaseException {
+        Long userId = (Long) request.getAttribute("userId");
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         List<DiaryDto> diaries = scheduleService.findMonthDiary(userId, localDateTimes);
         return new BaseResponse<>(diaries);
+    }
+
+    @ResponseBody
+    @GetMapping("/diary/day/{scheduleId}")
+    @ApiOperation(value = "스케줄 다이어리 개별 조회")
+    public BaseResponse<GetDiaryRes> findDiaryById (
+            @PathVariable("scheduleId") Long scheduleId,
+            HttpServletRequest request) throws BaseException {
+        GetDiaryRes diary = scheduleService.findDiary(scheduleId);
+        return new BaseResponse<>(diary);
     }
 
     @ResponseBody
@@ -116,9 +126,9 @@ public class ScheduleController {
     }
 
     @ResponseBody
-    @DeleteMapping("/diary/{schedule}")
+    @DeleteMapping("/diary/{scheduleId}")
     @ApiOperation(value = "스케줄 다이어리 삭제")
-    public BaseResponse<String> deleteDiary(@PathVariable("schedule") Long scheduleId) throws BaseException {
+    public BaseResponse<String> deleteDiary(@PathVariable("scheduleId") Long scheduleId) throws BaseException {
         scheduleService.deleteDiary(scheduleId);
         return new BaseResponse<>("삭제에 성공하셨습니다.");
     }

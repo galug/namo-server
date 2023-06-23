@@ -15,7 +15,7 @@ public class PostScheduleReq {
     private Long startDate;
     @NotNull
     private Long endDate;
-    private Long alarm;
+    private Long alarmDate;
     private Double x;
     private Double y;
     @NotNull

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.example.namo2.config.response.BaseResponseStatus.INVALID_TOKEN;
 
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -35,7 +34,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         } catch (BaseException e) {
             Gson gson = new Gson();
-            String exception = gson.toJson(new BaseResponse(e));
+            String exception = gson.toJson(new BaseResponse(e.getStatus()));
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(403);
             response.getWriter().print(exception);

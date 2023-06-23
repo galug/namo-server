@@ -65,9 +65,7 @@ public class JwtUtils {
             String accessToken = getAccessToken(request);
             return resolveToken(accessToken);
         } catch (ExpiredJwtException e) {
-            throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-        } catch (BaseException e) {
-            throw e;
+            throw new BaseException(BaseResponseStatus.EXPIRATION_ACCESS_TOKEN);
         }
     }
 

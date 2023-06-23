@@ -59,6 +59,11 @@ public class GetScheduleRes {
         private Double y;
 
         public PointDto(Point point) {
+            if (point == null) {
+                this.x = null;
+                this.y = null;
+                return;
+            }
             this.x = point.getX();
             this.y = point.getY();
         }

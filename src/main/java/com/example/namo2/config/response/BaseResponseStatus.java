@@ -21,7 +21,7 @@ public enum BaseResponseStatus {
      */
 
     EMPTY_ACCESS_KEY(403, "AccessToken 이 비어있습니다."),
-    INVALID_TOKEN(403, "토큰이 인증이 안됩니다."),
+    EXPIRATION_ACCESS_TOKEN(403, "Access token 이 만료되었습니다."),
     EXPIRATION_REFRESH_TOKEN(403, "RefreshToken 이 만료되었습니다."),
 
     /**
