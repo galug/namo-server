@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -30,52 +31,36 @@ public class CategoryController {
     @ResponseBody
     @PostMapping("")
     @ApiOperation(value = "카테고리 생성")
-    public BaseResponse<CategoryIdRes> createCategory(@RequestBody PostCategoryReq postcategoryReq) {
-        try {
-            CategoryIdRes categoryIdRes = categoryService.create(1L, postcategoryReq);
-            return new BaseResponse<>(categoryIdRes);
-        } catch (BaseException baseException) {
-            System.out.println("baseException.getStatus() = " + baseException.getStatus());
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<CategoryIdRes> createCategory(@RequestBody PostCategoryReq postcategoryReq,
+                                                      HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        CategoryIdRes categoryIdRes = categoryService.create(userId, postcategoryReq);
+        return new BaseResponse<>(categoryIdRes);
     }
 
     @ResponseBody
     @GetMapping("")
     @ApiOperation(value = "카테고리 조회")
-    public BaseResponse<List<CategoryDto>> findAllCategory() {
-        try {
-            List<CategoryDto> categories = categoryService.findAll(1L);
-            return new BaseResponse<>(categories);
-        } catch (BaseException baseException) {
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<List<CategoryDto>> findAllCategory(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        List<CategoryDto> categories = categoryService.findAll(userId);
+        return new BaseResponse<>(categories);
     }
 
     @ResponseBody
-    @PatchMapping("/{category}")
+    @PatchMapping("/{categoryId}")
     @ApiOperation(value = "카테고리 수정")
-    public BaseResponse<CategoryIdRes> updateCategory(@PathVariable("category") Long categoryId, @RequestBody PostCategoryReq postcategoryReq) {
-        try {
-            CategoryIdRes categoryIdRes = categoryService.update(categoryId, postcategoryReq);
-            return new BaseResponse<>(categoryIdRes);
-        } catch (BaseException baseException) {
-            System.out.println("baseException.getStatus() = " + baseException.getStatus());
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<CategoryIdRes> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody PostCategoryReq postcategoryReq) {
+        CategoryIdRes categoryIdRes = categoryService.update(categoryId, postcategoryReq);
+        return new BaseResponse<>(categoryIdRes);
     }
 
     @ResponseBody
-    @DeleteMapping("/{category}")
+    @DeleteMapping("/{categoryId}")
     @ApiOperation(value = "카테고리 삭제")
-    public BaseResponse<String> deleteCategory(@PathVariable("category") Long categoryId) {
-        try {
-            categoryService.delete(categoryId);
-            return new BaseResponse<>("삭제에 성공하셨습니다.");
-        } catch (BaseException baseException) {
-            System.out.println("baseException.getStatus() = " + baseException.getStatus());
-            return new BaseResponse(baseException.getStatus());
-        }
+    public BaseResponse<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
+        categoryService.delete(categoryId);
+        return new BaseResponse<>("삭제에 성공하셨습니다.");
     }
 
 }
