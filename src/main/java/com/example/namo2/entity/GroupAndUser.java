@@ -1,6 +1,8 @@
 package com.example.namo2.entity;
 
 
+import lombok.Builder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,4 +32,12 @@ public class GroupAndUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_id")
     private Group group;
+
+    @Builder
+    public GroupAndUser(String groupCustomName, String color, User user, Group group) {
+        this.groupCustomName = groupCustomName;
+        this.color = color;
+        this.user = user;
+        this.group = group;
+    }
 }
