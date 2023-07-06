@@ -25,13 +25,14 @@ import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USE
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryDao categoryDao;
     private final PaletteDao paletteDao;
     private final ScheduleDao scheduleDao;
     private final UserDao userDao;
 
+    @Transactional(readOnly = false)
     public CategoryIdRes create(Long userId, PostCategoryReq postcategoryReq) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         Palette palette = paletteDao.findById(postcategoryReq.getPalletId())
@@ -55,6 +56,7 @@ public class CategoryService {
     }
 
 
+    @Transactional(readOnly = false)
     public CategoryIdRes update(Long categoryId, PostCategoryReq postcategoryReq) throws BaseException {
         Category category = categoryDao.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
@@ -64,6 +66,7 @@ public class CategoryService {
         return new CategoryIdRes(category.getId());
     }
 
+    @Transactional(readOnly = false)
     public void delete(Long categoryId) throws BaseException {
         Category category = categoryDao.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));

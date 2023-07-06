@@ -46,4 +46,8 @@ public class GroupAndUser {
         this.user = user;
         this.group = group;
     }
+
+    public void updateCustomName(String name) {
+        this.groupCustomName = name;
+    }
 }

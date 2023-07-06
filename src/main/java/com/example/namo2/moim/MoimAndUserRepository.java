@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MoimAndUserRepository extends JpaRepository<GroupAndUser, Long> {
 
@@ -17,4 +18,6 @@ public interface MoimAndUserRepository extends JpaRepository<GroupAndUser, Long>
     public List<GroupAndUser> findGroupAndUserByGroup(Group group);
 
 //    @Query(value = "select gu from GroupAndUser gu join fetch gu.group g join fetch g. where gu.group = :user")
+
+    public Optional<GroupAndUser> findGroupAndUserByUserAndGroup(User user, Group group);
 }
