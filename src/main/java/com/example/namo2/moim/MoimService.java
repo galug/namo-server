@@ -5,12 +5,18 @@ import com.example.namo2.config.response.BaseResponseStatus;
 import com.example.namo2.entity.Group;
 import com.example.namo2.entity.GroupAndUser;
 import com.example.namo2.entity.User;
+import com.example.namo2.moim.dto.GetMoimRes;
+import com.example.namo2.moim.dto.GetMoimUserRes;
 import com.example.namo2.user.UserDao;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,7 +29,7 @@ public class MoimService {
 
     public Long create(Long userId, String groupName, MultipartFile img, String color) {
         User user = userDao.findById(userId)
-                .orElseThrow(() ->  new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
         String url = fileUtils.uploadImage(img);
         Group group = Group.builder()
                 .name(groupName)
@@ -39,5 +45,25 @@ public class MoimService {
         moimAndUserRepository.save(groupAndUser);
 
         return savedGroup.getId();
+    }
+
+    public List<GetMoimRes> findMoims(Long userId) {
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
+        List<GroupAndUser> groupAndUsers = moimAndUserRepository.findGroupAndUserByUser(user);
+
+        List<GetMoimRes> moims = new ArrayList<>();
+
+        for (GroupAndUser groupAndUser : groupAndUsers) {
+            Group group = groupAndUser.getGroup();
+            List<GroupAndUser> groupUsers = moimAndUserRepository.findGroupAndUserByGroup(group);
+            List<GetMoimUserRes> moimUsers = groupUsers.stream()
+                    .filter((groupUser) -> groupUser.getUser() != user)
+                    .map((groupUser) -> new GetMoimUserRes(groupUser.getUser().getId(), groupUser.getUser().getName()))
+                    .collect(Collectors.toList());
+            moims.add(new GetMoimRes(group.getId(), groupAndUser.getGroupCustomName(),
+                    group.getImgUrl(), group.getCode(), moimUsers));
+        }
+        return moims;
     }
 }
