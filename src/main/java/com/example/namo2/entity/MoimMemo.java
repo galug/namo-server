@@ -1,5 +1,6 @@
 package com.example.namo2.entity;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,24 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "moim_schedule_and_user")
-public class GroupScheduleAndUser {
+@Table(name = "moim_memo")
+public class MoimMemo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_schedule_user_id")
+    @Column(name = "moim_memo_id")
     private Long id;
-
-    private String memo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_schedule_id")
-    private GroupSchedule groupSchedule;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private MoimSchedule moimSchedule;
 }

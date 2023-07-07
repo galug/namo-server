@@ -52,4 +52,11 @@ public class MoimController {
         Long moimId = moimService.patchMoimName(patchMoimName, (Long) request.getAttribute("userId"));
         return new BaseResponse(moimId);
     }
+
+    @PatchMapping("/participate/{code}")
+    @ApiOperation(value = "모임 참여하기")
+    public BaseResponse<Long> updateName(@PathVariable("code") String code, HttpServletRequest request) {
+        Long moimId = moimService.participate((Long) request.getAttribute("userId"), code);
+        return new BaseResponse(moimId);
+    }
 }

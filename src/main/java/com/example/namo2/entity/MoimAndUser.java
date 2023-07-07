@@ -20,14 +20,14 @@ import javax.persistence.Table;
 @Table(name = "moim_and_user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GroupAndUser {
+public class MoimAndUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moim_and_user_id")
     private Long id;
 
     @Column(name="moim_custom_name")
-    private String groupCustomName;
+    private String moimCustomName;
 
     private String color;
 
@@ -37,17 +37,17 @@ public class GroupAndUser {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_id")
-    private Group group;
+    private Moim moim;
 
     @Builder
-    public GroupAndUser(String groupCustomName, String color, User user, Group group) {
-        this.groupCustomName = groupCustomName;
+    public MoimAndUser(String moimCustomName, String color, User user, Moim moim) {
+        this.moimCustomName = moimCustomName;
         this.color = color;
         this.user = user;
-        this.group = group;
+        this.moim = moim;
     }
 
     public void updateCustomName(String name) {
-        this.groupCustomName = name;
+        this.moimCustomName = name;
     }
 }

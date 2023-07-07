@@ -27,7 +27,7 @@ import static com.example.namo2.config.response.BaseResponseStatus.SOCIAL_LOGIN_
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserDao userDao;
+    private final UserRepository userDao;
     private final JwtUtils jwtUtils;
     private final SocialUtils socialUtils;
 

@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "moim")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Group {
+public class Moim {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "moim_id")
@@ -31,7 +31,7 @@ public class Group {
     private String code;
 
     @Builder
-    public Group(Long id, String name, String imgUrl) {
+    public Moim(Long id, String name, String imgUrl) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;

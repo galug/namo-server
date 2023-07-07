@@ -2,7 +2,7 @@ package com.example.namo2.config.interceptor;
 
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
-import com.example.namo2.user.UserDao;
+import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.JwtUtils;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtUtils jwtUtils;
 
-    private final UserDao userDao;
+    private final UserRepository userDao;
 
     @Autowired
-    public AuthenticationInterceptor(JwtUtils jwtUtils, UserDao userDao) {
+    public AuthenticationInterceptor(JwtUtils jwtUtils, UserRepository userDao) {
         this.jwtUtils = jwtUtils;
         this.userDao = userDao;
     }

@@ -12,7 +12,7 @@ import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
-import com.example.namo2.user.UserDao;
+import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.Converter;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class ScheduleService {
     private final CategoryDao categoryDao;
     private final ImageDao imageDao;
     private final ScheduleDao scheduleDao;
-    private final UserDao userDao;
+    private final UserRepository userDao;
     private final FileUtils fileUtils;
     private final Converter converter;
 

@@ -11,18 +11,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "moim_memo_location_and_user")
-public class GroupMemoLocationAndUser {
+@Table(name = "moim_schedule_and_user")
+public class MoimScheduleAndUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "moim_memo_location_user_id")
+    @Column(name = "group_schedule_user_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moim_memo_location_id")
-    private GroupMemoLocation groupMemoLocation;
+    private String memo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "moim_schedule_id")
+    private MoimSchedule moimSchedule;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

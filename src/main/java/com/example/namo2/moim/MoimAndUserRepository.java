@@ -1,7 +1,7 @@
 package com.example.namo2.moim;
 
-import com.example.namo2.entity.Group;
-import com.example.namo2.entity.GroupAndUser;
+import com.example.namo2.entity.Moim;
+import com.example.namo2.entity.MoimAndUser;
 import com.example.namo2.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,15 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface MoimAndUserRepository extends JpaRepository<GroupAndUser, Long> {
+public interface MoimAndUserRepository extends JpaRepository<MoimAndUser, Long> {
 
-    @Query(value = "select gu from GroupAndUser gu join fetch gu.group where gu.user= :user")
-    public List<GroupAndUser> findGroupAndUserByUser(User user);
+    @Query(value = "select gu from MoimAndUser gu join fetch gu.moim where gu.user= :user")
+    public List<MoimAndUser> findMoimAndUserByUser(User user);
 
-    @Query(value = "select gu from GroupAndUser gu join fetch gu.user where gu.group= :group")
-    public List<GroupAndUser> findGroupAndUserByGroup(Group group);
+    @Query(value = "select gu from MoimAndUser gu join fetch gu.user where gu.moim= :moim")
+    public List<MoimAndUser> findMoimAndUserByMoim(Moim moim);
 
 //    @Query(value = "select gu from GroupAndUser gu join fetch gu.group g join fetch g. where gu.group = :user")
 
-    public Optional<GroupAndUser> findGroupAndUserByUserAndGroup(User user, Group group);
+    public Optional<MoimAndUser> findMoimAndUserByUserAndMoim(User user, Moim moim);
 }

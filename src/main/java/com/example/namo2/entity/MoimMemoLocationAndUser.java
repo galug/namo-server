@@ -1,7 +1,6 @@
 package com.example.namo2.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,24 +10,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.data.geo.Point;
-
 @Entity
-@Table(name = "moim_schedule")
-public class GroupSchedule {
+@Table(name = "moim_memo_location_and_user")
+public class MoimMemoLocationAndUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "moim_schedule_id")
+    @Column(name = "moim_memo_location_user_id")
     private Long id;
 
-    private String name;
-
-    @Embedded
-    Period period;
-
-    private Point point;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "moim_memo_location_id")
+    private MoimMemoLocation moimMemoLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moim_id")
-    private Group group;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -22,5 +22,5 @@ public class MoimMemoLocationImg {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_memo_location_id")
-    private GroupMemoLocation groupMemoLocation;
+    private MoimMemoLocation moimMemoLocation;
 }
