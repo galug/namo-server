@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,9 +12,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "moim_schedule_and_user")
-public class GroupScheduleAndUser {
+public class MoimScheduleAndUser {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_schedule_user_id")
     private Long id;
 
@@ -25,7 +26,7 @@ public class GroupScheduleAndUser {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_schedule_id")
-    private GroupSchedule groupSchedule;
+    private MoimSchedule moimSchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -38,20 +38,16 @@ public class FileUtils {
     }
 
     public List<String> uploadImages(List<MultipartFile> files) throws BaseException {
-        try {
-            List<String> urls = new ArrayList<>();
-            for (MultipartFile file : files) {
-                if (Optional.ofNullable(file).isPresent()) {
-                    urls.add(uploadImage(file));
-                }
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            if (Optional.ofNullable(file).isPresent()) {
+                urls.add(uploadImage(file));
             }
-            return urls;
-        } catch (BaseException e) {
-            throw new BaseException(FILE_NAME_EXCEPTION);
         }
+        return urls;
     }
 
-    private String uploadImage(MultipartFile file) throws BaseException {
+    public String uploadImage(MultipartFile file) throws BaseException {
         String fileName = createFileName(file.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
@@ -75,7 +71,7 @@ public class FileUtils {
     }
 
 
-    private void delete(String url) throws BaseException{
+    private void delete(String url) throws BaseException {
         try {
             int IndexOf = url.indexOf("memo");
             String key = url.substring(IndexOf);

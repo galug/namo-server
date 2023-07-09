@@ -10,7 +10,7 @@ import com.example.namo2.entity.User;
 import com.example.namo2.entity.enumerate.CategoryStatus;
 import com.example.namo2.palette.PaletteDao;
 import com.example.namo2.schedule.ScheduleDao;
-import com.example.namo2.user.UserDao;
+import com.example.namo2.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,20 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.config.response.BaseResponseStatus.JPA_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_PALETTE_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryDao categoryDao;
     private final PaletteDao paletteDao;
     private final ScheduleDao scheduleDao;
-    private final UserDao userDao;
+    private final UserRepository userDao;
 
+    @Transactional(readOnly = false)
     public CategoryIdRes create(Long userId, PostCategoryReq postcategoryReq) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         Palette palette = paletteDao.findById(postcategoryReq.getPalletId())
@@ -55,6 +55,7 @@ public class CategoryService {
     }
 
 
+    @Transactional(readOnly = false)
     public CategoryIdRes update(Long categoryId, PostCategoryReq postcategoryReq) throws BaseException {
         Category category = categoryDao.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
@@ -64,6 +65,7 @@ public class CategoryService {
         return new CategoryIdRes(category.getId());
     }
 
+    @Transactional(readOnly = false)
     public void delete(Long categoryId) throws BaseException {
         Category category = categoryDao.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));

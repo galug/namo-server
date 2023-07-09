@@ -28,6 +28,9 @@ import static com.example.namo2.config.response.BaseResponseStatus.EXPIRATION_RE
 @Component
 public class JwtUtils {
     private static final String HEADER = "Authorization";
+    private static final Long ACCESS_TOKEN_EXPIRED_TIME = 1000 * 60 * 60 * 12L;
+    private static final Long REFRESH_TOKEN_EXPIRED_TIME = 1000 * 60 * 60 * 24 * 14 * 1L;
+
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -41,11 +44,11 @@ public class JwtUtils {
     }
 
     private String createAccessToken(Long userId) {
-        return createJwt(userId, 1000 * 60 * 60 * 12L);
+        return createJwt(userId, 1000 * 1000 * 1000 * ACCESS_TOKEN_EXPIRED_TIME);
     }
 
     private String createRefreshToken(Long userId) {
-        return createJwt(userId, 1000 * 60 * 60 * 24 * 14 * 1L);
+        return createJwt(userId, REFRESH_TOKEN_EXPIRED_TIME);
     }
 
     private String createJwt(Long userId, Long tokenValid) {
