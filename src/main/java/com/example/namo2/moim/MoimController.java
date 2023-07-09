@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,5 +59,12 @@ public class MoimController {
     public BaseResponse<Long> updateName(@PathVariable("code") String code, HttpServletRequest request) {
         Long moimId = moimService.participate((Long) request.getAttribute("userId"), code);
         return new BaseResponse(moimId);
+    }
+
+    @DeleteMapping("/withdraw/{moimId}")
+    @ApiOperation(value = "모임 탈퇴하기")
+    public BaseResponse withdraw(@PathVariable("moimId") Long moimId, HttpServletRequest request) {
+        moimService.withdraw((Long) request.getAttribute("userId"), moimId);
+        return BaseResponse.ok();
     }
 }
