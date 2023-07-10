@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Palette {
+public class Palette extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "palette_id")
@@ -23,11 +23,11 @@ public class Palette {
     @Column(nullable = false, length =  10)
     private String belong;
 
-    @Column(nullable = false, length = 15)
-    private String color;
+    @Column(nullable = false)
+    private Integer color;
 
     @Builder
-    public Palette(Long id, String belong, String color) {
+    public Palette(Long id, String belong, Integer color) {
         this.id = id;
         this.belong = belong;
         this.color = color;

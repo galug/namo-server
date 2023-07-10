@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Table(name = "moim_and_user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MoimAndUser {
+public class MoimAndUser extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moim_and_user_id")

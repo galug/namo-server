@@ -15,7 +15,7 @@ import org.springframework.data.geo.Point;
 
 @Entity
 @Table(name = "moim_schedule")
-public class MoimSchedule {
+public class MoimSchedule extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moim_schedule_id")

@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "moim")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Moim {
+public class Moim extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "moim_id")

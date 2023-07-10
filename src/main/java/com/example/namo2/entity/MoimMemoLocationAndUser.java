@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "moim_memo_location_and_user")
-public class MoimMemoLocationAndUser {
+public class MoimMemoLocationAndUser extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moim_memo_location_user_id")

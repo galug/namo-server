@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "moim_schedule_and_user")
-public class MoimScheduleAndUser {
+public class MoimScheduleAndUser extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_schedule_user_id")
