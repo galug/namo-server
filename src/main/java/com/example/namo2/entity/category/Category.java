@@ -1,6 +1,7 @@
-package com.example.namo2.entity;
+package com.example.namo2.entity.category;
 
-import com.example.namo2.entity.enumerate.CategoryStatus;
+import com.example.namo2.entity.BaseTimeEntity;
+import com.example.namo2.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends BaseTimeEntity{
+public class Category extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")

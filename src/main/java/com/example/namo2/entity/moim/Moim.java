@@ -1,5 +1,6 @@
-package com.example.namo2.entity;
+package com.example.namo2.entity.moim;
 
+import com.example.namo2.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

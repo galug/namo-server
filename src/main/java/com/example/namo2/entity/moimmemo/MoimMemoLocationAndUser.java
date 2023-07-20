@@ -1,4 +1,7 @@
-package com.example.namo2.entity;
+package com.example.namo2.entity.moimmemo;
+
+import com.example.namo2.entity.BaseTimeEntity;
+import com.example.namo2.entity.user.User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "moim_memo_location_and_user")
-public class MoimMemoLocationAndUser extends BaseTimeEntity{
+public class MoimMemoLocationAndUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moim_memo_location_user_id")

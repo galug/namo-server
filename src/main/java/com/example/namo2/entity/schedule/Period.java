@@ -1,6 +1,7 @@
-package com.example.namo2.entity;
+package com.example.namo2.entity.schedule;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,35 +16,30 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Period {
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
-    @Column(name = "alarm_date")
-    private LocalDateTime alarmDate;
+    @Column(name="day_interval")
+    private Integer dayInterval;
 
-    public Period(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime alarmDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.alarmDate = alarmDate;
-    }
-
-    public Period(Long startDate, Long endDate, Long alarmDate) {
+    @Builder
+    public Period(Long startDate, Long endDate, Long alarmDate, Integer dayInterval) {
         this.startDate = convertLongToLocalDateTime(startDate);
         this.endDate = convertLongToLocalDateTime(endDate);
-        this.alarmDate = convertLongToLocalDateTime(alarmDate);
+        this.dayInterval = dayInterval;
     }
 
-    public void updatePeriod(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime alarmDate) {
+    public void updatePeriod(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime alarmDate, Integer dayInterval) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.alarmDate = alarmDate;
+        this.dayInterval = dayInterval;
     }
 
     public LocalDateTime convertLongToLocalDateTime(Long timeStamp) {
-        if (timeStamp == 0)
+        if (timeStamp == 0 || timeStamp == null)
             return null;
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(timeStamp), ZoneId.systemDefault());
     }

@@ -1,4 +1,8 @@
-package com.example.namo2.entity;
+package com.example.namo2.entity.moimmemo;
+
+
+import com.example.namo2.entity.BaseTimeEntity;
+import com.example.namo2.entity.moimschedule.MoimSchedule;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,16 +15,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "moim_memo_location_img")
-public class MoimMemoLocationImg extends BaseTimeEntity{
+@Table(name = "moim_memo")
+public class MoimMemo extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "moim_memo_location_img_id")
+    @Column(name = "moim_memo_id")
     private Long id;
 
-    private String url;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moim_memo_location_id")
-    private MoimMemoLocation moimMemoLocation;
+    @JoinColumn(name = "moim_schedule_id")
+    private MoimSchedule moimSchedule;
 }

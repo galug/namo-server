@@ -1,4 +1,4 @@
-package com.example.namo2.entity;
+package com.example.namo2.entity.schedule;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -13,6 +13,9 @@ import javax.persistence.OneToMany;
 
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponseStatus;
+import com.example.namo2.entity.BaseTimeEntity;
+import com.example.namo2.entity.category.Category;
+import com.example.namo2.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,19 +28,23 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Schedule extends BaseTimeEntity{
+public class Schedule extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @Embedded
     Period period;
 
-    @Column(columnDefinition = "GEOMETRY")
-    private Point location;
+    @Embedded
+    private Location location;
+
+    @Column(name = "event_id", nullable = false)
+    private Long eventId;
 
     @Column(name = "has_diary", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean hasDiary;
@@ -56,20 +63,20 @@ public class Schedule extends BaseTimeEntity{
     private List<Image> images = new ArrayList<>();
 
     @Builder
-    public Schedule(Long id, String name, Period period, Point location, User user, Category category) {
+    public Schedule(Long id, String name, Period period, User user, Category category, Double x, Double y, String locationName) {
         this.id = id;
         this.name = name;
         this.period = period;
-        this.location = location;
+        this.location = new Location(x, y, locationName);
         this.user = user;
         this.category = category;
         hasDiary = false;
     }
 
-    public void updateSchedule(String name, Period period, Point point, Category category) {
+    public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName) {
         this.name = name;
-        this.period.updatePeriod(period.getStartDate(), period.getEndDate(), period.getAlarmDate());
-        this.location = point;
+        this.period = period;
+        this.location = new Location(x, y, locationName);
         this.category = category;
     }
 
@@ -79,6 +86,7 @@ public class Schedule extends BaseTimeEntity{
     }
 
     public void deleteDiary() {
+        existDairy();
         this.hasDiary = Boolean.FALSE;
         this.contents = null;
     }
