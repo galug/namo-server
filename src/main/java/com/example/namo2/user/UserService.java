@@ -1,7 +1,10 @@
 package com.example.namo2.user;
 
+import com.example.namo2.category.CategoryRepository;
 import com.example.namo2.config.exception.BaseException;
-import com.example.namo2.entity.User;
+import com.example.namo2.entity.category.Category;
+import com.example.namo2.entity.user.User;
+import com.example.namo2.palette.PaletteRepository;
 import com.example.namo2.user.dto.SignUpReq;
 import com.example.namo2.user.dto.SignUpRes;
 import com.example.namo2.user.dto.SocialSignUpReq;
@@ -28,6 +31,8 @@ import static com.example.namo2.config.response.BaseResponseStatus.SOCIAL_LOGIN_
 public class UserService {
 
     private final UserRepository userDao;
+    private final PaletteRepository paletteRepository;
+    private final CategoryRepository categoryRepository;
     private final JwtUtils jwtUtils;
     private final SocialUtils socialUtils;
 
@@ -83,9 +88,27 @@ public class UserService {
         Optional<User> userByEmail = userDao.findUserByEmail(user.getEmail());
         if (userByEmail.isEmpty()) {
             User save = userDao.save(user);
+            makeBaseCategory(save);
             return save;
         }
         return userByEmail.get();
+    }
+
+    private void makeBaseCategory(User save) {
+        Category baseCategory = Category.builder()
+                .name("기본")
+                .palette(paletteRepository.getReferenceById(1L))
+                .share(Boolean.TRUE)
+                .user(save)
+                .build();
+        Category groupCategory = Category.builder()
+                .name("모임")
+                .palette(paletteRepository.getReferenceById(2L))
+                .share(Boolean.TRUE)
+                .user(save)
+                .build();
+        categoryRepository.save(baseCategory);
+        categoryRepository.save(groupCategory);
     }
 
     public void updateRefreshToken(Long userId, String refreshToken) throws BaseException {

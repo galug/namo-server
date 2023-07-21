@@ -1,6 +1,6 @@
 package com.example.namo2.user;
 
-import com.example.namo2.entity.User;
+import com.example.namo2.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
