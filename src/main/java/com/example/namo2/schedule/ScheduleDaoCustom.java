@@ -1,8 +1,7 @@
 package com.example.namo2.schedule;
 
-import com.example.namo2.entity.Schedule;
-import com.example.namo2.schedule.dto.DiaryDto;
-import com.example.namo2.entity.User;
+import com.example.namo2.entity.schedule.Schedule;
+import com.example.namo2.entity.user.User;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 
 import java.time.LocalDateTime;

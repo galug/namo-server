@@ -1,13 +1,14 @@
 package com.example.namo2.schedule;
 
-import com.example.namo2.category.CategoryDao;
+import com.example.namo2.category.CategoryRepository;
 import com.example.namo2.config.exception.BaseException;
-import com.example.namo2.entity.Period;
+import com.example.namo2.entity.schedule.Alarm;
+import com.example.namo2.entity.schedule.Period;
 import com.example.namo2.schedule.dto.DiaryDto;
-import com.example.namo2.entity.Category;
-import com.example.namo2.entity.Image;
-import com.example.namo2.entity.Schedule;
-import com.example.namo2.entity.User;
+import com.example.namo2.entity.category.Category;
+import com.example.namo2.entity.schedule.Image;
+import com.example.namo2.entity.schedule.Schedule;
+import com.example.namo2.entity.user.User;
 import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
@@ -34,25 +35,41 @@ import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USE
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ScheduleService {
-    private final CategoryDao categoryDao;
-    private final ImageDao imageDao;
+    private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
     private final ScheduleDao scheduleDao;
     private final UserRepository userDao;
+    private final AlarmRepository alarmRepository;
     private final FileUtils fileUtils;
     private final Converter converter;
 
     @Transactional(readOnly = false)
     public ScheduleIdRes createSchedule(PostScheduleReq postScheduleReq, Long userId) throws BaseException {
         User findUser = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        Category findCategory = categoryDao.findById(postScheduleReq.getCategoryId())
+        Category findCategory = categoryRepository.findById(postScheduleReq.getCategoryId())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
+        Period period = Period.builder()
+                .startDate(postScheduleReq.getStartDate())
+                .endDate(postScheduleReq.getEndDate())
+                .dayInterval(postScheduleReq.getInterval())
+                .build();
         Schedule schedule = Schedule.builder()
                 .name(postScheduleReq.getName())
-                .period(new Period(postScheduleReq.getStartDate(), postScheduleReq.getEndDate(), postScheduleReq.getAlarmDate()))
-                .location(converter.convertPoint(postScheduleReq.getX(), postScheduleReq.getY()))
+                .period(period)
+                .x(postScheduleReq.getX())
+                .y(postScheduleReq.getY())
+                .locationName(postScheduleReq.getLocationName())
+                .eventId(postScheduleReq.getEventId())
                 .user(findUser)
                 .category(findCategory).build();
 
+        for (Integer alarm : postScheduleReq.getAlarmDate()) {
+            Alarm alarmEntity = Alarm.builder()
+                    .alarmDate(alarm)
+                    .schedule(schedule)
+                    .build();
+            schedule.addAlarm(alarmEntity);
+        }
         Schedule saveSchedule = scheduleDao.save(schedule);
         return new ScheduleIdRes(saveSchedule.getId());
     }
@@ -64,15 +81,33 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = false)
-    public ScheduleIdRes updateSchedule(Long scheduleId, PostScheduleReq scheduleReq) throws BaseException {
+    public ScheduleIdRes updateSchedule(Long scheduleId, PostScheduleReq postScheduleReq) throws BaseException {
         Schedule schedule = scheduleDao.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        Category category = categoryDao.findById(scheduleReq.getCategoryId()).orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
+        Category category = categoryRepository.findById(postScheduleReq.getCategoryId()).orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
+
+        Period period = Period.builder()
+                .startDate(postScheduleReq.getStartDate())
+                .endDate(postScheduleReq.getEndDate())
+                .dayInterval(postScheduleReq.getInterval())
+                .build();
+
+        schedule.clearAlarm();
+        for (Integer alarmDate : postScheduleReq.getAlarmDate()) {
+            Alarm alarmEntity = Alarm.builder()
+                    .alarmDate(alarmDate)
+                    .schedule(schedule)
+                    .build();
+            schedule.addAlarm(alarmEntity);
+        }
 
         schedule.updateSchedule(
-                scheduleReq.getName(),
-                new Period(scheduleReq.getStartDate(), scheduleReq.getEndDate(), scheduleReq.getAlarmDate()),
-                converter.convertPoint(scheduleReq.getX(), scheduleReq.getY()),
-                category);
+                postScheduleReq.getName(),
+                period,
+                category,
+                postScheduleReq.getX(),
+                postScheduleReq.getY(),
+                postScheduleReq.getLocationName(),
+                postScheduleReq.getEventId());
         return new ScheduleIdRes(schedule.getId());
     }
 
@@ -91,7 +126,7 @@ public class ScheduleService {
             List<String> urls = fileUtils.uploadImages(imgs);
             for (String url : urls) {
                 Image image = Image.builder().schedule(schedule).imgUrl(url).build();
-                imageDao.save(image);
+                imageRepository.save(image);
             }
         }
         return new ScheduleIdRes(schedule.getId());
@@ -128,7 +163,7 @@ public class ScheduleService {
         List<String> urls = schedule.getImages().stream()
                 .map(Image::getImgUrl)
                 .collect(Collectors.toList());
-        imageDao.deleteDiaryImages(schedule);
+        imageRepository.deleteDiaryImages(schedule);
         fileUtils.deleteImages(urls);
     }
 }

@@ -6,11 +6,10 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @AllArgsConstructor
-public class PostScheduleReq {
+public class PatchScheduleReq {
     @NotBlank
     private String name;
     @NotNull
@@ -19,7 +18,8 @@ public class PostScheduleReq {
     private Long endDate;
     @NotNull
     private Integer interval;
-    private Set<Integer> alarmDate;
+    private List<Integer> deleteAlarmDate;
+    private List<Integer> addAlarmDate;
     @NotNull
     private Integer eventId;
     private Double x;
