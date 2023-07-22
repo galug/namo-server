@@ -1,5 +1,6 @@
 package com.example.namo2.entity.schedule;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -23,7 +24,10 @@ import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -44,7 +48,7 @@ public class Schedule extends BaseTimeEntity {
     private Location location;
 
     @Column(name = "event_id", nullable = false)
-    private Long eventId;
+    private Integer eventId;
 
     @Column(name = "has_diary", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean hasDiary;
@@ -62,22 +66,27 @@ public class Schedule extends BaseTimeEntity {
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alarm> alarms = new ArrayList<>();
+
     @Builder
-    public Schedule(Long id, String name, Period period, User user, Category category, Double x, Double y, String locationName) {
+    public Schedule(Long id, String name, Period period, User user, Category category, Double x, Double y, String locationName, Integer eventId) {
         this.id = id;
         this.name = name;
         this.period = period;
         this.location = new Location(x, y, locationName);
         this.user = user;
         this.category = category;
+        this.eventId = eventId;
         hasDiary = false;
     }
 
-    public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName) {
+    public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName, Integer eventId) {
         this.name = name;
         this.period = period;
         this.location = new Location(x, y, locationName);
         this.category = category;
+        this.eventId = eventId;
     }
 
     public void updateDiaryContents(String contents) {
@@ -95,5 +104,19 @@ public class Schedule extends BaseTimeEntity {
         if (!hasDiary) {
             throw new BaseException(BaseResponseStatus.NOT_FOUND_DIARY_FAILURE);
         }
+    }
+
+    public void addAlarm(Alarm alarm) {
+        alarms.add(alarm);
+    }
+
+    public List<Integer> findAlarms() {
+        return alarms.stream()
+                .map((alarm -> alarm.getAlarmDate()))
+                .collect(Collectors.toList());
+    }
+
+    public void clearAlarm() {
+        alarms.clear();
     }
 }
