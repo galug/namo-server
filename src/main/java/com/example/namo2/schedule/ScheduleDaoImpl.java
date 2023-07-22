@@ -35,16 +35,6 @@ public class ScheduleDaoImpl implements ScheduleDaoCustom {
 
     @Override
     public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
-//        List<GetScheduleRes> schedules = queryFactory
-//                .select(new QGetScheduleRes(
-//                        schedule.id, schedule.name, schedule.period.startDate, schedule.period.endDate,
-//                        schedule.period.dayInterval, schedule.location, schedule.category.id, schedule.category.name,
-//                        schedule.category.palette.color, schedule.eventId, schedule.hasDiary))
-//                .from(schedule)
-//                .join(schedule.category, category).fetchJoin()
-//                .join(schedule.category.palette, palette).fetchJoin()
-//                .where(schedule.user.eq(user).and(schedule.period.startDate.before(endDate).and(schedule.period.endDate.after(startDate))))
-//                .fetch();
         List<GetScheduleRes> result = em.createQuery("select new com.example.namo2.schedule.dto.GetScheduleRes(" +
                         "s.id, s.name, s.period.startDate, s.period.endDate, s.period.dayInterval,s.location,s.category.id," +
                         "s.category.name, s.category.palette.color, s.eventId, s.hasDiary)" +
