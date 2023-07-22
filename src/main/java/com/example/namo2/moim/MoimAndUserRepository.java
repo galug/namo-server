@@ -1,8 +1,8 @@
 package com.example.namo2.moim;
 
-import com.example.namo2.entity.Moim;
-import com.example.namo2.entity.MoimAndUser;
-import com.example.namo2.entity.User;
+import com.example.namo2.entity.moim.Moim;
+import com.example.namo2.entity.moim.MoimAndUser;
+import com.example.namo2.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

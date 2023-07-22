@@ -2,9 +2,9 @@ package com.example.namo2.moim;
 
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponseStatus;
-import com.example.namo2.entity.Moim;
-import com.example.namo2.entity.MoimAndUser;
-import com.example.namo2.entity.User;
+import com.example.namo2.entity.moim.Moim;
+import com.example.namo2.entity.moim.MoimAndUser;
+import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.GetMoimUserRes;
 import com.example.namo2.moim.dto.PatchMoimName;

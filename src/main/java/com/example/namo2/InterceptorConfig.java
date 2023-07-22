@@ -1,5 +1,6 @@
-package com.example.namo2.config.interceptor;
+package com.example.namo2;
 
+import com.example.namo2.config.interceptor.AuthenticationInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;

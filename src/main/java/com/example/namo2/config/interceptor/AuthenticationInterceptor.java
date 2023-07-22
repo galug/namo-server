@@ -5,6 +5,7 @@ import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.JwtUtils;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,16 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @Component
+@Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final JwtUtils jwtUtils;
 
-    private final UserRepository userDao;
-
     @Autowired
-    public AuthenticationInterceptor(JwtUtils jwtUtils, UserRepository userDao) {
+    public AuthenticationInterceptor(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
-        this.userDao = userDao;
     }
 
     @Override

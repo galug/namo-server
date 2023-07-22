@@ -29,12 +29,4 @@ public class Converter {
         return List.of(startMonth, localDateTime);
     }
 
-    public Point convertPoint(double x, double y) {
-        try {
-            String pointWKT = String.format("POINT(%s %s)", x, y);
-            return (Point) new WKTReader().read(pointWKT);
-        } catch (ParseException e) {
-            throw new BaseException(BaseResponseStatus.INTERNET_SERVER_ERROR);
-        }
-    }
 }

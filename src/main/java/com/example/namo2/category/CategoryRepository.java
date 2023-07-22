@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CategoryDao extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
     public List<Category> findCategoriesByUserIdAndStatusEquals(Long userId, CategoryStatus status);
 }

@@ -1,6 +1,6 @@
 package com.example.namo2.moim;
 
-import com.example.namo2.entity.Moim;
+import com.example.namo2.entity.moim.Moim;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
