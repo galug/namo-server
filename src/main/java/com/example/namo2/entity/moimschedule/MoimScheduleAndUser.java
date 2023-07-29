@@ -3,6 +3,10 @@ package com.example.namo2.entity.moimschedule;
 import com.example.namo2.entity.BaseTimeEntity;
 import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.user.User;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +20,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "moim_schedule_and_user")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MoimScheduleAndUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +40,13 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Builder
+    public MoimScheduleAndUser(Long id, String memo, User user, MoimSchedule moimSchedule, Category category) {
+        this.id = id;
+        this.memo = memo;
+        this.user = user;
+        this.moimSchedule = moimSchedule;
+        this.category = category;
+    }
 }

@@ -37,7 +37,7 @@ import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USE
 public class ScheduleService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
-    private final ScheduleDao scheduleDao;
+    private final ScheduleRepository scheduleRepository;
     private final UserRepository userDao;
     private final AlarmRepository alarmRepository;
     private final FileUtils fileUtils;
@@ -70,19 +70,19 @@ public class ScheduleService {
                     .build();
             schedule.addAlarm(alarmEntity);
         }
-        Schedule saveSchedule = scheduleDao.save(schedule);
+        Schedule saveSchedule = scheduleRepository.save(schedule);
         return new ScheduleIdRes(saveSchedule.getId());
     }
 
     public List<GetScheduleRes> findUsersSchedule(long userId, List<LocalDateTime> localDateTimes) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 
-        return scheduleDao.findSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
+        return scheduleRepository.findSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
     }
 
     @Transactional(readOnly = false)
     public ScheduleIdRes updateSchedule(Long scheduleId, PostScheduleReq postScheduleReq) throws BaseException {
-        Schedule schedule = scheduleDao.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         Category category = categoryRepository.findById(postScheduleReq.getCategoryId()).orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
 
         Period period = Period.builder()
@@ -113,13 +113,13 @@ public class ScheduleService {
 
     @Transactional(readOnly = false)
     public void deleteSchedule(Long scheduleId) throws BaseException {
-        Schedule schedule = scheduleDao.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        scheduleDao.delete(schedule);
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        scheduleRepository.delete(schedule);
     }
 
     @Transactional(readOnly = false)
     public ScheduleIdRes createDiary(Long scheduleId, String content, List<MultipartFile> imgs) throws BaseException {
-        Schedule schedule = scheduleDao.findById(scheduleId)
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         schedule.updateDiaryContents(content);
         if (imgs != null) {
@@ -134,7 +134,7 @@ public class ScheduleService {
 
     public List<DiaryDto> findMonthDiary(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        List<Schedule> schedules = scheduleDao.findScheduleDiaryByMonthDtoWithNotPaging(user, localDateTimes.get(0), localDateTimes.get(1));
+        List<Schedule> schedules = scheduleRepository.findScheduleDiaryByMonthDtoWithNotPaging(user, localDateTimes.get(0), localDateTimes.get(1));
         List<DiaryDto> diaries = new ArrayList<>();
         for (Schedule schedule : schedules) {
             List<String> images = schedule.getImages().stream().map(Image::getImgUrl)
@@ -146,7 +146,7 @@ public class ScheduleService {
     }
 
     public GetDiaryRes findDiary(Long scheduleId) {
-        Schedule schedule = scheduleDao.findScheduleAndImages(scheduleId);
+        Schedule schedule = scheduleRepository.findScheduleAndImages(scheduleId);
 
         schedule.existDairy();
 
@@ -158,7 +158,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = false)
     public void deleteDiary(Long scheduleId) throws BaseException {
-        Schedule schedule = scheduleDao.findScheduleAndImages(scheduleId);
+        Schedule schedule = scheduleRepository.findScheduleAndImages(scheduleId);
         schedule.deleteDiary();
         List<String> urls = schedule.getImages().stream()
                 .map(Image::getImgUrl)

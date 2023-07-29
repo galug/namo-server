@@ -2,6 +2,7 @@ package com.example.namo2.config.interceptor;
 
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
+import com.example.namo2.config.response.BaseResponseStatus;
 import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.JwtUtils;
 import com.google.gson.Gson;
@@ -33,7 +34,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         } catch (BaseException e) {
             Gson gson = new Gson();
-            String exception = gson.toJson(new BaseResponse(e.getStatus()));
+            String exception = gson.toJson(new BaseResponse(BaseResponseStatus.EXPIRATION_ACCESS_TOKEN));
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(403);
             response.getWriter().print(exception);

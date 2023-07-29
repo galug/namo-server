@@ -9,7 +9,7 @@ import com.example.namo2.entity.category.Palette;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.entity.category.CategoryStatus;
 import com.example.namo2.palette.PaletteRepository;
-import com.example.namo2.schedule.ScheduleDao;
+import com.example.namo2.schedule.ScheduleRepository;
 import com.example.namo2.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USE
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final PaletteRepository paletteRepository;
-    private final ScheduleDao scheduleDao;
+    private final ScheduleRepository scheduleRepository;
     private final UserRepository userDao;
 
     @Transactional(readOnly = false)

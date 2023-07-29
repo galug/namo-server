@@ -1,13 +1,23 @@
 package com.example.namo2.moim;
 
+import com.example.namo2.category.CategoryRepository;
+import com.example.namo2.category.dto.MoimCategoryDto;
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponseStatus;
+import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.moim.Moim;
 import com.example.namo2.entity.moim.MoimAndUser;
+import com.example.namo2.entity.moimschedule.MoimSchedule;
+import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
+import com.example.namo2.entity.schedule.Location;
+import com.example.namo2.entity.schedule.Period;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.GetMoimUserRes;
 import com.example.namo2.moim.dto.PatchMoimName;
+import com.example.namo2.moim.dto.PostMoimScheduleReq;
+import com.example.namo2.moim.dto.MoimScheduleRes;
+import com.example.namo2.schedule.ScheduleRepository;
 import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,15 +38,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MoimService {
+    private final static int[] MOIM_USERS_COLOR = new int[]{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+
     private final MoimRepository moimRepository;
     private final MoimAndUserRepository moimAndUserRepository;
-    private final UserRepository userDao;
+    private final MoimScheduleRepository moimScheduleRepository;
+    private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final ScheduleRepository scheduleRepository;
     private final FileUtils fileUtils;
     private final EntityManager em;
 
     @Transactional(readOnly = false)
-    public Long create(Long userId, String groupName, MultipartFile img, String color) {
-        User user = userDao.findById(userId)
+    public Long create(Long userId, String groupName, MultipartFile img) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
         String url = fileUtils.uploadImage(img);
         Moim moim = Moim.builder()
@@ -42,6 +60,8 @@ public class MoimService {
                 .imgUrl(url)
                 .build();
         Moim savedMoim = moimRepository.save(moim);
+
+        Integer color = MOIM_USERS_COLOR[0];
         MoimAndUser moimAndUser = MoimAndUser.builder()
                 .user(user)
                 .moim(savedMoim)
@@ -54,7 +74,7 @@ public class MoimService {
     }
 
     public List<GetMoimRes> findMoims(Long userId) {
-        User user = userDao.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
         List<MoimAndUser> moimAndUsers = moimAndUserRepository.findMoimAndUserByUser(user);
 
@@ -87,13 +107,18 @@ public class MoimService {
     public Long participate(Long userId, String code) {
         Moim moim = moimRepository.findMoimByCode(code)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
-        User user = userDao.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
+        /**
+         * TODO: 전체 모임원 수를 반환하는 로직을 하나 짜서 color 값을 생성해서 넣어주는 방식으로 코드짜기
+         *
+         */
+        Integer color = 10;
         MoimAndUser moimAndUser = MoimAndUser.builder()
                 .user(user)
                 .moim(moim)
                 .moimCustomName(moim.getName())
-                .color("#42451f")
+                .color(color)
                 .build();
         moimAndUserRepository.save(moimAndUser);
         return moim.getId();
@@ -106,5 +131,46 @@ public class MoimService {
         MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
         moimAndUserRepository.delete(moimAndUser);
+    }
+
+    @Transactional(readOnly = false)
+    public Long createSchedule(PostMoimScheduleReq scheduleReq) {
+        Moim moim = moimRepository.getReferenceById(scheduleReq.getMoimId());
+        Period period = Period.builder()
+                .startDate(scheduleReq.getStartDate())
+                .endDate(scheduleReq.getEndDate())
+                .dayInterval(scheduleReq.getInterval())
+                .build();
+        Location location = Location.create(scheduleReq.getX(), scheduleReq.getY(), scheduleReq.getLocationName());
+        MoimSchedule moimSchedule = MoimSchedule.builder()
+                .name(scheduleReq.getName())
+                .moim(moim)
+                .location(location)
+                .period(period)
+                .build();
+
+        MoimSchedule moimScheduleEntity = moimScheduleRepository.save(moimSchedule);
+
+        Map<Long, Long> moimCategoryMap = categoryRepository
+                .findMoimCategoriesByUsers(scheduleReq.getUsers())
+                .stream().collect(Collectors.toMap(MoimCategoryDto::getUserId, MoimCategoryDto::getCategoryId));
+        for (Long userId : scheduleReq.getUsers()) {
+            User moimUsers = userRepository.getReferenceById(userId);
+            Long categoryId = moimCategoryMap.get(moimUsers.getId());
+            Category category = categoryRepository.getReferenceById(categoryId);
+            MoimScheduleAndUser moimScheduleAndUser = MoimScheduleAndUser
+                    .builder()
+                    .moimSchedule(moimScheduleEntity)
+                    .user(moimUsers)
+                    .category(category)
+                    .build();
+            moimScheduleAndUserRepository.save(moimScheduleAndUser);
+        }
+        return moimScheduleEntity.getId();
+
+    }
+
+    public List<MoimScheduleRes> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
+        return scheduleRepository.findScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
     }
 }

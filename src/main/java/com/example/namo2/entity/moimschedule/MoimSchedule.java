@@ -13,11 +13,18 @@ import javax.persistence.Table;
 
 import com.example.namo2.entity.BaseTimeEntity;
 import com.example.namo2.entity.moim.Moim;
+import com.example.namo2.entity.schedule.Location;
 import com.example.namo2.entity.schedule.Period;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
 
 @Entity
 @Table(name = "moim_schedule")
+@Getter
+@NoArgsConstructor
 public class MoimSchedule extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +36,19 @@ public class MoimSchedule extends BaseTimeEntity {
     @Embedded
     Period period;
 
-    private Point point;
+    @Embedded
+    private Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_id")
     private Moim moim;
+
+    @Builder
+    public MoimSchedule(Long id, String name, Period period, Location location, Moim moim) {
+        this.id = id;
+        this.name = name;
+        this.period = period;
+        this.location = location;
+        this.moim = moim;
+    }
 }

@@ -31,7 +31,7 @@ public class MoimAndUser extends BaseTimeEntity {
     @Column(name="moim_custom_name")
     private String moimCustomName;
 
-    private String color;
+    private Integer color;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -42,7 +42,7 @@ public class MoimAndUser extends BaseTimeEntity {
     private Moim moim;
 
     @Builder
-    public MoimAndUser(String moimCustomName, String color, User user, Moim moim) {
+    public MoimAndUser(String moimCustomName, Integer color, User user, Moim moim) {
         this.moimCustomName = moimCustomName;
         this.color = color;
         this.user = user;

@@ -103,7 +103,7 @@ public class UserService {
                 .build();
         Category groupCategory = Category.builder()
                 .name("모임")
-                .palette(paletteRepository.getReferenceById(2L))
+                .palette(paletteRepository.getReferenceById(4L))
                 .share(Boolean.TRUE)
                 .user(save)
                 .build();

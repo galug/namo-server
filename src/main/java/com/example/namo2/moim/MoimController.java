@@ -4,6 +4,9 @@ import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.PatchMoimName;
 import com.example.namo2.moim.dto.PostMoimRes;
+import com.example.namo2.moim.dto.PostMoimScheduleReq;
+import com.example.namo2.moim.dto.MoimScheduleRes;
+import com.example.namo2.utils.Converter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -29,14 +34,14 @@ import java.util.List;
 @Api(value = "Moims")
 public class MoimController {
     private final MoimService moimService;
+    private final Converter converter;
 
     @PostMapping("")
     @ApiOperation(value = "모임 생성")
     public BaseResponse<PostMoimRes> createMoim(@RequestPart(required = false) MultipartFile img,
                                                 @RequestPart String groupName,
-                                                @RequestPart String color,
                                                 HttpServletRequest request) {
-        Long moimId = moimService.create((Long) request.getAttribute("userId"), groupName, img, color);
+        Long moimId = moimService.create((Long) request.getAttribute("userId"), groupName, img);
         return new BaseResponse(new PostMoimRes(moimId));
     }
 
@@ -66,5 +71,21 @@ public class MoimController {
     public BaseResponse withdraw(@PathVariable("moimId") Long moimId, HttpServletRequest request) {
         moimService.withdraw((Long) request.getAttribute("userId"), moimId);
         return BaseResponse.ok();
+    }
+
+    @PostMapping("/schedule")
+    @ApiOperation(value = "모임 생성")
+    public BaseResponse<Long> createMoimSchedule(@Valid @RequestBody PostMoimScheduleReq scheduleReq) {
+        Long scheduleId = moimService.createSchedule(scheduleReq);
+        return new BaseResponse(scheduleId);
+    }
+
+    @GetMapping("/schedule/{moimId}/{month}")
+    @ApiOperation(value = "모임 스케줄 조회")
+    public BaseResponse<MoimScheduleRes> findMoimSchedules(@PathVariable("moimId") Long moimId,
+                                                           @PathVariable("month") String month) {
+        List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+        List<MoimScheduleRes> schedules = moimService.findMoimSchedules(moimId, localDateTimes);
+        return new BaseResponse(schedules);
     }
 }
