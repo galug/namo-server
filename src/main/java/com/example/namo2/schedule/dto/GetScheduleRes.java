@@ -28,13 +28,12 @@ public class GetScheduleRes {
     private Long categoryId;
     private String categoryName;
     private Integer color;
-    private Integer eventId;
     private boolean hasDiary;
 
     @Builder
     @QueryProjection
     public GetScheduleRes(Long scheduleId, String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval
-            , Location location, Long categoryId, String categoryName, Integer color, Integer eventId, Boolean hasDiary) {
+            , Location location, Long categoryId, String categoryName, Integer color, Boolean hasDiary) {
         this.scheduleId = scheduleId;
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
@@ -48,7 +47,6 @@ public class GetScheduleRes {
         this.categoryName = categoryName;
         this.color = color;
         this.interval = interval;
-        this.eventId = eventId;
         this.hasDiary = hasDiary;
     }
 

@@ -47,9 +47,6 @@ public class Schedule extends BaseTimeEntity {
     @Embedded
     private Location location;
 
-    @Column(name = "event_id", nullable = false)
-    private Integer eventId;
-
     @Column(name = "has_diary", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean hasDiary;
 
@@ -77,16 +74,14 @@ public class Schedule extends BaseTimeEntity {
         this.location = new Location(x, y, locationName);
         this.user = user;
         this.category = category;
-        this.eventId = eventId;
         hasDiary = false;
     }
 
-    public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName, Integer eventId) {
+    public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName) {
         this.name = name;
         this.period = period;
         this.location = new Location(x, y, locationName);
         this.category = category;
-        this.eventId = eventId;
     }
 
     public void updateDiaryContents(String contents) {

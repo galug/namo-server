@@ -13,16 +13,18 @@ import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
+import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.Converter;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +61,6 @@ public class ScheduleService {
                 .x(postScheduleReq.getX())
                 .y(postScheduleReq.getY())
                 .locationName(postScheduleReq.getLocationName())
-                .eventId(postScheduleReq.getEventId())
                 .user(findUser)
                 .category(findCategory).build();
 
@@ -106,8 +107,7 @@ public class ScheduleService {
                 category,
                 postScheduleReq.getX(),
                 postScheduleReq.getY(),
-                postScheduleReq.getLocationName(),
-                postScheduleReq.getEventId());
+                postScheduleReq.getLocationName());
         return new ScheduleIdRes(schedule.getId());
     }
 
@@ -132,17 +132,9 @@ public class ScheduleService {
         return new ScheduleIdRes(schedule.getId());
     }
 
-    public List<DiaryDto> findMonthDiary(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
+    public SliceDiaryDto<DiaryDto> findMonthDiary(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        List<Schedule> schedules = scheduleRepository.findScheduleDiaryByMonthDtoWithNotPaging(user, localDateTimes.get(0), localDateTimes.get(1));
-        List<DiaryDto> diaries = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            List<String> images = schedule.getImages().stream().map(Image::getImgUrl)
-                    .collect(Collectors.toList());
-            diaries.add(new DiaryDto(schedule.getId(), schedule.getName()
-                    , schedule.getPeriod().getStartDate(), schedule.getContents(), images));
-        }
-        return diaries;
+        return scheduleRepository.findScheduleDiaryByMonthDto(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
     }
 
     public GetDiaryRes findDiary(Long scheduleId) {

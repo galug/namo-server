@@ -20,8 +20,6 @@ public class PatchScheduleReq {
     private Integer interval;
     private List<Integer> deleteAlarmDate;
     private List<Integer> addAlarmDate;
-    @NotNull
-    private Integer eventId;
     private Double x;
     private Double y;
     private String locationName;

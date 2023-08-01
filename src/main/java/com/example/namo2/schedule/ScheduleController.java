@@ -7,10 +7,13 @@ import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
+import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.example.namo2.utils.Converter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -95,12 +98,12 @@ public class ScheduleController {
     @ResponseBody
     @GetMapping("/diary/{month}")
     @ApiOperation(value = "스케줄 다이어리 월간 조회")
-    public BaseResponse<List<DiaryDto>> findDiaryByMonth(
-            @PathVariable("month") String month,
+    public BaseResponse<SliceDiaryDto> findDiaryByMonth(
+            @PathVariable("month") String month, Pageable pageable,
             HttpServletRequest request) throws BaseException {
         Long userId = (Long) request.getAttribute("userId");
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        List<DiaryDto> diaries = scheduleService.findMonthDiary(userId, localDateTimes);
+        SliceDiaryDto diaries = scheduleService.findMonthDiary(userId, localDateTimes, pageable);
         return new BaseResponse<>(diaries);
     }
 

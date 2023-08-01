@@ -20,8 +20,6 @@ public class PostScheduleReq {
     @NotNull
     private Integer interval;
     private Set<Integer> alarmDate;
-    @NotNull
-    private Integer eventId;
     private Double x;
     private Double y;
     private String locationName;
