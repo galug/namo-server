@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class PostCategoryReq {
     private String name;
-    private Long palletId;
+    private Long paletteId;
     private boolean isShare;
 }

@@ -34,7 +34,7 @@ public class CategoryService {
     @Transactional(readOnly = false)
     public CategoryIdRes create(Long userId, PostCategoryReq postcategoryReq) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        Palette palette = paletteRepository.findById(postcategoryReq.getPalletId())
+        Palette palette = paletteRepository.findById(postcategoryReq.getPaletteId())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PALETTE_FAILURE));
         Category category = Category.builder()
                 .name(postcategoryReq.getName())
@@ -59,7 +59,7 @@ public class CategoryService {
     public CategoryIdRes update(Long categoryId, PostCategoryReq postcategoryReq) throws BaseException {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
-        Palette palette = paletteRepository.findById(postcategoryReq.getPalletId())
+        Palette palette = paletteRepository.findById(postcategoryReq.getPaletteId())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PALETTE_FAILURE));
         category.update(postcategoryReq.getName(), postcategoryReq.isShare(), palette);
         return new CategoryIdRes(category.getId());
