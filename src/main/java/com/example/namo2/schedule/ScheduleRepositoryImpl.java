@@ -13,11 +13,14 @@ import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.MoimScheduleRes;
 import com.example.namo2.moim.dto.MoimScheduleUserDto;
 import com.example.namo2.moim.dto.QMoimScheduleRes;
+import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
-import com.example.namo2.schedule.dto.QGetScheduleRes;
-import com.querydsl.jpa.JPAExpressions;
+import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -49,7 +52,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<GetScheduleRes> result = em.createQuery("select new com.example.namo2.schedule.dto.GetScheduleRes(" +
                         "s.id, s.name, s.period.startDate, s.period.endDate, s.period.dayInterval,s.location,s.category.id," +
-                        "s.category.name, s.category.palette.color, s.eventId, s.hasDiary)" +
+                        "s.category.name, s.category.palette.color, s.hasDiary)" +
                         " from Schedule s" +
                         " join s.category c" +
                         " join c.palette p" +
@@ -73,18 +76,29 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<Schedule> findScheduleDiaryByMonthDtoWithNotPaging(User user, LocalDateTime startDate, LocalDateTime endDate) {
-        return queryFactory
+    public SliceDiaryDto<DiaryDto> findScheduleDiaryByMonthDto(User user, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        List<Schedule> content = queryFactory
                 .select(schedule)
-                .distinct()
                 .from(schedule)
-                .leftJoin(schedule.images, image).fetchJoin()
+                .join(schedule.category).fetchJoin()
+                .join(schedule.category.palette).fetchJoin()
                 .where(schedule.user.eq(user)
                         .and(schedule.period.startDate.before(endDate)
                                 .and(schedule.period.endDate.after(startDate))
                                 .and(schedule.hasDiary.isTrue())
                         ))
+                .orderBy(schedule.period.startDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
+        boolean hasNext = false;
+        if (content.size() > pageable.getPageSize()) {
+            content.remove(pageable.getPageSize());
+            hasNext = true;
+        }
+        SliceImpl<Schedule> schedules = new SliceImpl<>(content, pageable, hasNext);
+        Slice<DiaryDto> diarySlices = schedules.map(DiaryDto::new);
+        return new SliceDiaryDto(diarySlices);
     }
 
     @Override
