@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.example.namo2.entity.category.QCategory.category;
+import static com.example.namo2.entity.category.QPalette.palette;
 import static com.example.namo2.entity.moim.QMoimAndUser.moimAndUser;
 import static com.example.namo2.entity.moimschedule.QMoimScheduleAndUser.moimScheduleAndUser;
 import static com.example.namo2.entity.schedule.QAlarm.alarm;
@@ -80,8 +82,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         List<Schedule> content = queryFactory
                 .select(schedule)
                 .from(schedule)
-                .join(schedule.category).fetchJoin()
-                .join(schedule.category.palette).fetchJoin()
+                .join(schedule.category, category).fetchJoin()
+                .join(category.palette, palette).fetchJoin()
                 .where(schedule.user.eq(user)
                         .and(schedule.period.startDate.before(endDate)
                                 .and(schedule.period.endDate.after(startDate))
