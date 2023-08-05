@@ -44,14 +44,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
 
+    /**
+     * 알람을 한 번에 가지고 오는 편이 성능상 더 좋은 퍼포먼스를 발휘할지도?
+     */
     @Override
     public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<GetScheduleRes> result = em.createQuery("select new com.example.namo2.schedule.dto.GetScheduleRes(" +
-                        "s.id, s.name, s.period.startDate, s.period.endDate, s.period.dayInterval,s.location,s.category.id," +
-                        "s.category.name, s.category.palette.color, s.hasDiary)" +
+                        "s.id, s.name, s.period.startDate, s.period.endDate, s.period.dayInterval,s.location,s.category.id, s.hasDiary)" +
                         " from Schedule s" +
-                        " join s.category c" +
-                        " join c.palette p" +
                         " where s.user = :user and s.period.startDate <= :endDate and s.period.endDate >= :startDate", GetScheduleRes.class)
                 .setParameter("user", user)
                 .setParameter("startDate", startDate)

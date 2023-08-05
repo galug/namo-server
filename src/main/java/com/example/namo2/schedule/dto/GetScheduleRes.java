@@ -24,16 +24,16 @@ public class GetScheduleRes {
     private Long endDate;
     private List<Integer> alarmDate;
     private Integer interval;
-    private Location location;
+    private Double x;
+    private Double y;
+    private String locationName;
     private Long categoryId;
-    private String categoryName;
-    private Integer color;
     private boolean hasDiary;
 
     @Builder
     @QueryProjection
     public GetScheduleRes(Long scheduleId, String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval
-            , Location location, Long categoryId, String categoryName, Integer color, Boolean hasDiary) {
+            , Location location, Long categoryId, Boolean hasDiary) {
         this.scheduleId = scheduleId;
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
@@ -42,10 +42,10 @@ public class GetScheduleRes {
         this.endDate = endDate.atZone(ZoneId.systemDefault())
                 .toInstant()
                 .getEpochSecond();
-        this.location = location;
+        this.x = location.getX();
+        this.y = location.getY();
+        this.locationName = location.getLocationName();
         this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.color = color;
         this.interval = interval;
         this.hasDiary = hasDiary;
     }
