@@ -38,7 +38,7 @@ public class MoimController {
 
     @PostMapping("")
     @ApiOperation(value = "모임 생성")
-    public BaseResponse<PostMoimRes> createMoim(@RequestPart(required = false) MultipartFile img,
+    public BaseResponse<PostMoimRes> createMoim(@RequestPart MultipartFile img,
                                                 @RequestPart String groupName,
                                                 HttpServletRequest request) {
         Long moimId = moimService.create((Long) request.getAttribute("userId"), groupName, img);

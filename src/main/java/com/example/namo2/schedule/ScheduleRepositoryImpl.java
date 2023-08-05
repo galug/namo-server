@@ -1,14 +1,8 @@
 package com.example.namo2.schedule;
 
-import com.example.namo2.entity.moim.Moim;
 import com.example.namo2.entity.moim.MoimAndUser;
-import com.example.namo2.entity.moim.QMoimAndUser;
-import com.example.namo2.entity.moimschedule.MoimSchedule;
-import com.example.namo2.entity.moimschedule.QMoimScheduleAndUser;
 import com.example.namo2.entity.schedule.Alarm;
-import com.example.namo2.entity.schedule.QSchedule;
 import com.example.namo2.entity.schedule.Schedule;
-import com.example.namo2.entity.user.QUser;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.MoimScheduleRes;
 import com.example.namo2.moim.dto.MoimScheduleUserDto;

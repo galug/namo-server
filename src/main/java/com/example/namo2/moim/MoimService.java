@@ -38,7 +38,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MoimService {
-    private final static int[] MOIM_USERS_COLOR = new int[]{10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    private final static int[] MOIM_USERS_COLOR =
+            new int[]{2131034708, 2131034710, 2131034711, 2131034712, 2131034713,
+                    2131034714, 2131034715, 2131034716, 2131034717, 2131034709};
 
     private final MoimRepository moimRepository;
     private final MoimAndUserRepository moimAndUserRepository;
@@ -107,21 +109,23 @@ public class MoimService {
     public Long participate(Long userId, String code) {
         Moim moim = moimRepository.findMoimByCode(code)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
-        /**
-         * TODO: 전체 모임원 수를 반환하는 로직을 하나 짜서 color 값을 생성해서 넣어주는 방식으로 코드짜기
-         *
-         */
-        Integer color = 10;
+        User user = userRepository.getReferenceById(userId);
+        duplicateParticipate(moim, user);
+        Integer numberOfMoimer = moimAndUserRepository.countMoimAndUserByMoim(moim);
         MoimAndUser moimAndUser = MoimAndUser.builder()
                 .user(user)
                 .moim(moim)
                 .moimCustomName(moim.getName())
-                .color(color)
+                .color(MOIM_USERS_COLOR[numberOfMoimer])
                 .build();
         moimAndUserRepository.save(moimAndUser);
         return moim.getId();
+    }
+
+    private void duplicateParticipate(Moim moim, User user) {
+        if (moimAndUserRepository.existsMoimAndUserByMoimAndUser(moim, user)) {
+            throw new BaseException(BaseResponseStatus.DUPLICATE_PARTICIPATE_FAILURE);
+        }
     }
 
     @Transactional(readOnly = false)
