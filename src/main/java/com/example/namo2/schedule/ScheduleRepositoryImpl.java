@@ -120,7 +120,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .collect(Collectors.toList());
 
         List<MoimScheduleRes> results = em.createQuery("select new com.example.namo2.moim.dto.MoimScheduleRes(" +
-                        "s.name, s.period.startDate, s.period.endDate, s.period.dayInterval, u.name, mu.color)" +
+                        "s.name, s.period.startDate, s.period.endDate, s.period.dayInterval, u.id, u.name, mu.color)" +
                         " from Schedule s, MoimAndUser mu" +
                         " join s.user u" +
                         " where s.user in (:users) " +
@@ -136,7 +136,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .collect(Collectors.groupingBy(
                         (moimAndUser -> moimAndUser.getMoim().getId()),
                         Collectors.mapping(
-                                moimAndUser -> new MoimScheduleUserDto(moimAndUser.getUser().getName(), moimAndUser.getColor()),
+                                moimAndUser -> new MoimScheduleUserDto(moimAndUser.getUser().getId(), moimAndUser.getUser().getName(), moimAndUser.getColor()),
                                 Collectors.toList()
                         )
                 ));

@@ -42,17 +42,17 @@ public class MoimScheduleRes {
     }
 
     @QueryProjection
-    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, String userName, Integer color
+    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long userId, String userName, Integer color
     ) {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
                 .toInstant()
-                .getEpochSecond();;
+                .getEpochSecond();
         this.endDate = endDate.atZone(ZoneId.systemDefault())
                 .toInstant()
                 .getEpochSecond();
         this.interval = interval;
-        this.users.add(new MoimScheduleUserDto(userName, color));
+        this.users.add(new MoimScheduleUserDto(userId, userName, color));
     }
 
     public void setUsers(List<MoimScheduleUserDto> users, boolean isCurMoimSchedule) {
