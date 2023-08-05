@@ -86,8 +86,7 @@ public class MoimService {
             Moim moim = moimAndUser.getMoim();
             List<MoimAndUser> groupUsers = moimAndUserRepository.findMoimAndUserByMoim(moim);
             List<GetMoimUserRes> moimUsers = groupUsers.stream()
-                    .filter((groupUser) -> groupUser.getUser() != user)
-                    .map((groupUser) -> new GetMoimUserRes(groupUser.getUser().getId(), groupUser.getUser().getName()))
+                    .map((groupUser) -> new GetMoimUserRes(groupUser.getUser().getId(), groupUser.getUser().getName(), groupUser.getColor()))
                     .collect(Collectors.toList());
             moims.add(new GetMoimRes(moim.getId(), moimAndUser.getMoimCustomName(),
                     moim.getImgUrl(), moim.getCode(), moimUsers));

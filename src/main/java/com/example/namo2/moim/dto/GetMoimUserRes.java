@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class GetMoimUserRes {
     private Long userId;
     private String userName;
+    private Integer userColor;
 }
