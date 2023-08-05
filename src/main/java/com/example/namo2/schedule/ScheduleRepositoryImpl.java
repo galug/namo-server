@@ -144,7 +144,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         moimScheduleAndUser.moimSchedule.period.startDate,
                         moimScheduleAndUser.moimSchedule.period.endDate,
                         moimScheduleAndUser.moimSchedule.period.dayInterval,
-                        moimScheduleAndUser.moimSchedule.moim.id))
+                        moimScheduleAndUser.moimSchedule.moim.id, moimScheduleAndUser.moimSchedule.id))
                 .from(moimScheduleAndUser)
                 .join(moimScheduleAndUser.moimSchedule)
                 .where(moimScheduleAndUser.user.in(users)

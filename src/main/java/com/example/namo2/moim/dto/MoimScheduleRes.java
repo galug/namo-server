@@ -25,11 +25,12 @@ public class MoimScheduleRes {
 
     private List<MoimScheduleUserDto> users = new ArrayList<>();
     private Long moimId;
+    private Long moimScheduleId;
     private boolean isCurMoimSchedule = false;
 
 
     @QueryProjection
-    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long moimId) {
+    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long moimId, Long moimScheduleId) {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
                 .toInstant()
@@ -39,6 +40,7 @@ public class MoimScheduleRes {
                 .getEpochSecond();
         this.interval = interval;
         this.moimId = moimId;
+        this.moimScheduleId = moimScheduleId;
     }
 
     @QueryProjection
