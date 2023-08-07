@@ -2,6 +2,7 @@ package com.example.namo2.moim;
 
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.moim.dto.GetMoimRes;
+import com.example.namo2.moim.dto.MoimMemoReq;
 import com.example.namo2.moim.dto.PatchMoimName;
 import com.example.namo2.moim.dto.PostMoimRes;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +36,7 @@ import java.util.List;
 @Api(value = "Moims")
 public class MoimController {
     private final MoimService moimService;
+    private final MoimMemoService moimMemoService;
     private final Converter converter;
 
     @PostMapping("")
@@ -87,5 +90,20 @@ public class MoimController {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         List<MoimScheduleRes> schedules = moimService.findMoimSchedules(moimId, localDateTimes);
         return new BaseResponse(schedules);
+    }
+
+    @PostMapping("/schedule/{moimScheduleId}")
+    @ApiOperation(value = "모임 메모 생성")
+    public BaseResponse<Object> createMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId,
+                                                        @RequestPart(required = false, name = "moimMemo") MoimMemoReq moimMemo,
+                                                        @RequestPart(required = false) List<MultipartFile> imgs1,
+                                                        @RequestPart(required = false) List<MultipartFile> imgs2,
+                                                        @RequestPart(required = false) List<MultipartFile> imgs3) {
+        ArrayList<List<MultipartFile>> imgs = new ArrayList<>();
+        imgs.add(imgs1);
+        imgs.add(imgs2);
+        imgs.add(imgs3);
+        moimMemoService.create(moimScheduleId, moimMemo.getLocationInfos(), imgs);
+        return BaseResponse.ok();
     }
 }
