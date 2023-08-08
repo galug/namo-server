@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,7 +29,7 @@ public class MoimMemo extends BaseTimeEntity {
     @Column(name = "moim_memo_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_schedule_id")
     private MoimSchedule moimSchedule;
 
@@ -36,5 +37,6 @@ public class MoimMemo extends BaseTimeEntity {
     public MoimMemo(Long id, MoimSchedule moimSchedule) {
         this.id = id;
         this.moimSchedule = moimSchedule;
+        this.moimSchedule.registerMemo(this);
     }
 }

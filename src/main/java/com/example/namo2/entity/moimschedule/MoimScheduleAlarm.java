@@ -37,5 +37,6 @@ public class MoimScheduleAlarm {
         this.id = id;
         this.alarmDate = alarmDate;
         this.moimSchedule = moimSchedule;
+        moimSchedule.getMoimScheduleAlarms().add(this);
     }
 }

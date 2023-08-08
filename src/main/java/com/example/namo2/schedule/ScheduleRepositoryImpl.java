@@ -1,7 +1,7 @@
 package com.example.namo2.schedule;
 
 import com.example.namo2.entity.moim.MoimAndUser;
-import com.example.namo2.entity.schedule.Alarm;
+import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
 import com.example.namo2.entity.schedule.Schedule;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.MoimScheduleRes;
@@ -9,7 +9,9 @@ import com.example.namo2.moim.dto.MoimScheduleUserDto;
 import com.example.namo2.moim.dto.QMoimScheduleRes;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
+import com.example.namo2.schedule.dto.QGetScheduleRes;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,9 @@ import java.util.stream.Collectors;
 import static com.example.namo2.entity.category.QCategory.category;
 import static com.example.namo2.entity.category.QPalette.palette;
 import static com.example.namo2.entity.moim.QMoimAndUser.moimAndUser;
+import static com.example.namo2.entity.moimmemo.QMoimMemo.moimMemo;
+import static com.example.namo2.entity.moimschedule.QMoimSchedule.moimSchedule;
+import static com.example.namo2.entity.moimschedule.QMoimScheduleAlarm.moimScheduleAlarm;
 import static com.example.namo2.entity.moimschedule.QMoimScheduleAndUser.moimScheduleAndUser;
 import static com.example.namo2.entity.schedule.QAlarm.alarm;
 import static com.example.namo2.entity.schedule.QImage.image;
@@ -49,26 +54,42 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
      */
     @Override
     public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
-        List<GetScheduleRes> result = em.createQuery("select new com.example.namo2.schedule.dto.GetScheduleRes(" +
-                        "s.id, s.name, s.period.startDate, s.period.endDate, s.period.dayInterval,s.location,s.category.id, s.hasDiary)" +
-                        " from Schedule s" +
-                        " where s.user = :user and s.period.startDate <= :endDate and s.period.endDate >= :startDate", GetScheduleRes.class)
-                .setParameter("user", user)
-                .setParameter("startDate", startDate)
-                .setParameter("endDate", endDate)
-                .getResultList();
+        List<GetScheduleRes> results = findPersonalSchedulesByUserId(user, startDate, endDate);
+        List<GetScheduleRes> moimSchedules = findMoimSchedulesByUserId(user, startDate, endDate);
+        if (moimSchedules != null) {
+            results.addAll(moimSchedules);
+        }
+        return results;
+    }
 
-        List<Long> scheduleIds = result.stream().map((schedule) -> schedule.getScheduleId()).collect(Collectors.toList());
-        List<Alarm> alarms = queryFactory
-                .select(alarm)
-                .from(alarm)
-                .where(alarm.schedule.id.in(scheduleIds))
+    public List<GetScheduleRes> findPersonalSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+        List<Schedule> schedules = queryFactory
+                .select(schedule).distinct()
+                .from(schedule)
+                .join(schedule.alarms).fetchJoin()
+                .where(schedule.user.eq(user)
+                        .and(schedule.period.startDate.before(endDate)
+                                .and(schedule.period.endDate.after(startDate)))
+                )
                 .fetch();
-        Map<Long, List<Alarm>> alarmScheduleIdMap =
-                alarms.stream().collect(Collectors.groupingBy((alarm) -> alarm.getSchedule().getId()));
-        result.stream().filter(s -> alarmScheduleIdMap.containsKey(s.getScheduleId())).forEach(s -> s.setAlarmDate(alarmScheduleIdMap.get(s.getScheduleId()).stream().map(Alarm::getAlarmDate)
-                .collect(Collectors.toList())));
-        return result;
+        return schedules.stream().map(schedule -> new GetScheduleRes(schedule))
+                .collect(Collectors.toList());
+    }
+
+    public List<GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+        List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory
+                .select(moimScheduleAndUser).distinct()
+                .from(moimScheduleAndUser)
+                .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
+                .leftJoin(moimSchedule.moimScheduleAlarms).fetchJoin()
+                .leftJoin(moimSchedule.moimMemo).fetchJoin()
+                .where(moimScheduleAndUser.user.eq(user)
+                        .and(moimSchedule.period.startDate.before(endDate)
+                                .and(moimSchedule.period.endDate.after(startDate)))
+                )
+                .fetch();
+        return moimScheduleAndUsers.stream()
+                .map(GetScheduleRes::new).collect(Collectors.toList());
     }
 
     @Override

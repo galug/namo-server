@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.example.namo2.entity.BaseTimeEntity;
 import com.example.namo2.entity.moim.Moim;
+import com.example.namo2.entity.moimmemo.MoimMemo;
 import com.example.namo2.entity.schedule.Location;
 import com.example.namo2.entity.schedule.Period;
 import lombok.AllArgsConstructor;
@@ -50,6 +52,12 @@ public class MoimSchedule extends BaseTimeEntity {
     @OneToMany(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
     private List<MoimScheduleAndUser> moimScheduleAndUsers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
+    private List<MoimScheduleAlarm> moimScheduleAlarms = new ArrayList<>();
+
+    @OneToOne(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
+    private MoimMemo moimMemo;
+
     @Builder
     public MoimSchedule(Long id, String name, Period period, Location location, Moim moim) {
         this.id = id;
@@ -57,5 +65,9 @@ public class MoimSchedule extends BaseTimeEntity {
         this.period = period;
         this.location = location;
         this.moim = moim;
+    }
+
+    public void registerMemo(MoimMemo moimMemo) {
+        this.moimMemo = moimMemo;
     }
 }
