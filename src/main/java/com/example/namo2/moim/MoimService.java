@@ -8,12 +8,14 @@ import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.moim.Moim;
 import com.example.namo2.entity.moim.MoimAndUser;
 import com.example.namo2.entity.moimschedule.MoimSchedule;
+import com.example.namo2.entity.moimschedule.MoimScheduleAlarm;
 import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
 import com.example.namo2.entity.schedule.Location;
 import com.example.namo2.entity.schedule.Period;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.GetMoimUserRes;
+import com.example.namo2.moim.dto.MoimScheduleAlarmDto;
 import com.example.namo2.moim.dto.PatchMoimName;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,7 @@ public class MoimService {
     private final MoimAndUserRepository moimAndUserRepository;
     private final MoimScheduleRepository moimScheduleRepository;
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
+    private final MoimScheduleAlarmRepository moimScheduleAlarmRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ScheduleRepository scheduleRepository;
@@ -173,5 +177,17 @@ public class MoimService {
 
     public List<MoimScheduleRes> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
         return scheduleRepository.findScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
+    }
+
+    @Transactional(readOnly = false)
+    public void createScheduleAlarm(MoimScheduleAlarmDto scheduleAlarmDto) {
+        MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleAlarmDto.getMoimScheduleId());
+        for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder()
+                    .alarmDate(alarmDate)
+                    .moimSchedule(moimSchedule)
+                    .build();
+            moimScheduleAlarmRepository.save(moimScheduleAlarm);
+        }
     }
 }

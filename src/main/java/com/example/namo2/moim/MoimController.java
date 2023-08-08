@@ -5,6 +5,7 @@ import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.MoimMemoDto;
 import com.example.namo2.moim.dto.MoimMemoLocationDto;
 import com.example.namo2.moim.dto.MoimMemoReq;
+import com.example.namo2.moim.dto.MoimScheduleAlarmDto;
 import com.example.namo2.moim.dto.PatchMoimName;
 import com.example.namo2.moim.dto.PostMoimRes;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
@@ -79,7 +80,7 @@ public class MoimController {
     }
 
     @PostMapping("/schedule")
-    @ApiOperation(value = "모임 생성")
+    @ApiOperation(value = "모임 스케줄 생성")
     public BaseResponse<Long> createMoimSchedule(@Valid @RequestBody PostMoimScheduleReq scheduleReq) {
         Long scheduleId = moimService.createSchedule(scheduleReq);
         return new BaseResponse(scheduleId);
@@ -92,6 +93,13 @@ public class MoimController {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         List<MoimScheduleRes> schedules = moimService.findMoimSchedules(moimId, localDateTimes);
         return new BaseResponse(schedules);
+    }
+
+    @PostMapping("/schedule/alarm")
+    @ApiOperation(value = "모임 스케줄 알람 생성")
+    public BaseResponse createMoimScheduleAlarm(@Valid @RequestBody MoimScheduleAlarmDto moimScheduleAlarmDto) {
+        moimService.createScheduleAlarm(moimScheduleAlarmDto);
+        return BaseResponse.ok();
     }
 
     @PostMapping("/schedule/{moimScheduleId}")
