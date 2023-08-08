@@ -38,9 +38,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MoimService {
-    private final static int[] MOIM_USERS_COLOR =
-            new int[]{2131034708, 2131034710, 2131034711, 2131034712, 2131034713,
-                    2131034714, 2131034715, 2131034716, 2131034717, 2131034709};
+    private final static int[] MOIM_USERS_COLOR = new int[]{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 
     private final MoimRepository moimRepository;
     private final MoimAndUserRepository moimAndUserRepository;
