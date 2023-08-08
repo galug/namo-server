@@ -4,6 +4,7 @@ import com.example.namo2.entity.BaseTimeEntity;
 import com.example.namo2.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "moim_memo_location_and_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class MoimMemoLocationAndUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

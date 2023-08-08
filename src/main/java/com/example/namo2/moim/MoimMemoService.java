@@ -7,9 +7,10 @@ import com.example.namo2.entity.moimmemo.MoimMemoLocation;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationAndUser;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationImg;
 import com.example.namo2.entity.moimschedule.MoimSchedule;
-import com.example.namo2.entity.schedule.Image;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.LocationInfo;
+import com.example.namo2.moim.dto.MoimMemoDto;
+import com.example.namo2.moim.dto.MoimMemoLocationDto;
 import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
@@ -91,5 +92,13 @@ public class MoimMemoService {
                 moimMemoLocationImgRepository.save(moimMemoLocationImg);
             }
         }
+    }
+
+    public MoimMemoDto find(Long moimScheduleId) {
+        MoimMemo moimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimScheduleId);
+        MoimMemoDto moimMemoDto = new MoimMemoDto(moimMemo);
+        List<MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocationRepository.findMoimMemo(moimScheduleId);
+        moimMemoDto.addMoimMemoLocationDto(moimMemoLocationDtos);
+        return moimMemoDto;
     }
 }

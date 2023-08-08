@@ -5,6 +5,7 @@ import com.example.namo2.entity.BaseTimeEntity;
 import com.example.namo2.entity.moimschedule.MoimSchedule;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "moim_memo")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class MoimMemo extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

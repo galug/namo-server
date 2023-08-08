@@ -2,6 +2,8 @@ package com.example.namo2.moim;
 
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.moim.dto.GetMoimRes;
+import com.example.namo2.moim.dto.MoimMemoDto;
+import com.example.namo2.moim.dto.MoimMemoLocationDto;
 import com.example.namo2.moim.dto.MoimMemoReq;
 import com.example.namo2.moim.dto.PatchMoimName;
 import com.example.namo2.moim.dto.PostMoimRes;
@@ -105,5 +107,12 @@ public class MoimController {
         imgs.add(imgs3);
         moimMemoService.create(moimScheduleId, moimMemo.getLocationInfos(), imgs);
         return BaseResponse.ok();
+    }
+
+    @GetMapping("/schedule/{moimScheduleId}")
+    @ApiOperation(value = "모임 메모 검색")
+    public BaseResponse<Object> createMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
+        MoimMemoDto moimMemoDto = moimMemoService.find(moimScheduleId);
+        return new BaseResponse(moimMemoDto);
     }
 }

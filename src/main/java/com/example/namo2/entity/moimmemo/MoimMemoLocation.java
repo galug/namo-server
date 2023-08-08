@@ -3,6 +3,7 @@ package com.example.namo2.entity.moimmemo;
 import com.example.namo2.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -13,11 +14,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "moim_memo_location")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class MoimMemoLocation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +37,9 @@ public class MoimMemoLocation extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moim_memo_id")
     private MoimMemo moimMemo;
+
+    @OneToMany(mappedBy = "moimMemoLocation", fetch = FetchType.LAZY)
+    private List<MoimMemoLocationImg> moimMemoLocationImgs = new ArrayList<>();
 
     @Builder
     public MoimMemoLocation(Long id, String name, Integer totalAmount, MoimMemo moimMemo) {

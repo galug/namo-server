@@ -6,6 +6,7 @@ import com.example.namo2.entity.user.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "moim_schedule_and_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class MoimScheduleAndUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,5 +50,6 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
         this.user = user;
         this.moimSchedule = moimSchedule;
         this.category = category;
+        moimSchedule.getMoimScheduleAndUsers().add(this);
     }
 }

@@ -3,6 +3,7 @@ package com.example.namo2.entity.moimmemo;
 import com.example.namo2.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "moim_memo_location_img")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class MoimMemoLocationImg extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,5 +37,6 @@ public class MoimMemoLocationImg extends BaseTimeEntity {
         this.id = id;
         this.url = url;
         this.moimMemoLocation = moimMemoLocation;
+        this.moimMemoLocation.getMoimMemoLocationImgs().add(this);
     }
 }
