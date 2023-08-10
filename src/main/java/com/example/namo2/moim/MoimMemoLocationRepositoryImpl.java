@@ -39,7 +39,8 @@ public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositor
                         moimMemoLocation.getName(), moimMemoLocation.getTotalAmount(),
                         moimMemoLocation.getMoimMemoLocationImgs().stream().map(MoimMemoLocationImg::getUrl).collect(Collectors.toList())))
                 .collect(Collectors.toList());
-        List<Long> moimMemoLocationIds = moimMemoLocationDtos.stream().map(MoimMemoLocationDto::getMoimMemoLocationId)
+        List<Long> moimMemoLocationIds = moimMemoLocationDtos.stream()
+                .map(MoimMemoLocationDto::getMoimMemoLocationId)
                 .collect(Collectors.toList());
 
         Map<Long, List<MoimMemoLocationAndUser>> locationAndUsersMap = queryFactory.select(moimMemoLocationAndUser)

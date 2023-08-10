@@ -11,7 +11,7 @@ import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.LocationInfo;
 import com.example.namo2.moim.dto.MoimMemoDto;
 import com.example.namo2.moim.dto.MoimMemoLocationDto;
-import com.example.namo2.user.UserRepository;
+import com.example.namo2.auth.UserRepository;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

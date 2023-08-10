@@ -1,4 +1,4 @@
-package com.example.namo2.user;
+package com.example.namo2.auth;
 
 import com.example.namo2.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

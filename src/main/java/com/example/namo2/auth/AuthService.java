@@ -1,13 +1,13 @@
-package com.example.namo2.user;
+package com.example.namo2.auth;
 
 import com.example.namo2.category.CategoryRepository;
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.palette.PaletteRepository;
-import com.example.namo2.user.dto.SignUpReq;
-import com.example.namo2.user.dto.SignUpRes;
-import com.example.namo2.user.dto.SocialSignUpReq;
+import com.example.namo2.auth.dto.SignUpReq;
+import com.example.namo2.auth.dto.SignUpRes;
+import com.example.namo2.auth.dto.SocialSignUpReq;
 import com.example.namo2.utils.JwtUtils;
 import com.example.namo2.utils.SocialUtils;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import static com.example.namo2.config.response.BaseResponseStatus.SOCIAL_LOGIN_
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService {
+public class AuthService {
 
     private final UserRepository userDao;
     private final PaletteRepository paletteRepository;

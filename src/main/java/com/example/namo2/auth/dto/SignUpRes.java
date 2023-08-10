@@ -1,4 +1,4 @@
-package com.example.namo2.user.dto;
+package com.example.namo2.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

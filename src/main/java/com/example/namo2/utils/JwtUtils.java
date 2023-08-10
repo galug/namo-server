@@ -3,7 +3,7 @@ package com.example.namo2.utils;
 
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponseStatus;
-import com.example.namo2.user.dto.SignUpRes;
+import com.example.namo2.auth.dto.SignUpRes;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
-
-import static com.example.namo2.config.response.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
 
 @Slf4j
 @NoArgsConstructor

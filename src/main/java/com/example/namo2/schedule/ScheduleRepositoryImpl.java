@@ -180,7 +180,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
             }
             groupSchedule.setUsers(moimUserMapping.get(groupMoimId), isCurMoimSchedule);
         });
-        results.addAll(groupSchedules);
+        if (groupSchedules != null) {
+            results.addAll(groupSchedules);
+        }
         return results;
     }
 }

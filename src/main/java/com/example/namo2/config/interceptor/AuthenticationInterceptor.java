@@ -3,7 +3,6 @@ package com.example.namo2.config.interceptor;
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.config.response.BaseResponseStatus;
-import com.example.namo2.user.UserRepository;
 import com.example.namo2.utils.JwtUtils;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;

@@ -1,11 +1,10 @@
-package com.example.namo2.user.dto;
+package com.example.namo2.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor

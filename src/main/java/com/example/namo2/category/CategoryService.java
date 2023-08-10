@@ -10,7 +10,7 @@ import com.example.namo2.entity.user.User;
 import com.example.namo2.entity.category.CategoryStatus;
 import com.example.namo2.palette.PaletteRepository;
 import com.example.namo2.schedule.ScheduleRepository;
-import com.example.namo2.user.UserRepository;
+import com.example.namo2.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
