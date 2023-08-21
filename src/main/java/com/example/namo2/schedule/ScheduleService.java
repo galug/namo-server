@@ -113,6 +113,7 @@ public class ScheduleService {
     @Transactional(readOnly = false)
     public void deleteSchedule(Long scheduleId) throws BaseException {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+
         scheduleRepository.delete(schedule);
     }
 
@@ -156,5 +157,9 @@ public class ScheduleService {
                 .collect(Collectors.toList());
         imageRepository.deleteDiaryImages(schedule);
         fileUtils.deleteImages(urls);
+    }
+
+    public List<GetScheduleRes> findUsersALLSchedule(Long userId) {
+        return null;
     }
 }

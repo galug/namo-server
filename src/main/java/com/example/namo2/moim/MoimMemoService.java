@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,23 +36,13 @@ public class MoimMemoService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = false)
-    public void create(Long moimScheduleId, List<LocationInfo> locationInfos, List<List<MultipartFile>> imgs) {
+    public void create(Long moimScheduleId, LocationInfo locationInfo, List<MultipartFile> imgs) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(moimScheduleId);
-        existsMoimMemo(moimSchedule);
-        MoimMemo moimMemo = createMoimMemo(moimSchedule);
-        for (int i = 0; i < locationInfos.size(); i++) {
-            List<MultipartFile> locationImgs = imgs.get(i);
-            LocationInfo locationInfo = locationInfos.get(i);
-            MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationInfo);
-            createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
-            createMoimMemoLocationImgs(locationImgs, moimMemoLocation);
-        }
-    }
-
-    private void existsMoimMemo(MoimSchedule moimSchedule) {
-        if (moimMemoRepository.existsMoimMemoByMoimSchedule(moimSchedule)) {
-            throw new BaseException(BaseResponseStatus.DUPLICATE_MOIM_MEMO_FAILURE);
-        }
+        Optional<MoimMemo> optionalMoimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
+        MoimMemo moimMemo = optionalMoimMemo.orElseGet(() -> createMoimMemo(moimSchedule));
+        MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationInfo);
+        createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
+        createMoimMemoLocationImgs(imgs, moimMemoLocation);
     }
 
     private MoimMemo createMoimMemo(MoimSchedule moimSchedule) {
@@ -82,20 +73,21 @@ public class MoimMemoService {
     }
 
     private void createMoimMemoLocationImgs(List<MultipartFile> locationImgs, MoimMemoLocation moimMemoLocation) {
-        if (locationImgs != null) {
-            List<String> urls = fileUtils.uploadImages(locationImgs);
-            for (String url : urls) {
-                MoimMemoLocationImg moimMemoLocationImg = MoimMemoLocationImg.builder()
-                        .moimMemoLocation(moimMemoLocation)
-                        .url(url)
-                        .build();
-                moimMemoLocationImgRepository.save(moimMemoLocationImg);
-            }
+        if (locationImgs == null) {
+            return;
+        }
+        List<String> urls = fileUtils.uploadImages(locationImgs);
+        for (String url : urls) {
+            MoimMemoLocationImg moimMemoLocationImg = MoimMemoLocationImg.builder()
+                    .moimMemoLocation(moimMemoLocation)
+                    .url(url)
+                    .build();
+            moimMemoLocationImgRepository.save(moimMemoLocationImg);
         }
     }
 
     public MoimMemoDto find(Long moimScheduleId) {
-        MoimMemo moimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimScheduleId);
+        MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndUsersByMoimSchedule(moimScheduleId);
         MoimMemoDto moimMemoDto = new MoimMemoDto(moimMemo);
         List<MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocationRepository.findMoimMemo(moimScheduleId);
         moimMemoDto.addMoimMemoLocationDto(moimMemoLocationDtos);

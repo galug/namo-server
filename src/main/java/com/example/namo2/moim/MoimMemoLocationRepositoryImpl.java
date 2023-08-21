@@ -30,7 +30,7 @@ public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositor
         List<MoimMemoLocation> moimMemoLocations = queryFactory.select(moimMemoLocation).distinct()
                 .from(moimMemoLocation)
                 .join(moimMemoLocation.moimMemo).fetchJoin()
-                .join(moimMemoLocation.moimMemoLocationImgs).fetchJoin()
+                .leftJoin(moimMemoLocation.moimMemoLocationImgs).fetchJoin()
                 .where(moimMemoLocation.moimMemo.moimSchedule.id.eq(moimScheduleId))
                 .fetch();
 

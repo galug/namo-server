@@ -52,15 +52,20 @@ public class ScheduleController {
         return new BaseResponse<>(scheduleIdRes);
     }
 
-    /**
-     * Todo: 그룹 스케줄 조회에 대한 처리가 필요할 예정
-     */
     @ResponseBody
     @GetMapping("/{month}")
     @ApiOperation(value = "스케줄 월별 조회 ")
     public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month") String month, HttpServletRequest request) throws BaseException {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule((Long) request.getAttribute("userId"), localDateTimes);
+        return new BaseResponse<>(userSchedule);
+    }
+
+    @ResponseBody
+    @GetMapping("/all")
+    @ApiOperation(value = "모든 스케줄 조회 ")
+    public BaseResponse<List<GetScheduleRes>> findUserALLSchedule(HttpServletRequest request) throws BaseException {
+        List<GetScheduleRes> userSchedule = scheduleService.findUsersALLSchedule((Long) request.getAttribute("userId"));
         return new BaseResponse<>(userSchedule);
     }
 

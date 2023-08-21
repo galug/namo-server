@@ -2,6 +2,7 @@ package com.example.namo2.moim;
 
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.moim.dto.GetMoimRes;
+import com.example.namo2.moim.dto.LocationInfo;
 import com.example.namo2.moim.dto.MoimMemoDto;
 import com.example.namo2.moim.dto.MoimMemoLocationDto;
 import com.example.namo2.moim.dto.MoimMemoReq;
@@ -102,23 +103,20 @@ public class MoimController {
         return BaseResponse.ok();
     }
 
-    @PostMapping("/schedule/{moimScheduleId}")
-    @ApiOperation(value = "모임 메모 생성")
-    public BaseResponse<Object> createMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId,
-                                                        @RequestPart(required = false, name = "moimMemo") MoimMemoReq moimMemo,
-                                                        @RequestPart(required = false) List<MultipartFile> imgs1,
-                                                        @RequestPart(required = false) List<MultipartFile> imgs2,
-                                                        @RequestPart(required = false) List<MultipartFile> imgs3) {
-        ArrayList<List<MultipartFile>> imgs = new ArrayList<>();
-        imgs.add(imgs1);
-        imgs.add(imgs2);
-        imgs.add(imgs3);
-        moimMemoService.create(moimScheduleId, moimMemo.getLocationInfos(), imgs);
+    @PostMapping("/schedule/memo/{moimScheduleId}")
+    @ApiOperation(value = "모임 메모 장소 생성")
+    public BaseResponse<Object> createMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
+                                               @PathVariable Long moimScheduleId,
+                                               @RequestPart(required = true) String name,
+                                               @RequestPart(required = true) String money,
+                                               @RequestPart(required = true) String participants) {
+        LocationInfo locationInfo = new LocationInfo(name, money, participants);
+        moimMemoService.create(moimScheduleId, locationInfo, imgs);
         return BaseResponse.ok();
     }
 
-    @GetMapping("/schedule/{moimScheduleId}")
-    @ApiOperation(value = "모임 메모 검색")
+    @GetMapping("/schedule/memo/{moimScheduleId}")
+    @ApiOperation(value = "모임 메모 조회")
     public BaseResponse<Object> createMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
         MoimMemoDto moimMemoDto = moimMemoService.find(moimScheduleId);
         return new BaseResponse(moimMemoDto);

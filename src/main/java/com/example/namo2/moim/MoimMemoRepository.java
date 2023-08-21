@@ -5,6 +5,8 @@ import com.example.namo2.entity.moimschedule.MoimSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface MoimMemoRepository extends JpaRepository<MoimMemo, Long> {
     public boolean existsMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
 
@@ -14,5 +16,8 @@ public interface MoimMemoRepository extends JpaRepository<MoimMemo, Long> {
             " join fetch ms.moimScheduleAndUsers msu" +
             " join fetch msu.user" +
             " where ms.id = :moimScheduleId")
-    public MoimMemo findMoimMemoByMoimSchedule(Long moimScheduleId);
+    public MoimMemo findMoimMemoAndUsersByMoimSchedule(Long moimScheduleId);
+
+    public Optional<MoimMemo> findMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
+
 }

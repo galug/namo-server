@@ -78,8 +78,4 @@ public class GetScheduleRes {
         this.isMoimSchedule = true;
         this.hasDiary = moimScheduleAndUser.getMoimSchedule().getMoimMemo() != null;
     }
-
-    public void setAlarmDate(List<Integer> alarmDate) {
-        this.alarmDate = alarmDate;
-    }
 }
