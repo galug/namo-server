@@ -70,4 +70,10 @@ public class MoimSchedule extends BaseTimeEntity {
     public void registerMemo(MoimMemo moimMemo) {
         this.moimMemo = moimMemo;
     }
+
+    public void update(String name, Period period, Location location) {
+        this.name = name;
+        this.period = period;
+        this.location = location;
+    }
 }

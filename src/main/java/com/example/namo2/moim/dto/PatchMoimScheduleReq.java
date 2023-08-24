@@ -11,9 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class PostMoimScheduleReq {
+public class PatchMoimScheduleReq {
     @NotNull
-    private Long moimId;
+    private Long moimScheduleId;
     @NotBlank
     private String name;
 

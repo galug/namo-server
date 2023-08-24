@@ -6,6 +6,7 @@ import com.example.namo2.moim.dto.LocationInfo;
 import com.example.namo2.moim.dto.MoimMemoDto;
 import com.example.namo2.moim.dto.MoimScheduleAlarmDto;
 import com.example.namo2.moim.dto.PatchMoimName;
+import com.example.namo2.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.moim.dto.PostMoimRes;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
@@ -82,6 +83,13 @@ public class MoimController {
     public BaseResponse<Long> createMoimSchedule(@Valid @RequestBody PostMoimScheduleReq scheduleReq) {
         Long scheduleId = moimService.createSchedule(scheduleReq);
         return new BaseResponse(scheduleId);
+    }
+
+    @PatchMapping("/schedule")
+    @ApiOperation(value = "모임 스케줄 수정")
+    public BaseResponse<Long> updateMoimSchedule(@Valid @RequestBody PatchMoimScheduleReq scheduleReq) {
+        moimService.updateSchedule(scheduleReq);
+        return BaseResponse.ok();
     }
 
     @GetMapping("/schedule/{moimId}/{month}")

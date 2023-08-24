@@ -26,15 +26,9 @@ public class Period {
     private Integer dayInterval;
 
     @Builder
-    public Period(Long startDate, Long endDate, Long alarmDate, Integer dayInterval) {
+    public Period(Long startDate, Long endDate, Integer dayInterval) {
         this.startDate = convertLongToLocalDateTime(startDate);
         this.endDate = convertLongToLocalDateTime(endDate);
-        this.dayInterval = dayInterval;
-    }
-
-    public void updatePeriod(LocalDateTime startDate, LocalDateTime endDate, LocalDateTime alarmDate, Integer dayInterval) {
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.dayInterval = dayInterval;
     }
 

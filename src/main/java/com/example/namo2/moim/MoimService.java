@@ -17,6 +17,7 @@ import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.GetMoimUserRes;
 import com.example.namo2.moim.dto.MoimScheduleAlarmDto;
 import com.example.namo2.moim.dto.PatchMoimName;
+import com.example.namo2.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
 import com.example.namo2.schedule.ScheduleRepository;
@@ -155,10 +156,15 @@ public class MoimService {
 
         MoimSchedule moimScheduleEntity = moimScheduleRepository.save(moimSchedule);
 
+        unionScheduleParticipant(scheduleReq.getUsers(), moimScheduleEntity);
+        return moimScheduleEntity.getId();
+    }
+
+    private void unionScheduleParticipant(List<Long> users, MoimSchedule moimScheduleEntity) {
         Map<Long, Long> moimCategoryMap = categoryRepository
-                .findMoimCategoriesByUsers(scheduleReq.getUsers())
+                .findMoimCategoriesByUsers(users)
                 .stream().collect(Collectors.toMap(MoimCategoryDto::getUserId, MoimCategoryDto::getCategoryId));
-        for (Long userId : scheduleReq.getUsers()) {
+        for (Long userId : users) {
             User moimUsers = userRepository.getReferenceById(userId);
             Long categoryId = moimCategoryMap.get(moimUsers.getId());
             Category category = categoryRepository.getReferenceById(categoryId);
@@ -170,8 +176,25 @@ public class MoimService {
                     .build();
             moimScheduleAndUserRepository.save(moimScheduleAndUser);
         }
-        return moimScheduleEntity.getId();
+    }
 
+    @Transactional(readOnly = false)
+    public void updateSchedule(PatchMoimScheduleReq scheduleReq) {
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleReq.getMoimScheduleId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
+        Period period = Period.builder()
+                .startDate(scheduleReq.getStartDate())
+                .endDate(scheduleReq.getEndDate())
+                .dayInterval(scheduleReq.getInterval())
+                .build();
+        Location location = Location.builder()
+                .locationName(scheduleReq.getLocationName())
+                .x(scheduleReq.getX())
+                .y(scheduleReq.getY())
+                .build();
+        moimSchedule.update(scheduleReq.getName(), period, location);
+        moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
+        unionScheduleParticipant(scheduleReq.getUsers(), moimSchedule);
     }
 
     public List<MoimScheduleRes> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
