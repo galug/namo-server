@@ -12,7 +12,7 @@ public interface MoimMemoLocationRepository extends JpaRepository<MoimMemoLocati
 
     @Query(value = "select ml" +
             " from MoimMemoLocation ml" +
-            " join fetch ml.moimMemoLocationImgs" +
+            " left join fetch ml.moimMemoLocationImgs" +
             " where ml.id = :locationId")
     Optional<MoimMemoLocation> findMoimMemoLocationById(@Param("locationId") Long locationId);
 }

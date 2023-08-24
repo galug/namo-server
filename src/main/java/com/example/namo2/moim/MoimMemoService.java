@@ -118,7 +118,7 @@ public class MoimMemoService {
 
     @Transactional(readOnly = false)
     public void delete(Long moimLocationId) {
-        MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findById(moimLocationId)
+        MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
         deleteMoimImgs(moimMemoLocation);

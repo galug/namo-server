@@ -39,10 +39,10 @@ public class MoimMemoLocation extends BaseTimeEntity {
     @JoinColumn(name = "moim_memo_id")
     private MoimMemo moimMemo;
 
-    @OneToMany(mappedBy = "moimMemoLocation", fetch =  FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "moimMemoLocation", fetch =  FetchType.LAZY)
     private List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "moimMemoLocation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "moimMemoLocation", fetch = FetchType.LAZY)
     private List<MoimMemoLocationImg> moimMemoLocationImgs = new ArrayList<>();
 
     @Builder
