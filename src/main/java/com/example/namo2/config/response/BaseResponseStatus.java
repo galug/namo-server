@@ -33,6 +33,8 @@ public enum BaseResponseStatus {
     NOT_FOUND_CATEGORY_FAILURE(404, "카테고리를 찾을 수 없습니다."),
     NOT_FOUND_PALETTE_FAILURE(404, "팔레트를 찾을 수 없습니다."),
     NOT_FOUND_DIARY_FAILURE(404, "다이어리를 찾을 수 없습니다."),
+
+    NOT_FOUND_MOIM_DIARY_FAILURE(404, "모임 메모 장소를 찾을 수 없습니다."),
     NOT_FOUND_MOIM_FAILURE(404, "모임을 찾을 수 없습니다."),
     NOT_FOUND_MOIM_AND_USER_FAILURE(404, "그룹 구성원이 아닙니다."),
     DIARY_EXISTS_FAILURE(404, "이미 존재하는 다이어리 입니다."),

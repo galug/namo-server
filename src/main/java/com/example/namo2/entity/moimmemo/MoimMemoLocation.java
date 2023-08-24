@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +39,10 @@ public class MoimMemoLocation extends BaseTimeEntity {
     @JoinColumn(name = "moim_memo_id")
     private MoimMemo moimMemo;
 
-    @OneToMany(mappedBy = "moimMemoLocation", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "moimMemoLocation", fetch =  FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "moimMemoLocation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MoimMemoLocationImg> moimMemoLocationImgs = new ArrayList<>();
 
     @Builder
@@ -47,5 +51,10 @@ public class MoimMemoLocation extends BaseTimeEntity {
         this.name = name;
         this.totalAmount = totalAmount;
         this.moimMemo = moimMemo;
+    }
+
+    public void update(String name, Integer totalAmount) {
+        this.name = name;
+        this.totalAmount = totalAmount;
     }
 }

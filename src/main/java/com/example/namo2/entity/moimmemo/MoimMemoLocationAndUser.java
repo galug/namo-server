@@ -40,5 +40,6 @@ public class MoimMemoLocationAndUser extends BaseTimeEntity {
         this.id = id;
         this.moimMemoLocation = moimMemoLocation;
         this.user = user;
+        this.moimMemoLocation.getMoimMemoLocationAndUsers().add(this);
     }
 }

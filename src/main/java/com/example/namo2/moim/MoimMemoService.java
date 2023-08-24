@@ -7,6 +7,7 @@ import com.example.namo2.entity.moimmemo.MoimMemoLocation;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationAndUser;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationImg;
 import com.example.namo2.entity.moimschedule.MoimSchedule;
+import com.example.namo2.entity.schedule.Image;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.LocationInfo;
 import com.example.namo2.moim.dto.MoimMemoDto;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -92,5 +94,34 @@ public class MoimMemoService {
         List<MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocationRepository.findMoimMemo(moimScheduleId);
         moimMemoDto.addMoimMemoLocationDto(moimMemoLocationDtos);
         return moimMemoDto;
+    }
+
+    @Transactional(readOnly = false)
+    public void update(Long moimLocationId, LocationInfo locationInfo, List<MultipartFile> imgs) {
+        MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
+        moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
+        deleteMoimImgs(moimMemoLocation);
+        moimMemoLocation.update(locationInfo.getName(), locationInfo.getMoney());
+        createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
+        createMoimMemoLocationImgs(imgs, moimMemoLocation);
+    }
+
+    private void deleteMoimImgs(MoimMemoLocation moimMemoLocation) {
+        List<String> deleteUrls = moimMemoLocation.getMoimMemoLocationImgs()
+                .stream()
+                .map(MoimMemoLocationImg::getUrl)
+                .collect(Collectors.toList());
+        moimMemoLocationImgRepository.deleteMoimMemoLocationImgByMoimMemoLocation(moimMemoLocation);
+        fileUtils.deleteImages(deleteUrls);
+    }
+
+    @Transactional(readOnly = false)
+    public void delete(Long moimLocationId) {
+        MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findById(moimLocationId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
+        moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
+        deleteMoimImgs(moimMemoLocation);
+        moimMemoLocationRepository.delete(moimMemoLocation);
     }
 }

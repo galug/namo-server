@@ -4,8 +4,6 @@ import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.LocationInfo;
 import com.example.namo2.moim.dto.MoimMemoDto;
-import com.example.namo2.moim.dto.MoimMemoLocationDto;
-import com.example.namo2.moim.dto.MoimMemoReq;
 import com.example.namo2.moim.dto.MoimScheduleAlarmDto;
 import com.example.namo2.moim.dto.PatchMoimName;
 import com.example.namo2.moim.dto.PostMoimRes;
@@ -30,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -105,20 +102,39 @@ public class MoimController {
 
     @PostMapping("/schedule/memo/{moimScheduleId}")
     @ApiOperation(value = "모임 메모 장소 생성")
-    public BaseResponse<Object> createMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
-                                               @PathVariable Long moimScheduleId,
-                                               @RequestPart(required = true) String name,
-                                               @RequestPart(required = true) String money,
-                                               @RequestPart(required = true) String participants) {
+    public BaseResponse<Object> findMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
+                                             @PathVariable Long moimScheduleId,
+                                             @RequestPart(required = true) String name,
+                                             @RequestPart(required = true) String money,
+                                             @RequestPart(required = true) String participants) {
         LocationInfo locationInfo = new LocationInfo(name, money, participants);
         moimMemoService.create(moimScheduleId, locationInfo, imgs);
         return BaseResponse.ok();
     }
 
+    @PatchMapping("/schedule/memo/{memoLocationId}")
+    @ApiOperation(value = "모임 메모 장소 수정")
+    public BaseResponse<Object> updateMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
+                                               @PathVariable Long memoLocationId,
+                                               @RequestPart(required = true) String name,
+                                               @RequestPart(required = true) String money,
+                                               @RequestPart(required = true) String participants) {
+        LocationInfo locationInfo = new LocationInfo(name, money, participants);
+        moimMemoService.update(memoLocationId, locationInfo, imgs);
+        return BaseResponse.ok();
+    }
+
     @GetMapping("/schedule/memo/{moimScheduleId}")
     @ApiOperation(value = "모임 메모 조회")
-    public BaseResponse<Object> createMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
+    public BaseResponse<Object> findMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
         MoimMemoDto moimMemoDto = moimMemoService.find(moimScheduleId);
         return new BaseResponse(moimMemoDto);
+    }
+
+    @DeleteMapping("/schedule/memo/{memoLocationId}")
+    @ApiOperation(value = "모임 메모 장소 수정")
+    public BaseResponse<Object> deleteMoimMemo(@PathVariable Long memoLocationId) {
+        moimMemoService.delete(memoLocationId);
+        return BaseResponse.ok();
     }
 }
