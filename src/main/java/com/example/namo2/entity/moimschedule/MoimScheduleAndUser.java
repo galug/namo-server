@@ -52,4 +52,8 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
         this.category = category;
         moimSchedule.getMoimScheduleAndUsers().add(this);
     }
+
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
 }

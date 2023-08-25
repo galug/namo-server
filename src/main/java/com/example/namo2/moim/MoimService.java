@@ -8,8 +8,6 @@ import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.moim.Moim;
 import com.example.namo2.entity.moim.MoimAndUser;
 import com.example.namo2.entity.moimmemo.MoimMemo;
-import com.example.namo2.entity.moimmemo.MoimMemoLocation;
-import com.example.namo2.entity.moimmemo.MoimMemoLocationImg;
 import com.example.namo2.entity.moimschedule.MoimSchedule;
 import com.example.namo2.entity.moimschedule.MoimScheduleAlarm;
 import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
@@ -20,6 +18,7 @@ import com.example.namo2.moim.dto.GetMoimRes;
 import com.example.namo2.moim.dto.GetMoimUserRes;
 import com.example.namo2.moim.dto.MoimScheduleAlarmDto;
 import com.example.namo2.moim.dto.PatchMoimName;
+import com.example.namo2.moim.dto.PatchMoimScheduleCategoryReq;
 import com.example.namo2.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
@@ -37,10 +36,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
 
 @Slf4j
@@ -205,6 +203,17 @@ public class MoimService {
         moimSchedule.update(scheduleReq.getName(), period, location);
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
         unionScheduleParticipant(scheduleReq.getUsers(), moimSchedule);
+    }
+
+    @Transactional(readOnly = false)
+    public void updateScheduleCategory(PatchMoimScheduleCategoryReq scheduleReq, Long userId) {
+        MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleReq.getMoimScheduleId());
+        User user = userRepository.getReferenceById(userId);
+        Category category = categoryRepository.findById(scheduleReq.getCategoryId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE));
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+        moimScheduleAndUser.updateCategory(category);
     }
 
     public List<MoimScheduleRes> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
