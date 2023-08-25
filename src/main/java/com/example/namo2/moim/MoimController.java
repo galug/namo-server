@@ -92,6 +92,13 @@ public class MoimController {
         return BaseResponse.ok();
     }
 
+    @DeleteMapping("/schedule/{moimScheduleId}")
+    @ApiOperation(value = "모임 스케줄 삭제")
+    public BaseResponse<Long> deleteMoimSchedule(@PathVariable Long moimScheduleId) {
+        moimService.deleteSchedule(moimScheduleId);
+        return BaseResponse.ok();
+    }
+
     @GetMapping("/schedule/{moimId}/{month}")
     @ApiOperation(value = "모임 스케줄 조회")
     public BaseResponse<MoimScheduleRes> findMoimSchedules(@PathVariable("moimId") Long moimId,

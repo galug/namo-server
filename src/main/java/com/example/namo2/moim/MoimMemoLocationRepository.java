@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MoimMemoLocationRepository extends JpaRepository<MoimMemoLocation, Long>, MoimMemoLocationRepositoryCustom {
@@ -15,4 +16,9 @@ public interface MoimMemoLocationRepository extends JpaRepository<MoimMemoLocati
             " left join fetch ml.moimMemoLocationImgs" +
             " where ml.id = :locationId")
     Optional<MoimMemoLocation> findMoimMemoLocationById(@Param("locationId") Long locationId);
+
+    @Query("select ml " +
+            "from MoimMemoLocation ml" +
+            " where ml.moimMemo = :moimMemo")
+    Optional<List<MoimMemoLocation>> findMoimMemoLocationsByMoimMemo(MoimMemo moimMemo);
 }
