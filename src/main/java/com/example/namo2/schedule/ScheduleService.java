@@ -11,6 +11,7 @@ import com.example.namo2.entity.schedule.Schedule;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
+import com.example.namo2.schedule.dto.OnlyDiaryDto;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
@@ -135,6 +136,11 @@ public class ScheduleService {
     public SliceDiaryDto<DiaryDto> findMonthDiary(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         return scheduleRepository.findScheduleDiaryByMonthDto(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
+    }
+
+    public List<OnlyDiaryDto> findAllDiary(Long userId) {
+        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+        return scheduleRepository.findAllScheduleDiary(user);
     }
 
     public GetDiaryRes findDiary(Long scheduleId) {

@@ -9,6 +9,8 @@ import com.example.namo2.moim.dto.MoimScheduleUserDto;
 import com.example.namo2.moim.dto.QMoimScheduleRes;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
+import com.example.namo2.schedule.dto.OnlyDiaryDto;
+import com.example.namo2.schedule.dto.QOnlyDiaryDto;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -86,7 +88,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .leftJoin(moimSchedule.moimScheduleAlarms).fetchJoin()
                 .leftJoin(moimSchedule.moimMemo).fetchJoin()
                 .where(moimScheduleAndUser.user.eq(user),
-                        moimScheduleDateLoe(endDate) ,
+                        moimScheduleDateLoe(endDate),
                         moimScheduleDateGoe(startDate)
                 )
                 .fetch();
@@ -99,7 +101,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     private BooleanExpression moimScheduleDateLoe(LocalDateTime endDate) {
-        return endDate != null ? moimSchedule.period.startDate.before(endDate): null;
+        return endDate != null ? moimSchedule.period.startDate.before(endDate) : null;
     }
 
     @Override
@@ -126,6 +128,20 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         SliceImpl<Schedule> schedules = new SliceImpl<>(content, pageable, hasNext);
         Slice<DiaryDto> diarySlices = schedules.map(DiaryDto::new);
         return new SliceDiaryDto(diarySlices);
+    }
+
+    @Override
+    public List<OnlyDiaryDto> findAllScheduleDiary(User user) {
+        List<Schedule> schedules = queryFactory
+                .select(schedule).distinct()
+                .from(schedule)
+                .leftJoin(schedule.images, image).fetchJoin()
+                .where(schedule.user.eq(user),
+                        schedule.hasDiary.isTrue()
+                )
+                .fetch();
+        return schedules.stream().map(OnlyDiaryDto::new)
+                .collect(Collectors.toList());
     }
 
     @Override

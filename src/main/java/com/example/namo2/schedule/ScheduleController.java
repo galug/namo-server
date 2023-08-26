@@ -5,6 +5,7 @@ import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetDiaryRes;
 import com.example.namo2.schedule.dto.GetScheduleRes;
+import com.example.namo2.schedule.dto.OnlyDiaryDto;
 import com.example.namo2.schedule.dto.PostScheduleReq;
 import com.example.namo2.schedule.dto.ScheduleIdRes;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
@@ -109,6 +110,15 @@ public class ScheduleController {
         Long userId = (Long) request.getAttribute("userId");
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         SliceDiaryDto diaries = scheduleService.findMonthDiary(userId, localDateTimes, pageable);
+        return new BaseResponse<>(diaries);
+    }
+
+    @ResponseBody
+    @GetMapping("/diary/all")
+    @ApiOperation(value = "개인 스케줄 다이어리 전체 조회")
+    public BaseResponse<List<OnlyDiaryDto>> findALLDiary(HttpServletRequest request) throws BaseException {
+        Long userId = (Long) request.getAttribute("userId");
+        List<OnlyDiaryDto> diaries = scheduleService.findAllDiary(userId);
         return new BaseResponse<>(diaries);
     }
 
