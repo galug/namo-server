@@ -217,7 +217,7 @@ public class MoimService {
     }
 
     public List<MoimScheduleRes> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
-        return scheduleRepository.findScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
+        return scheduleRepository.findMonthScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
     }
 
     @Transactional(readOnly = false)

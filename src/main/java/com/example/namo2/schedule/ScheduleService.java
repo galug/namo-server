@@ -138,7 +138,7 @@ public class ScheduleService {
     }
 
     public GetDiaryRes findDiary(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findScheduleAndImages(scheduleId);
+        Schedule schedule = scheduleRepository.findOneScheduleAndImages(scheduleId);
 
         schedule.existDairy();
 
@@ -150,7 +150,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = false)
     public void deleteDiary(Long scheduleId) throws BaseException {
-        Schedule schedule = scheduleRepository.findScheduleAndImages(scheduleId);
+        Schedule schedule = scheduleRepository.findOneScheduleAndImages(scheduleId);
         schedule.deleteDiary();
         List<String> urls = schedule.getImages().stream()
                 .map(Image::getImgUrl)
@@ -160,6 +160,8 @@ public class ScheduleService {
     }
 
     public List<GetScheduleRes> findUsersALLSchedule(Long userId) {
-        return null;
+        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+
+        return scheduleRepository.findSchedulesByUserId(user, null, null);
     }
 }

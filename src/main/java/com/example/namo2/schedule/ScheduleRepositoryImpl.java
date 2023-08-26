@@ -9,9 +9,9 @@ import com.example.namo2.moim.dto.MoimScheduleUserDto;
 import com.example.namo2.moim.dto.QMoimScheduleRes;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.GetScheduleRes;
-import com.example.namo2.schedule.dto.QGetScheduleRes;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
-import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.SliceImpl;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,14 +27,10 @@ import java.util.stream.Collectors;
 import static com.example.namo2.entity.category.QCategory.category;
 import static com.example.namo2.entity.category.QPalette.palette;
 import static com.example.namo2.entity.moim.QMoimAndUser.moimAndUser;
-import static com.example.namo2.entity.moimmemo.QMoimMemo.moimMemo;
 import static com.example.namo2.entity.moimschedule.QMoimSchedule.moimSchedule;
-import static com.example.namo2.entity.moimschedule.QMoimScheduleAlarm.moimScheduleAlarm;
 import static com.example.namo2.entity.moimschedule.QMoimScheduleAndUser.moimScheduleAndUser;
-import static com.example.namo2.entity.schedule.QAlarm.alarm;
 import static com.example.namo2.entity.schedule.QImage.image;
 import static com.example.namo2.entity.schedule.QSchedule.schedule;
-import static com.example.namo2.entity.user.QUser.user;
 
 @Slf4j
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
@@ -66,14 +61,21 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         List<Schedule> schedules = queryFactory
                 .select(schedule).distinct()
                 .from(schedule)
-                .join(schedule.alarms).fetchJoin()
-                .where(schedule.user.eq(user)
-                        .and(schedule.period.startDate.before(endDate)
-                                .and(schedule.period.endDate.after(startDate)))
-                )
+                .leftJoin(schedule.alarms).fetchJoin()
+                .where(schedule.user.eq(user),
+                        scheduleDateLoe(endDate),
+                        scheduleDateGoe(startDate))
                 .fetch();
         return schedules.stream().map(schedule -> new GetScheduleRes(schedule))
                 .collect(Collectors.toList());
+    }
+
+    private BooleanExpression scheduleDateLoe(LocalDateTime endDate) {
+        return endDate != null ? schedule.period.startDate.before(endDate) : null;
+    }
+
+    private BooleanExpression scheduleDateGoe(LocalDateTime startDate) {
+        return startDate != null ? schedule.period.endDate.after(startDate) : null;
     }
 
     public List<GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
@@ -83,13 +85,21 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
                 .leftJoin(moimSchedule.moimScheduleAlarms).fetchJoin()
                 .leftJoin(moimSchedule.moimMemo).fetchJoin()
-                .where(moimScheduleAndUser.user.eq(user)
-                        .and(moimSchedule.period.startDate.before(endDate)
-                                .and(moimSchedule.period.endDate.after(startDate)))
+                .where(moimScheduleAndUser.user.eq(user),
+                        moimScheduleDateLoe(endDate) ,
+                        moimScheduleDateGoe(startDate)
                 )
                 .fetch();
         return moimScheduleAndUsers.stream()
                 .map(GetScheduleRes::new).collect(Collectors.toList());
+    }
+
+    private BooleanExpression moimScheduleDateGoe(LocalDateTime startDate) {
+        return startDate != null ? moimSchedule.period.endDate.after(startDate) : null;
+    }
+
+    private BooleanExpression moimScheduleDateLoe(LocalDateTime endDate) {
+        return endDate != null ? moimSchedule.period.startDate.before(endDate): null;
     }
 
     @Override
@@ -119,7 +129,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public Schedule findScheduleAndImages(Long scheduleId) {
+    public Schedule findOneScheduleAndImages(Long scheduleId) {
         return queryFactory
                 .select(schedule)
                 .distinct()
@@ -130,7 +140,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<MoimScheduleRes> findScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<MoimScheduleRes> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate) {
         List<MoimAndUser> moimAndUsers = queryFactory.select(moimAndUser)
                 .from(moimAndUser)
                 .join(moimAndUser.user).fetchJoin()
