@@ -11,11 +11,14 @@ import com.example.namo2.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.moim.dto.PostMoimRes;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
+import com.example.namo2.schedule.dto.DiaryDto;
+import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.example.namo2.utils.Converter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -152,6 +155,14 @@ public class MoimController {
     public BaseResponse<Object> findMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
         MoimMemoDto moimMemoDto = moimMemoService.find(moimScheduleId);
         return new BaseResponse(moimMemoDto);
+    }
+
+    @GetMapping("/schedule/memo/month/{month}")
+    @ApiOperation(value = "월간 모임 메모 조회")
+    public BaseResponse<SliceDiaryDto<DiaryDto>> findMonthMoimMemo(@PathVariable("month") String month, Pageable pageable, HttpServletRequest request) {
+        List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+        SliceDiaryDto<DiaryDto> diaryDto = moimMemoService.findMonth((Long) request.getAttribute("userId"), localDateTimes, pageable);
+        return new BaseResponse(diaryDto);
     }
 
     @DeleteMapping("/schedule/memo/{memoLocationId}")

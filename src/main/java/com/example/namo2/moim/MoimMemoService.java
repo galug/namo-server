@@ -7,19 +7,27 @@ import com.example.namo2.entity.moimmemo.MoimMemoLocation;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationAndUser;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationImg;
 import com.example.namo2.entity.moimschedule.MoimSchedule;
+import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
 import com.example.namo2.entity.schedule.Image;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.moim.dto.LocationInfo;
 import com.example.namo2.moim.dto.MoimMemoDto;
 import com.example.namo2.moim.dto.MoimMemoLocationDto;
 import com.example.namo2.auth.UserRepository;
+import com.example.namo2.schedule.dto.DiaryDto;
+import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.example.namo2.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -123,5 +131,10 @@ public class MoimMemoService {
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
         deleteMoimImgs(moimMemoLocation);
         moimMemoLocationRepository.delete(moimMemoLocation);
+    }
+
+    public SliceDiaryDto<DiaryDto> findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable
+    ) {
+        return moimScheduleRepository.findMoimScheduleMemoByMonth(userId, localDateTimes, pageable);
     }
 }
