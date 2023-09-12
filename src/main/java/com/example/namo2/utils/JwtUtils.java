@@ -21,6 +21,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 
+import static com.example.namo2.config.response.BaseResponseStatus.EXPIRATION_ACCESS_TOKEN;
+
 @Slf4j
 @NoArgsConstructor
 @Component
@@ -66,11 +68,11 @@ public class JwtUtils {
             String accessToken = getAccessToken(request);
             return resolveToken(accessToken);
         } catch (ExpiredJwtException e) {
-            throw new BaseException(BaseResponseStatus.EXPIRATION_ACCESS_TOKEN);
+            throw new BaseException(EXPIRATION_ACCESS_TOKEN);
         }
     }
 
-    private String getAccessToken(HttpServletRequest request) throws BaseException {
+    public String getAccessToken(HttpServletRequest request) throws BaseException {
         String accessToken = request.getHeader(HEADER);
 
         if (accessToken == null || accessToken.length() == 0) {
@@ -81,19 +83,19 @@ public class JwtUtils {
 
     private Long resolveToken(String accessToken) throws BaseException {
         return Optional.ofNullable(Jwts.parserBuilder()
-                    .setSigningKey(getSecretKey())
-                    .build()
-                    .parseClaimsJws(accessToken)
-                    .getBody())
+                        .setSigningKey(getSecretKey())
+                        .build()
+                        .parseClaimsJws(accessToken)
+                        .getBody())
                 .map((c) -> c.get("userId", Long.class))
-                    .orElseThrow(() -> new BaseException(BaseResponseStatus.EMPTY_ACCESS_KEY));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.EMPTY_ACCESS_KEY));
     }
 
     public boolean validateRequest(HttpServletRequest request) {
         try {
             String jwtToken = getAccessToken(request);
             return validateToken(jwtToken);
-        }catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -109,5 +111,17 @@ public class JwtUtils {
     private String getSecretKey() {
         String secretKeyEncodeBase64 = Encoders.BASE64.encode(secretKey.getBytes());
         return secretKeyEncodeBase64;
+    }
+
+    public Long getExpiration(String accessToken) {
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(getSecretKey())
+                    .build()
+                    .parseClaimsJws(accessToken);
+            return claims.getBody().getExpiration().getTime();
+        } catch (Exception e) {
+            throw new BaseException(EXPIRATION_ACCESS_TOKEN);
+        }
     }
 }

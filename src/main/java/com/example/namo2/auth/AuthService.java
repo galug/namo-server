@@ -1,5 +1,6 @@
 package com.example.namo2.auth;
 
+import com.example.namo2.auth.dto.LogoutReq;
 import com.example.namo2.category.CategoryRepository;
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.entity.category.Category;
@@ -12,6 +13,7 @@ import com.example.namo2.utils.JwtUtils;
 import com.example.namo2.utils.SocialUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.namo2.config.response.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
@@ -35,6 +38,7 @@ public class AuthService {
     private final CategoryRepository categoryRepository;
     private final JwtUtils jwtUtils;
     private final SocialUtils socialUtils;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional(readOnly = false)
     public SignUpRes signupNaver(SocialSignUpReq signUpReq) throws BaseException {
@@ -128,5 +132,15 @@ public class AuthService {
         SignUpRes signUpRes = jwtUtils.generateTokens(user.getId());
         user.updateRefreshToken(signUpRes.getRefreshToken());
         return signUpRes;
+    }
+
+    public void logout(LogoutReq logoutReq) {
+        // AccessToken 만료시 종료
+        if (!jwtUtils.validateToken(logoutReq.getAccessToken())) {
+            throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+        }
+
+        Long expiration = jwtUtils.getExpiration(logoutReq.getAccessToken());
+        redisTemplate.opsForValue().set(logoutReq.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
     }
 }

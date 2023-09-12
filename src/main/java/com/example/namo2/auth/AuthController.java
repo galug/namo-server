@@ -1,5 +1,6 @@
 package com.example.namo2.auth;
 
+import com.example.namo2.auth.dto.LogoutReq;
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.auth.dto.SignUpReq;
@@ -46,4 +47,10 @@ public class AuthController {
         return new BaseResponse<>(signupRes);
     }
 
+    @PostMapping(value = "/logout")
+    @ApiOperation(value = "로그 아웃")
+    public BaseResponse logout(@Valid @RequestBody LogoutReq logoutReq) throws BaseException {
+        authService.logout(logoutReq);
+        return BaseResponse.ok();
+    }
 }
