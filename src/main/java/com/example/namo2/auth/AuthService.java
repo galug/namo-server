@@ -3,6 +3,7 @@ package com.example.namo2.auth;
 import com.example.namo2.auth.dto.LogoutReq;
 import com.example.namo2.category.CategoryRepository;
 import com.example.namo2.config.exception.BaseException;
+import com.example.namo2.config.response.BaseResponseStatus;
 import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.user.User;
 import com.example.namo2.palette.PaletteRepository;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -125,6 +127,7 @@ public class AuthService {
         if (!jwtUtils.validateToken(signUpReq.getRefreshToken())) {
             throw new BaseException(EXPIRATION_REFRESH_TOKEN);
         }
+        validateLogout(signUpReq);
 
         User user = userDao.findUserByRefreshToken(signUpReq.getRefreshToken())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
@@ -132,6 +135,13 @@ public class AuthService {
         SignUpRes signUpRes = jwtUtils.generateTokens(user.getId());
         user.updateRefreshToken(signUpRes.getRefreshToken());
         return signUpRes;
+    }
+
+    private void validateLogout(SignUpReq signUpReq) {
+        String blackToken = redisTemplate.opsForValue().get(signUpReq.getAccessToken());
+        if (StringUtils.hasText(blackToken)) {
+            throw new BaseException(BaseResponseStatus.LOGOUT_ERROR);
+        }
     }
 
     public void logout(LogoutReq logoutReq) {
