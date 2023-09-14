@@ -177,7 +177,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 
         List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory.select(moimScheduleAndUser)
                 .from(moimScheduleAndUser)
-                .join(moimScheduleAndUser.moimSchedule)
+                .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
+                .leftJoin(moimSchedule.moimMemo).fetchJoin()
                 .where(moimScheduleAndUser.user.in(users)
                         .and(moimScheduleAndUser.moimSchedule.period.startDate.loe(endDate))
                         .and(moimScheduleAndUser.moimSchedule.period.endDate.goe(startDate)))
@@ -196,7 +197,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
             MoimScheduleRes moimScheduleRes = new MoimScheduleRes(moimSchedule.getName(), moimSchedule.getPeriod().getStartDate(), moimSchedule.getPeriod().getEndDate(),
                     moimSchedule.getPeriod().getDayInterval(), moimSchedule.getMoim().getId(), moimSchedule.getId(),
                     moimSchedule.getLocation().getX(), moimSchedule.getLocation().getY(), moimSchedule.getLocation().getLocationName());
-            moimScheduleRes.setUsers(moimScheduleUserDtos, moimSchedule.getMoim().getId() == moimId);
+            moimScheduleRes.setUsers(moimScheduleUserDtos, moimSchedule.getMoim().getId() == moimId, moimSchedule.getMoimMemo() != null);
             results.add(moimScheduleRes);
         });
         return results;

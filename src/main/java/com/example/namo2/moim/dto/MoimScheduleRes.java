@@ -30,6 +30,7 @@ public class MoimScheduleRes {
     private Double x;
     private Double y;
     private String locationName;
+    private boolean hasDiaryPlace;
 
 
     @QueryProjection
@@ -61,10 +62,12 @@ public class MoimScheduleRes {
                 .getEpochSecond();
         this.interval = interval;
         this.users.add(new MoimScheduleUserDto(userId, userName, color));
+        this.hasDiaryPlace = false;
     }
 
-    public void setUsers(List<MoimScheduleUserDto> users, boolean isCurMoimSchedule) {
+    public void setUsers(List<MoimScheduleUserDto> users, boolean isCurMoimSchedule, boolean hasDiaryPlace) {
         this.users = users;
         this.isCurMoimSchedule = isCurMoimSchedule;
+        this.hasDiaryPlace = hasDiaryPlace;
     }
 }
