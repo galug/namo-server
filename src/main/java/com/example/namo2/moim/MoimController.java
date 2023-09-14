@@ -111,7 +111,7 @@ public class MoimController {
     }
 
     @GetMapping("/schedule/{moimId}/{month}")
-    @ApiOperation(value = "모임 스케줄 조회")
+    @ApiOperation(value = "월간 모임 스케줄 조회")
     public BaseResponse<MoimScheduleRes> findMoimSchedules(@PathVariable("moimId") Long moimId,
                                                            @PathVariable("month") String month) {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);

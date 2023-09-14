@@ -27,6 +27,9 @@ public class MoimScheduleRes {
     private Long moimId;
     private Long moimScheduleId;
     private boolean isCurMoimSchedule = false;
+    private Double x;
+    private Double y;
+    private String locationName;
 
 
     @QueryProjection
@@ -44,8 +47,7 @@ public class MoimScheduleRes {
     }
 
     @QueryProjection
-    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long userId, String userName, Integer color
-    ) {
+    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long userId, String userName, Integer color) {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
                 .toInstant()

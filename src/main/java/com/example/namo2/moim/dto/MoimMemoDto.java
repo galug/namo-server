@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 public class MoimMemoDto {
+    private String name;
     private Long startDate;
     private String locationName;
     private List<MoimUserDto> users;
     private List<MoimMemoLocationDto> locationDtos;
 
     public MoimMemoDto(MoimMemo moimMemo) {
+        this.name = moimMemo.getMoimSchedule().getName();
         this.startDate = moimMemo.getMoimSchedule().getPeriod().getStartDate().atZone(ZoneId.systemDefault())
                 .toInstant()
                 .getEpochSecond();
