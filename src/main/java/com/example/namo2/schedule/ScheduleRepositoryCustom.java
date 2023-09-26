@@ -22,4 +22,6 @@ public interface ScheduleRepositoryCustom {
     Schedule findOneScheduleAndImages(Long scheduleId);
 
     List<MoimScheduleRes> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
+
+    public List<GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 }

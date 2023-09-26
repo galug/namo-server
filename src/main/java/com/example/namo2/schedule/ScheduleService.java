@@ -170,4 +170,9 @@ public class ScheduleService {
 
         return scheduleRepository.findSchedulesByUserId(user, null, null);
     }
+
+    public List<GetScheduleRes> findMoimALLSchedule(Long userId) {
+        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+        return scheduleRepository.findMoimSchedulesByUserId(user, null, null);
+    }
 }

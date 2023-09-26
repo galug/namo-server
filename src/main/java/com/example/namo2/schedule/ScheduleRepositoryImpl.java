@@ -81,6 +81,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         return startDate != null ? schedule.period.endDate.after(startDate) : null;
     }
 
+    @Override
     public List<GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory
                 .select(moimScheduleAndUser).distinct()

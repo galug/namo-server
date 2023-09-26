@@ -71,6 +71,14 @@ public class ScheduleController {
     }
 
     @ResponseBody
+    @GetMapping("/moim/all")
+    @ApiOperation(value = "모든 모임 스케줄 조회 ")
+    public BaseResponse<List<GetScheduleRes>> findMoimALLSchedule(HttpServletRequest request) throws BaseException {
+        List<GetScheduleRes> moimSchedule = scheduleService.findMoimALLSchedule((Long) request.getAttribute("userId"));
+        return new BaseResponse<>(moimSchedule);
+    }
+
+    @ResponseBody
     @PatchMapping("/{schedule}")
     @ApiOperation(value = "스케줄 수정")
     public BaseResponse<ScheduleIdRes> updateUserSchedule(
