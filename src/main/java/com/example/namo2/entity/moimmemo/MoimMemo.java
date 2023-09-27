@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -45,5 +43,9 @@ public class MoimMemo extends BaseTimeEntity {
         this.id = id;
         this.moimSchedule = moimSchedule;
         this.moimSchedule.registerMemo(this);
+    }
+
+    public boolean isLastMoimMemoLocations() {
+        return moimMemoLocations != null && moimMemoLocations.size() == 1;
     }
 }
