@@ -175,32 +175,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 ));
 
         List<MoimScheduleRes> results = findIndivisualSchedule(moimId, startDate, endDate, users);
+        Map<MoimSchedule, List<MoimScheduleUserDto>> groupScheduleMap = findMoimScheduleAndScheduleUserMap(startDate, endDate, users, moimAndUserDtoMap);
 
-        List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory.select(moimScheduleAndUser)
-                .from(moimScheduleAndUser)
-                .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
-                .leftJoin(moimSchedule.moimMemo).fetchJoin()
-                .where(moimScheduleAndUser.user.in(users)
-                        .and(moimScheduleAndUser.moimSchedule.period.startDate.loe(endDate))
-                        .and(moimScheduleAndUser.moimSchedule.period.endDate.goe(startDate)))
-                .fetch();
-        Map<MoimSchedule, List<MoimScheduleUserDto>> groupScheduleMap = moimScheduleAndUsers.stream().collect(
-                Collectors.groupingBy(
-                        ((moimScheduleAndUser -> moimScheduleAndUser.getMoimSchedule())),
-                        Collectors.mapping(
-                                (moimScheduleAndUser1 ->
-                                        moimAndUserDtoMap.get(moimScheduleAndUser1.getUser().getId())),
-                                Collectors.toList()
-                        )
-                )
-        );
-        groupScheduleMap.forEach((moimSchedule, moimScheduleUserDtos) ->{
+        for (MoimSchedule moimSchedule : groupScheduleMap.keySet()) {
+            List<MoimScheduleUserDto> moimScheduleUserDtos = groupScheduleMap.get(moimSchedule);
             MoimScheduleRes moimScheduleRes = new MoimScheduleRes(moimSchedule.getName(), moimSchedule.getPeriod().getStartDate(), moimSchedule.getPeriod().getEndDate(),
                     moimSchedule.getPeriod().getDayInterval(), moimSchedule.getMoim().getId(), moimSchedule.getId(),
                     moimSchedule.getLocation().getX(), moimSchedule.getLocation().getY(), moimSchedule.getLocation().getLocationName());
             moimScheduleRes.setUsers(moimScheduleUserDtos, moimSchedule.getMoim().getId() == moimId, moimSchedule.getMoimMemo() != null);
             results.add(moimScheduleRes);
-        });
+        }
         return results;
     }
 
@@ -213,13 +197,36 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         " where s.user in (:users) " +
                         "and s.period.startDate <= :endDate " +
                         "and s.period.endDate >= :startDate " +
-//                        "and c.share = :share " +
+                        "and c.share = :share " +
                         "and mu.user = s.user and mu.moim.id = :moimId", MoimScheduleRes.class)
                 .setParameter("users", users)
                 .setParameter("moimId", moimId)
                 .setParameter("endDate", endDate)
                 .setParameter("startDate", startDate)
-//                .setParameter("share", true)
+                .setParameter("share", true)
                 .getResultList();
+    }
+
+    private Map<MoimSchedule, List<MoimScheduleUserDto>> findMoimScheduleAndScheduleUserMap(LocalDateTime startDate, LocalDateTime endDate, List<User> users, Map<Long, MoimScheduleUserDto> moimAndUserDtoMap) {
+        List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory.select(moimScheduleAndUser)
+                .from(moimScheduleAndUser)
+                .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
+                .join(moimScheduleAndUser.category, category).fetchJoin()
+                .leftJoin(moimSchedule.moimMemo).fetchJoin()
+                .where(moimScheduleAndUser.user.in(users)
+                        .and(moimScheduleAndUser.moimSchedule.period.startDate.loe(endDate))
+                        .and(moimScheduleAndUser.moimSchedule.period.endDate.goe(startDate))
+                        .and(moimScheduleAndUser.category.share.isTrue()))
+                .fetch();
+        return moimScheduleAndUsers.stream().collect(
+                Collectors.groupingBy(
+                        ((moimScheduleAndUser1 -> moimScheduleAndUser1.getMoimSchedule())),
+                        Collectors.mapping(
+                                (moimScheduleAndUser1 ->
+                                        moimAndUserDtoMap.get(moimScheduleAndUser1.getUser().getId())),
+                                Collectors.toList()
+                        )
+                )
+        );
     }
 }

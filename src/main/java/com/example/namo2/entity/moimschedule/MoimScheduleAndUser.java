@@ -56,4 +56,8 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
     public void updateCategory(Category category) {
         this.category = category;
     }
+
+    public void updateText(String memo) {
+        this.memo = memo;
+    }
 }

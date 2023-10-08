@@ -22,6 +22,7 @@ import com.example.namo2.moim.dto.PatchMoimScheduleCategoryReq;
 import com.example.namo2.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
+import com.example.namo2.moim.dto.PostMoimScheduleText;
 import com.example.namo2.schedule.ScheduleRepository;
 import com.example.namo2.auth.UserRepository;
 import com.example.namo2.utils.FileUtils;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 @Slf4j
 @Service
@@ -249,5 +252,16 @@ public class MoimService {
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
         moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimSchedule(moimSchedule);
         moimScheduleRepository.delete(moimSchedule);
+    }
+
+    @Transactional(readOnly = false)
+    public void createMoimScheduleText(Long moimScheduleId, Long userId, PostMoimScheduleText moimScheduleText) {
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+        moimScheduleAndUser.updateText(moimScheduleText.getText());
     }
 }

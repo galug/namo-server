@@ -11,6 +11,7 @@ import com.example.namo2.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.moim.dto.PostMoimRes;
 import com.example.namo2.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.moim.dto.MoimScheduleRes;
+import com.example.namo2.moim.dto.PostMoimScheduleText;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.example.namo2.utils.Converter;
@@ -135,6 +136,13 @@ public class MoimController {
                                              @RequestPart(required = true) String participants) {
         LocationInfo locationInfo = new LocationInfo(name, money, participants);
         moimMemoService.create(moimScheduleId, locationInfo, imgs);
+        return BaseResponse.ok();
+    }
+
+    @PatchMapping("/schedule/memo/text/{moimScheduleId}")
+    @ApiOperation(value = "모임 메모 텍스트 추가")
+    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId, HttpServletRequest request, @RequestBody @Valid PostMoimScheduleText moimScheduleText) {
+        moimService.createMoimScheduleText(moimScheduleId, (Long) request.getAttribute("userId"), moimScheduleText);
         return BaseResponse.ok();
     }
 
