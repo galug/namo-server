@@ -236,6 +236,20 @@ public class MoimService {
     }
 
     @Transactional(readOnly = false)
+    public void updateScheduleAlarm(MoimScheduleAlarmDto scheduleAlarmDto) {
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleAlarmDto.getMoimScheduleId())
+                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimSchedule(moimSchedule);
+        for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder()
+                    .alarmDate(alarmDate)
+                    .moimSchedule(moimSchedule)
+                    .build();
+            moimScheduleAlarmRepository.save(moimScheduleAlarm);
+        }
+    }
+
+    @Transactional(readOnly = false)
     public void deleteSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));

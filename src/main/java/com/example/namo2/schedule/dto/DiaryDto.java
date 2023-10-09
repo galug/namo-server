@@ -21,7 +21,7 @@ public class DiaryDto {
     private String contents;
     private List<String> urls;
     private Long categoryId;
-    private Integer color;
+    private Long color;
     private String placeName;
 
     public DiaryDto(Schedule schedule) {
@@ -32,7 +32,7 @@ public class DiaryDto {
                 .getEpochSecond();
         this.contents = schedule.getContents();
         this.categoryId = schedule.getCategory().getId();
-        this.color = schedule.getCategory().getPalette().getColor();
+        this.color = schedule.getCategory().getPalette().getId();
         this.placeName = schedule.getLocation().getLocationName();
         this.urls = schedule.getImages().stream()
                 .map(Image::getImgUrl)
@@ -47,7 +47,7 @@ public class DiaryDto {
                 .getEpochSecond();
         this.contents = moimScheduleAndUser.getMemo();
         this.categoryId = moimScheduleAndUser.getCategory().getId();
-        this.color = moimScheduleAndUser.getCategory().getPalette().getColor();
+        this.color = moimScheduleAndUser.getCategory().getPalette().getId();
         this.placeName = moimScheduleAndUser.getMoimSchedule().getLocation().getLocationName();
         this.urls = moimScheduleAndUser.getMoimSchedule().getMoimMemo()
                 .getMoimMemoLocations()

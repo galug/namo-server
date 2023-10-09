@@ -127,6 +127,13 @@ public class MoimController {
         return BaseResponse.ok();
     }
 
+    @PatchMapping("/schedule/alarm")
+    @ApiOperation(value = "모임 스케줄 알람 생성")
+    public BaseResponse updateMoimScheduleAlarm(@Valid @RequestBody MoimScheduleAlarmDto moimScheduleAlarmDto) {
+        moimService.updateScheduleAlarm(moimScheduleAlarmDto);
+        return BaseResponse.ok();
+    }
+
     @PostMapping("/schedule/memo/{moimScheduleId}")
     @ApiOperation(value = "모임 메모 장소 생성")
     public BaseResponse<Object> findMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
