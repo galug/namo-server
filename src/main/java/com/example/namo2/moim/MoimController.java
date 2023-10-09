@@ -141,7 +141,7 @@ public class MoimController {
 
     @PatchMapping("/schedule/memo/text/{moimScheduleId}")
     @ApiOperation(value = "모임 메모 텍스트 추가")
-    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId, HttpServletRequest request, @RequestBody @Valid PostMoimScheduleText moimScheduleText) {
+    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId, HttpServletRequest request, @RequestBody PostMoimScheduleText moimScheduleText) {
         moimService.createMoimScheduleText(moimScheduleId, (Long) request.getAttribute("userId"), moimScheduleText);
         return BaseResponse.ok();
     }

@@ -60,4 +60,13 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
     public void updateText(String memo) {
         this.memo = memo;
     }
+
+    @Override
+    public String toString() {
+        return "MoimScheduleAndUser{" +
+                "id=" + id +
+                ", user=" + user.getId() +
+                ", moimSchedule=" + moimSchedule.getId() +
+                '}';
+    }
 }

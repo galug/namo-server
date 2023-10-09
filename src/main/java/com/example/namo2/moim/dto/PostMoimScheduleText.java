@@ -11,6 +11,5 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostMoimScheduleText {
-    @NotEmpty
     private String text;
 }
