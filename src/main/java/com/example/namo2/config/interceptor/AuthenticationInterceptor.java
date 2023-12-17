@@ -29,7 +29,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
             Long userId = jwtUtils.resolveRequest(request);
-//            validateLogout(jwtUtils.getAccessToken(request));
+            validateLogout(jwtUtils.getAccessToken(request));
             request.setAttribute("userId", userId);
             return true;
         } catch (BaseException e) {

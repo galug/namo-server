@@ -21,14 +21,14 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public  void  uploadFile(InputStream inputStream, ObjectMetadata objectMeTadata, String fileName){
+    public void uploadFile(InputStream inputStream, ObjectMetadata objectMeTadata, String fileName) {
         //.withCannedAcl(CannedAccessControlList.PublicRead)); 는 파일을 누구나 읽게 해준다.
-        amazonS3Client.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMeTadata)
+        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMeTadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
-    public  String getFileUrl(String fileName){
-        return amazonS3Client.getUrl(bucket,fileName).toString();
+    public String getFileUrl(String fileName) {
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     public void delete(String key) {

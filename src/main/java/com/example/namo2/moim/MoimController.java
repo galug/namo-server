@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,11 +137,11 @@ public class MoimController {
 
     @PostMapping("/schedule/memo/{moimScheduleId}")
     @ApiOperation(value = "모임 메모 장소 생성")
-    public BaseResponse<Object> findMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
-                                             @PathVariable Long moimScheduleId,
-                                             @RequestPart(required = true) String name,
-                                             @RequestPart(required = true) String money,
-                                             @RequestPart(required = true) String participants) {
+    public BaseResponse<Object> createMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
+                                               @PathVariable Long moimScheduleId,
+                                               @RequestPart(required = true) String name,
+                                               @RequestParam(defaultValue = "0") String money,
+                                               @RequestPart(required = true) String participants) {
         LocationInfo locationInfo = new LocationInfo(name, money, participants);
         moimMemoService.create(moimScheduleId, locationInfo, imgs);
         return BaseResponse.ok();
