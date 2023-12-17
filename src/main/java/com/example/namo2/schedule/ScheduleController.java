@@ -63,6 +63,15 @@ public class ScheduleController {
     }
 
     @ResponseBody
+    @GetMapping("/moim/{month}")
+    @ApiOperation(value = "모임 스케줄 월별 조회 ")
+    public BaseResponse<List<GetScheduleRes>> findUserMoimSchedule(@PathVariable("month") String month, HttpServletRequest request) throws BaseException {
+        List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
+        List<GetScheduleRes> userSchedule = scheduleService.findUsersMoimSchedule((Long) request.getAttribute("userId"), localDateTimes);
+        return new BaseResponse<>(userSchedule);
+    }
+
+    @ResponseBody
     @GetMapping("/all")
     @ApiOperation(value = "모든 스케줄 조회 ")
     public BaseResponse<List<GetScheduleRes>> findUserALLSchedule(HttpServletRequest request) throws BaseException {

@@ -81,6 +81,12 @@ public class ScheduleService {
         return scheduleRepository.findSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
     }
 
+    public List<GetScheduleRes> findUsersMoimSchedule(long userId, List<LocalDateTime> localDateTimes) throws BaseException {
+        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+
+        return scheduleRepository.findMoimSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
+    }
+
     @Transactional(readOnly = false)
     public ScheduleIdRes updateSchedule(Long scheduleId, PostScheduleReq postScheduleReq) throws BaseException {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
