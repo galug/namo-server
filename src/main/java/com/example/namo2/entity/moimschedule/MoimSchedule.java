@@ -77,4 +77,8 @@ public class MoimSchedule extends BaseTimeEntity {
         this.period = period;
         this.location = location;
     }
+
+    public Boolean isLastScheduleMember() {
+        return moimScheduleAndUsers.size() == 1;
+    }
 }

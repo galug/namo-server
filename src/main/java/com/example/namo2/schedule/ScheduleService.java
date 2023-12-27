@@ -2,8 +2,14 @@ package com.example.namo2.schedule;
 
 import com.example.namo2.category.CategoryRepository;
 import com.example.namo2.config.exception.BaseException;
+import com.example.namo2.config.response.BaseResponseStatus;
+import com.example.namo2.entity.moimschedule.MoimSchedule;
+import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
 import com.example.namo2.entity.schedule.Alarm;
 import com.example.namo2.entity.schedule.Period;
+import com.example.namo2.moim.MoimScheduleAndUserRepository;
+import com.example.namo2.moim.MoimScheduleRepository;
+import com.example.namo2.moim.MoimService;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.schedule.Image;
@@ -29,6 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
+import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
 import static com.example.namo2.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
@@ -42,6 +49,9 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userDao;
     private final AlarmRepository alarmRepository;
+    private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
+    private final MoimScheduleRepository moimScheduleRepository;
+    private final MoimService moimService;
     private final FileUtils fileUtils;
     private final Converter converter;
 
@@ -118,10 +128,23 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteSchedule(Long scheduleId) throws BaseException {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-
-        scheduleRepository.delete(schedule);
+    public void deleteSchedule(Long scheduleId, Integer kind, Long userId) throws BaseException {
+        if (kind == 0) {
+            Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+            scheduleRepository.delete(schedule);
+            return;
+        }
+        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+        // 마지막 사람이면 모임 스케줄 삭제
+        if (moimSchedule.isLastScheduleMember()) {
+            moimService.deleteSchedule(scheduleId);
+            return;
+        }
+        moimScheduleAndUserRepository.delete(moimScheduleAndUser);
     }
 
     @Transactional(readOnly = false)

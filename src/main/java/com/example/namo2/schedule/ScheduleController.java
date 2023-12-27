@@ -98,13 +98,16 @@ public class ScheduleController {
     }
 
     /**
-     * Todo: 스케줄 삭제 시 이미지 삭제 S3 에 서 동반되어야함
+     * kind 0 은 개인 스케줄
+     * kind 1 은 모임 스케줄
      */
     @ResponseBody
-    @DeleteMapping("/{schedule}")
+    @DeleteMapping("/{schedule}/{kind}")
     @ApiOperation(value = "스케줄 삭제")
-    public BaseResponse<String> deleteUserSchedule(@PathVariable("schedule") Long scheduleId) throws BaseException {
-        scheduleService.deleteSchedule(scheduleId);
+    public BaseResponse<String> deleteUserSchedule(@PathVariable("schedule") Long scheduleId,
+                                                   @PathVariable("kind") Integer kind,
+                                                   HttpServletRequest request) throws BaseException {
+        scheduleService.deleteSchedule(scheduleId, kind, (Long) request.getAttribute("userId"));
         return new BaseResponse<>("삭제에 성공하였습니다.");
     }
 
