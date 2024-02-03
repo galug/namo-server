@@ -6,15 +6,14 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.8'
-    //querydsl 추가
+    id 'org.springframework.boot' version '3.2.2'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -27,40 +26,46 @@ repositories {
 }
 
 dependencies {
+    //data
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '6.2.0.CR3' // point 저장
 
-    // jwt 위한 라이브러리 추가
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    // application
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    //querydsl 추가
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    // Security
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // utils
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // querydsl 라이브러리
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}" //  Querydsl 관련 코드 생성 기능 제공
 
-    // Aws s3 추가
-    // File upload 를 위한
-    implementation 'commons-io:commons-io:2.6'
-    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+    // Aws s3
+    implementation 'commons-io:commons-io:2.11'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
 
-    // @Valid 를 위한 의존관계 추가
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // point 를 저장하기 위한
-    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.9.Final'
-    // redis 를 위한
+    // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
