@@ -3,21 +3,11 @@ package com.example.namo2.entity.moimschedule;
 import com.example.namo2.entity.BaseTimeEntity;
 import com.example.namo2.entity.category.Category;
 import com.example.namo2.entity.user.User;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "moim_schedule_and_user")

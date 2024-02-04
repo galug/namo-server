@@ -1,19 +1,19 @@
 package com.example.namo2.auth;
 
 import com.example.namo2.auth.dto.LogoutReq;
-import com.example.namo2.config.exception.BaseException;
-import com.example.namo2.config.response.BaseResponse;
 import com.example.namo2.auth.dto.SignUpReq;
 import com.example.namo2.auth.dto.SignUpRes;
 import com.example.namo2.auth.dto.SocialSignUpReq;
+import com.example.namo2.config.exception.BaseException;
+import com.example.namo2.config.response.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
