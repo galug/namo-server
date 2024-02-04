@@ -4,24 +4,23 @@ import com.example.namo2.category.dto.CategoryDto;
 import com.example.namo2.category.dto.CategoryIdRes;
 import com.example.namo2.category.dto.PostCategoryReq;
 import com.example.namo2.config.response.BaseResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Category", description = "카테고리 관련 API")
 @RestController
 @RequestMapping("categories")
 @RequiredArgsConstructor
-@Api(value = "Category")
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @ResponseBody
+    @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
     @PostMapping("")
-    @ApiOperation(value = "카테고리 생성")
     public BaseResponse<CategoryIdRes> createCategory(@RequestBody PostCategoryReq postcategoryReq,
                                                       HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
@@ -29,26 +28,23 @@ public class CategoryController {
         return new BaseResponse<>(categoryIdRes);
     }
 
-    @ResponseBody
+    @Operation(summary = "카테고리 조회", description = "카테고리 조회 API")
     @GetMapping("")
-    @ApiOperation(value = "카테고리 조회")
     public BaseResponse<List<CategoryDto>> findAllCategory(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         List<CategoryDto> categories = categoryService.findAll(userId);
         return new BaseResponse<>(categories);
     }
 
-    @ResponseBody
+    @Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
     @PatchMapping("/{categoryId}")
-    @ApiOperation(value = "카테고리 수정")
     public BaseResponse<CategoryIdRes> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody PostCategoryReq postcategoryReq) {
         CategoryIdRes categoryIdRes = categoryService.update(categoryId, postcategoryReq);
         return new BaseResponse<>(categoryIdRes);
     }
 
-    @ResponseBody
+    @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
     @DeleteMapping("/{categoryId}")
-    @ApiOperation(value = "카테고리 삭제")
     public BaseResponse<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         categoryService.delete(categoryId);
         return new BaseResponse<>("삭제에 성공하셨습니다.");
