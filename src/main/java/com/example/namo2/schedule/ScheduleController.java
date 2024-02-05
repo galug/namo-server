@@ -2,40 +2,24 @@ package com.example.namo2.schedule;
 
 import com.example.namo2.config.exception.BaseException;
 import com.example.namo2.config.response.BaseResponse;
-import com.example.namo2.schedule.dto.DiaryDto;
-import com.example.namo2.schedule.dto.GetDiaryRes;
-import com.example.namo2.schedule.dto.GetScheduleRes;
-import com.example.namo2.schedule.dto.OnlyDiaryDto;
-import com.example.namo2.schedule.dto.PostScheduleReq;
-import com.example.namo2.schedule.dto.ScheduleIdRes;
-import com.example.namo2.schedule.dto.SliceDiaryDto;
+import com.example.namo2.schedule.dto.*;
 import com.example.namo2.utils.Converter;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(name = "Schedule", description = "스케줄 관련 API")
 @Slf4j
 @RestController
 @RequestMapping("/schedules")
-@Api(value = "Schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
     private final Converter converter;
@@ -45,51 +29,45 @@ public class ScheduleController {
         this.converter = converter;
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 생성", description = "스케줄 생성 API")
     @PostMapping("")
-    @ApiOperation(value = "스케줄 생성")
     public BaseResponse<ScheduleIdRes> createSchedule(@Valid @RequestBody PostScheduleReq postScheduleReq, HttpServletRequest request) throws BaseException {
         ScheduleIdRes scheduleIdRes = scheduleService.createSchedule(postScheduleReq, (Long) request.getAttribute("userId"));
         return new BaseResponse<>(scheduleIdRes);
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 월별 조회", description = "스케줄 월별 조회 API")
     @GetMapping("/{month}")
-    @ApiOperation(value = "스케줄 월별 조회 ")
     public BaseResponse<List<GetScheduleRes>> findUserSchedule(@PathVariable("month") String month, HttpServletRequest request) throws BaseException {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         List<GetScheduleRes> userSchedule = scheduleService.findUsersSchedule((Long) request.getAttribute("userId"), localDateTimes);
         return new BaseResponse<>(userSchedule);
     }
 
-    @ResponseBody
+    @Operation(summary = "모임 스케줄 월별 조회", description = "모임 스케줄 월별 조회 API")
     @GetMapping("/moim/{month}")
-    @ApiOperation(value = "모임 스케줄 월별 조회 ")
     public BaseResponse<List<GetScheduleRes>> findUserMoimSchedule(@PathVariable("month") String month, HttpServletRequest request) throws BaseException {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
         List<GetScheduleRes> userSchedule = scheduleService.findUsersMoimSchedule((Long) request.getAttribute("userId"), localDateTimes);
         return new BaseResponse<>(userSchedule);
     }
 
-    @ResponseBody
+    @Operation(summary = "모든 스케줄 조회", description = "모든 스케줄 조회 API")
     @GetMapping("/all")
-    @ApiOperation(value = "모든 스케줄 조회 ")
     public BaseResponse<List<GetScheduleRes>> findUserALLSchedule(HttpServletRequest request) throws BaseException {
         List<GetScheduleRes> userSchedule = scheduleService.findUsersALLSchedule((Long) request.getAttribute("userId"));
         return new BaseResponse<>(userSchedule);
     }
 
-    @ResponseBody
+    @Operation(summary = "모든 모임 스케줄 조회", description = "모든 모임 스케줄 조회 API")
     @GetMapping("/moim/all")
-    @ApiOperation(value = "모든 모임 스케줄 조회 ")
     public BaseResponse<List<GetScheduleRes>> findMoimALLSchedule(HttpServletRequest request) throws BaseException {
         List<GetScheduleRes> moimSchedule = scheduleService.findMoimALLSchedule((Long) request.getAttribute("userId"));
         return new BaseResponse<>(moimSchedule);
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 수정", description = "스케줄 수정 API")
     @PatchMapping("/{schedule}")
-    @ApiOperation(value = "스케줄 수정")
     public BaseResponse<ScheduleIdRes> updateUserSchedule(
             @PathVariable("schedule") Long scheduleId,
             @RequestBody PostScheduleReq postScheduleReq) throws BaseException {
@@ -101,9 +79,8 @@ public class ScheduleController {
      * kind 0 은 개인 스케줄
      * kind 1 은 모임 스케줄
      */
-    @ResponseBody
+    @Operation(summary = "스케줄 삭제", description = "스케줄 삭제 API")
     @DeleteMapping("/{schedule}/{kind}")
-    @ApiOperation(value = "스케줄 삭제")
     public BaseResponse<String> deleteUserSchedule(@PathVariable("schedule") Long scheduleId,
                                                    @PathVariable("kind") Integer kind,
                                                    HttpServletRequest request) throws BaseException {
@@ -111,9 +88,8 @@ public class ScheduleController {
         return new BaseResponse<>("삭제에 성공하였습니다.");
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 다이어리 생성", description = "스케줄 다이어리 생성 API")
     @PostMapping("/diary")
-    @ApiOperation(value = "스케줄 다이어리 생성")
     public BaseResponse<ScheduleIdRes> createDiary(@RequestPart(required = false) List<MultipartFile> imgs,
                                                    @RequestPart String scheduleId,
                                                    @RequestPart(required = false) String content) throws BaseException {
@@ -121,9 +97,8 @@ public class ScheduleController {
         return new BaseResponse<>(scheduleIdRes);
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 다이어리 월간 조회", description = "스케줄 다이어리 월간 조회 API")
     @GetMapping("/diary/{month}")
-    @ApiOperation(value = "스케줄 다이어리 월간 조회")
     public BaseResponse<SliceDiaryDto> findDiaryByMonth(
             @PathVariable("month") String month, Pageable pageable,
             HttpServletRequest request) throws BaseException {
@@ -133,18 +108,16 @@ public class ScheduleController {
         return new BaseResponse<>(diaries);
     }
 
-    @ResponseBody
+    @Operation(summary = "개인 스케줄 다이어리 전체 조회", description = "개인 스케줄 다이어리 전체 조회 API")
     @GetMapping("/diary/all")
-    @ApiOperation(value = "개인 스케줄 다이어리 전체 조회")
     public BaseResponse<List<OnlyDiaryDto>> findALLDiary(HttpServletRequest request) throws BaseException {
         Long userId = (Long) request.getAttribute("userId");
         List<OnlyDiaryDto> diaries = scheduleService.findAllDiary(userId);
         return new BaseResponse<>(diaries);
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 다이어리 개별 조회", description = "스케줄 다이어리 개별 조회 API")
     @GetMapping("/diary/day/{scheduleId}")
-    @ApiOperation(value = "스케줄 다이어리 개별 조회")
     public BaseResponse<GetDiaryRes> findDiaryById (
             @PathVariable("scheduleId") Long scheduleId,
             HttpServletRequest request) throws BaseException {
@@ -152,9 +125,8 @@ public class ScheduleController {
         return new BaseResponse<>(diary);
     }
 
-    @ResponseBody
+    @Operation(summary="스케줄 다이어리 수정", description = "스케줄 다이어리 수정 API")
     @PatchMapping("/diary")
-    @ApiOperation(value = "스케줄 다이어리 수정")
     public BaseResponse<String> updateDiary(@RequestPart(required = false) List<MultipartFile> imgs,
                                             @RequestPart String scheduleId,
                                             @RequestPart(required = false) String content) throws BaseException {
@@ -163,9 +135,8 @@ public class ScheduleController {
         return new BaseResponse<>("수정에 성공하셨습니다.");
     }
 
-    @ResponseBody
+    @Operation(summary = "스케줄 다이어리 삭제", description = "스케줄 다이어리 삭제 API")
     @DeleteMapping("/diary/{scheduleId}")
-    @ApiOperation(value = "스케줄 다이어리 삭제")
     public BaseResponse<String> deleteDiary(@PathVariable("scheduleId") Long scheduleId) throws BaseException {
         scheduleService.deleteDiary(scheduleId);
         return new BaseResponse<>("삭제에 성공하셨습니다.");

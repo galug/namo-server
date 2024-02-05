@@ -1,30 +1,20 @@
 package com.example.namo2.moim;
 
-import com.example.namo2.entity.category.QCategory;
-import com.example.namo2.entity.category.QPalette;
-import com.example.namo2.entity.moimschedule.MoimSchedule;
 import com.example.namo2.entity.moimschedule.MoimScheduleAndUser;
-import com.example.namo2.entity.moimschedule.QMoimSchedule;
-import com.example.namo2.entity.moimschedule.QMoimScheduleAndUser;
-import com.example.namo2.entity.schedule.Schedule;
-import com.example.namo2.entity.user.User;
 import com.example.namo2.schedule.dto.DiaryDto;
 import com.example.namo2.schedule.dto.SliceDiaryDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.namo2.entity.category.QCategory.category;
-import static com.example.namo2.entity.category.QPalette.palette;
 import static com.example.namo2.entity.moimschedule.QMoimSchedule.moimSchedule;
 import static com.example.namo2.entity.moimschedule.QMoimScheduleAndUser.moimScheduleAndUser;
-import static com.example.namo2.entity.schedule.QSchedule.schedule;
 
 public class MoimScheduleRepositoryImpl implements MoimScheduleRepositoryCustom {
     private final JPAQueryFactory queryFactory;

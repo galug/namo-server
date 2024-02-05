@@ -26,14 +26,13 @@ import com.example.namo2.moim.dto.PostMoimScheduleText;
 import com.example.namo2.schedule.ScheduleRepository;
 import com.example.namo2.auth.UserRepository;
 import com.example.namo2.utils.FileUtils;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

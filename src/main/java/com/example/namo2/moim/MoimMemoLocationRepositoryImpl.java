@@ -3,14 +3,12 @@ package com.example.namo2.moim;
 import com.example.namo2.entity.moimmemo.MoimMemoLocation;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationAndUser;
 import com.example.namo2.entity.moimmemo.MoimMemoLocationImg;
-import com.example.namo2.entity.moimmemo.QMoimMemoLocationAndUser;
 import com.example.namo2.moim.dto.MoimMemoLocationDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.example.namo2.entity.moimmemo.QMoimMemoLocation.moimMemoLocation;

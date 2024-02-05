@@ -1,20 +1,12 @@
-buildscript {
-    ext {
-        queryDslVersion = "5.0.0"
-    }
-}
-
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.8'
-    //querydsl 추가
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -27,62 +19,54 @@ repositories {
 }
 
 dependencies {
+    //data
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '6.2.0.CR3' // point 저장
 
-    // jwt 위한 라이브러리 추가
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    // application
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    //querydsl 추가
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // querydsl 라이브러리
-    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}" //  Querydsl 관련 코드 생성 기능 제공
-
-    // Aws s3 추가
-    // File upload 를 위한
-    implementation 'commons-io:commons-io:2.6'
-    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
-
-    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
-    implementation("io.springfox:springfox-swagger-ui:3.0.0")
-
-    // @Valid 를 위한 의존관계 추가
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // point 를 저장하기 위한
-    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.9.Final'
-    // redis 를 위한
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    annotationProcessor 'org.projectlombok:lombok'
+    // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    // Security
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // utils
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // querydsl 추가
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+    // Aws s3
+//    implementation 'commons-io:commons-io:2.11'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+
+    // documentation
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-//querydsl 추가 시작 (위에 plugin 추가 부분과 맞물림)
-def querydslDir = "$buildDir/generated/querydsl"
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
+clean {
+    delete file('src/main/generated')
 }
 
-sourceSets { // IDE의 소스 폴더에 자동으로 넣어준다.
-    main.java.srcDir querydslDir
-}
-
-configurations {
-    querydsl.extendsFrom compileClasspath // 컴파일이 될때 같이 수행
-}
-
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl // Q파일을 생성해준다.
-}
-//querydsl 추가 끝

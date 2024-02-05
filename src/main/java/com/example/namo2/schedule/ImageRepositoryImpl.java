@@ -2,8 +2,7 @@ package com.example.namo2.schedule;
 
 import com.example.namo2.entity.schedule.Schedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import static com.example.namo2.entity.schedule.QImage.image;
 
