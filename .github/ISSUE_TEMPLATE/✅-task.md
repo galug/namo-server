@@ -1,14 +1,17 @@
 ---
-name: "✅ Feature"
-about: 프로젝트에 추가할 기능에 대하여 작성해주세요
-title: "[Feat]"
+name: "✅ Task"
+about: 진행할 작업에 대해 작성해주세요.
+title: "[Task-Type] 작업내용"
 labels: ''
 assignees: ''
 
 ---
 
-## **Issue : Feature**
-<!-- Feature 작업 사항을 작성해주세요 -->
+## **Issue : {Task-Type}**
+<!-- 
+    1. 작업타입을 입력해주세요.
+    2. 작업사항을 작성해주세요. 
+-->
 
 ## **Description**
 <!-- 작업사항에 대한 설명을 작성해주세요 -->
