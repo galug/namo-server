@@ -3,7 +3,7 @@ package com.example.namo2.domain.entity.moimschedule;
 import com.example.namo2.domain.entity.moimmemo.MoimMemo;
 import com.example.namo2.domain.entity.schedule.Location;
 import com.example.namo2.domain.entity.schedule.Period;
-import com.example.namo2.domain.entity.BaseTimeEntity;
+import com.example.namo2.global.common.entity.BaseTimeEntity;
 import com.example.namo2.domain.entity.moim.Moim;
 import jakarta.persistence.*;
 import lombok.Builder;

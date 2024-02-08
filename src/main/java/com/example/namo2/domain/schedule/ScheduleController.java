@@ -1,8 +1,8 @@
 package com.example.namo2.domain.schedule;
 
 import com.example.namo2.domain.schedule.dto.*;
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponse;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.utils.Converter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

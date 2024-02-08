@@ -1,7 +1,7 @@
 package com.example.namo2.domain.entity.moimmemo;
 
 
-import com.example.namo2.domain.entity.BaseTimeEntity;
+import com.example.namo2.global.common.entity.BaseTimeEntity;
 import com.example.namo2.domain.entity.moimschedule.MoimSchedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

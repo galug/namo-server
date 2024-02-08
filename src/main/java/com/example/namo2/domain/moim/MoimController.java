@@ -1,7 +1,7 @@
 package com.example.namo2.domain.moim;
 
 import com.example.namo2.domain.moim.dto.*;
-import com.example.namo2.global.config.response.BaseResponse;
+import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
 import com.example.namo2.global.utils.Converter;

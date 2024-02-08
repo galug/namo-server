@@ -5,8 +5,8 @@ import com.example.namo2.domain.category.CategoryRepository;
 import com.example.namo2.domain.auth.dto.SignUpReq;
 import com.example.namo2.domain.auth.dto.SignUpRes;
 import com.example.namo2.domain.auth.dto.SocialSignUpReq;
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponseStatus;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.entity.category.Category;
 import com.example.namo2.domain.entity.user.User;
 import com.example.namo2.domain.palette.PaletteRepository;
@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.namo2.global.config.response.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
-import static com.example.namo2.global.config.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
 
 @Slf4j
 @Service

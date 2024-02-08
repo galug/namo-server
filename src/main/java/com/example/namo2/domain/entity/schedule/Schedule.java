@@ -1,8 +1,8 @@
 package com.example.namo2.domain.entity.schedule;
 
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponseStatus;
-import com.example.namo2.domain.entity.BaseTimeEntity;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
+import com.example.namo2.global.common.entity.BaseTimeEntity;
 import com.example.namo2.domain.entity.category.Category;
 import com.example.namo2.domain.entity.user.User;
 import jakarta.persistence.*;

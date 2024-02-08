@@ -2,8 +2,8 @@ package com.example.namo2.domain.moim;
 
 import com.example.namo2.domain.category.CategoryRepository;
 import com.example.namo2.domain.category.dto.MoimCategoryDto;
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponseStatus;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.entity.category.Category;
 import com.example.namo2.domain.entity.moim.Moim;
 import com.example.namo2.domain.entity.moim.MoimAndUser;
@@ -39,9 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 @Slf4j
 @Service

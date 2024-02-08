@@ -1,7 +1,7 @@
 package com.example.namo2.domain.schedule;
 
 import com.example.namo2.domain.category.CategoryRepository;
-import com.example.namo2.global.config.exception.BaseException;
+import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.domain.entity.moimschedule.MoimSchedule;
 import com.example.namo2.domain.entity.moimschedule.MoimScheduleAndUser;
 import com.example.namo2.domain.entity.schedule.Alarm;
@@ -33,10 +33,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
-import static com.example.namo2.global.config.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 
 @Service

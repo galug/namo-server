@@ -3,7 +3,7 @@ package com.example.namo2.domain.category;
 import com.example.namo2.domain.category.dto.CategoryDto;
 import com.example.namo2.domain.category.dto.CategoryIdRes;
 import com.example.namo2.domain.category.dto.PostCategoryReq;
-import com.example.namo2.global.config.response.BaseResponse;
+import com.example.namo2.global.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

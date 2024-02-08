@@ -1,4 +1,4 @@
-package com.example.namo2.domain.entity;
+package com.example.namo2.global.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
