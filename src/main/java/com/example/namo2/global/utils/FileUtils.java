@@ -2,8 +2,8 @@ package com.example.namo2.global.utils;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponseStatus;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.example.namo2.global.config.response.BaseResponseStatus.FILE_NAME_EXCEPTION;
-import static com.example.namo2.global.config.response.BaseResponseStatus.S3_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.FILE_NAME_EXCEPTION;
+import static com.example.namo2.global.common.response.BaseResponseStatus.S3_FAILURE;
 
 @Slf4j
 @Component

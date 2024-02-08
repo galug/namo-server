@@ -1,6 +1,6 @@
 package com.example.namo2.global.utils;
 
-import com.example.namo2.global.config.exception.BaseException;
+import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.domain.auth.dto.SocialSignUpReq;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.namo2.global.config.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
+import static com.example.namo2.global.common.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
 
 @Slf4j
 @Component

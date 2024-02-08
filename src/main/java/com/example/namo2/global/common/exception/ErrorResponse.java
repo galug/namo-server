@@ -1,4 +1,4 @@
-package com.example.namo2.global.config.exception;
+package com.example.namo2.global.common.exception;
 
 import lombok.Builder;
 import lombok.Getter;

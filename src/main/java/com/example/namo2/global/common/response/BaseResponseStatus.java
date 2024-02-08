@@ -1,4 +1,4 @@
-package com.example.namo2.global.config.response;
+package com.example.namo2.global.common.response;
 
 import lombok.Getter;
 

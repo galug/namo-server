@@ -1,6 +1,6 @@
-package com.example.namo2.global.config.exception;
+package com.example.namo2.global.common.exception;
 
-import com.example.namo2.global.config.response.BaseResponseStatus;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

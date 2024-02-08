@@ -1,4 +1,4 @@
-package com.example.namo2.global.config.response;
+package com.example.namo2.global.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

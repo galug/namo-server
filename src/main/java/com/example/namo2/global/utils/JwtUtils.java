@@ -1,8 +1,8 @@
 package com.example.namo2.global.utils;
 
 
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponseStatus;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.auth.dto.SignUpRes;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,7 +21,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 
-import static com.example.namo2.global.config.response.BaseResponseStatus.EXPIRATION_ACCESS_TOKEN;
+import static com.example.namo2.global.common.response.BaseResponseStatus.EXPIRATION_ACCESS_TOKEN;
 
 @Slf4j
 @NoArgsConstructor

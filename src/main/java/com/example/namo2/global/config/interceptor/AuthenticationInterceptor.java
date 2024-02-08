@@ -1,8 +1,8 @@
 package com.example.namo2.global.config.interceptor;
 
-import com.example.namo2.global.config.exception.BaseException;
-import com.example.namo2.global.config.response.BaseResponse;
-import com.example.namo2.global.config.response.BaseResponseStatus;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponse;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.JwtUtils;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
