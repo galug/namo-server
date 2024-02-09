@@ -1,6 +1,6 @@
 package com.example.namo2.domain.moim.dto;
 
-import com.example.namo2.domain.entity.moimmemo.MoimMemo;
+import com.example.namo2.domain.memo.domain.MoimMemo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

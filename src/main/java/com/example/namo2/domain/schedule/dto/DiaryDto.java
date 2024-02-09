@@ -1,9 +1,9 @@
 package com.example.namo2.domain.schedule.dto;
 
-import com.example.namo2.domain.entity.moimmemo.MoimMemoLocationImg;
-import com.example.namo2.domain.entity.moimschedule.MoimScheduleAndUser;
-import com.example.namo2.domain.entity.schedule.Image;
-import com.example.namo2.domain.entity.schedule.Schedule;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.domain.Image;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import lombok.Getter;
 
 import java.time.ZoneId;

@@ -1,6 +1,6 @@
 package com.example.namo2.domain.moim.dto;
 
-import com.example.namo2.domain.entity.moimschedule.MoimScheduleAndUser;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

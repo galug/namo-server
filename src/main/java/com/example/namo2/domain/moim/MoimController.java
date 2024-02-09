@@ -1,5 +1,6 @@
 package com.example.namo2.domain.moim;
 
+import com.example.namo2.domain.memo.MoimMemoService;
 import com.example.namo2.domain.moim.dto.*;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.domain.schedule.dto.DiaryDto;

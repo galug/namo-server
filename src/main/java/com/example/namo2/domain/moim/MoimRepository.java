@@ -1,6 +1,6 @@
 package com.example.namo2.domain.moim;
 
-import com.example.namo2.domain.entity.moim.Moim;
+import com.example.namo2.domain.moim.domain.Moim;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

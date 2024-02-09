@@ -1,7 +1,7 @@
 package com.example.namo2.domain.moim;
 
-import com.example.namo2.domain.entity.moimschedule.MoimSchedule;
-import com.example.namo2.domain.entity.moimschedule.MoimScheduleAlarm;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

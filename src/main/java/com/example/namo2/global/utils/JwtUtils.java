@@ -3,7 +3,7 @@ package com.example.namo2.global.utils;
 
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.domain.auth.dto.SignUpRes;
+import com.example.namo2.domain.user.dto.SignUpRes;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;

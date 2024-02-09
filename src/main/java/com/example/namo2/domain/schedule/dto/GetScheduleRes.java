@@ -1,10 +1,10 @@
 package com.example.namo2.domain.schedule.dto;
 
 
-import com.example.namo2.domain.entity.moimschedule.MoimScheduleAlarm;
-import com.example.namo2.domain.entity.moimschedule.MoimScheduleAndUser;
-import com.example.namo2.domain.entity.schedule.Alarm;
-import com.example.namo2.domain.entity.schedule.Schedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.domain.Alarm;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

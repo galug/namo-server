@@ -1,8 +1,8 @@
 package com.example.namo2.domain.category;
 
 import com.example.namo2.domain.category.dto.MoimCategoryDto;
-import com.example.namo2.domain.entity.category.Category;
-import com.example.namo2.domain.entity.category.CategoryStatus;
+import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.category.domain.CategoryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,6 +1,6 @@
 package com.example.namo2.domain.schedule;
 
-import com.example.namo2.domain.entity.schedule.Schedule;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 

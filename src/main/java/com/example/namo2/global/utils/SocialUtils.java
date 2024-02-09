@@ -1,7 +1,7 @@
 package com.example.namo2.global.utils;
 
 import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.domain.auth.dto.SocialSignUpReq;
+import com.example.namo2.domain.user.dto.SocialSignUpReq;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.example.namo2.domain.schedule.dto;
 
-import com.example.namo2.domain.entity.schedule.Image;
-import com.example.namo2.domain.entity.schedule.Schedule;
+import com.example.namo2.domain.schedule.domain.Image;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 

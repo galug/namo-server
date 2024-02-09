@@ -1,10 +1,10 @@
 package com.example.namo2.domain.schedule;
 
-import com.example.namo2.domain.entity.moim.MoimAndUser;
-import com.example.namo2.domain.entity.moimschedule.MoimSchedule;
-import com.example.namo2.domain.entity.moimschedule.MoimScheduleAndUser;
-import com.example.namo2.domain.entity.schedule.Schedule;
-import com.example.namo2.domain.entity.user.User;
+import com.example.namo2.domain.moim.domain.MoimAndUser;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.domain.Schedule;
+import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.moim.dto.MoimScheduleUserDto;
 import com.example.namo2.domain.schedule.dto.DiaryDto;

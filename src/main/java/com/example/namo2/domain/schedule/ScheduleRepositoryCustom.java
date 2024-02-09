@@ -1,7 +1,7 @@
 package com.example.namo2.domain.schedule;
 
-import com.example.namo2.domain.entity.schedule.Schedule;
-import com.example.namo2.domain.entity.user.User;
+import com.example.namo2.domain.schedule.domain.Schedule;
+import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.GetScheduleRes;
