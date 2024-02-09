@@ -1,7 +1,7 @@
 package com.example.namo2.domain.moim;
 
-import com.example.namo2.domain.category.CategoryRepository;
-import com.example.namo2.domain.category.dto.MoimCategoryDto;
+import com.example.namo2.domain.category.dao.repository.CategoryRepository;
+import com.example.namo2.domain.category.ui.dto.MoimCategoryDto;
 import com.example.namo2.domain.memo.MoimMemoRepository;
 import com.example.namo2.domain.memo.MoimMemoService;
 import com.example.namo2.global.common.exception.BaseException;

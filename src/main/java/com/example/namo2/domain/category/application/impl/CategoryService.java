@@ -1,8 +1,10 @@
-package com.example.namo2.domain.category;
+package com.example.namo2.domain.category.application.impl;
 
-import com.example.namo2.domain.category.dto.CategoryDto;
-import com.example.namo2.domain.category.dto.CategoryIdRes;
-import com.example.namo2.domain.category.dto.PostCategoryReq;
+import com.example.namo2.domain.category.dao.repository.CategoryRepository;
+import com.example.namo2.domain.category.dao.repository.PaletteRepository;
+import com.example.namo2.domain.category.ui.dto.CategoryDto;
+import com.example.namo2.domain.category.ui.dto.CategoryIdRes;
+import com.example.namo2.domain.category.ui.dto.PostCategoryReq;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.category.domain.Palette;

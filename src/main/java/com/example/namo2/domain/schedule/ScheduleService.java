@@ -1,6 +1,6 @@
 package com.example.namo2.domain.schedule;
 
-import com.example.namo2.domain.category.CategoryRepository;
+import com.example.namo2.domain.category.dao.repository.CategoryRepository;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;

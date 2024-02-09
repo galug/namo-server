@@ -1,6 +1,6 @@
-package com.example.namo2.domain.category;
+package com.example.namo2.domain.category.dao.repository;
 
-import com.example.namo2.domain.category.dto.MoimCategoryDto;
+import com.example.namo2.domain.category.ui.dto.MoimCategoryDto;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.category.domain.CategoryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

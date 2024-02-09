@@ -1,7 +1,7 @@
 package com.example.namo2.domain.user;
 
 import com.example.namo2.domain.user.dto.LogoutReq;
-import com.example.namo2.domain.category.CategoryRepository;
+import com.example.namo2.domain.category.dao.repository.CategoryRepository;
 import com.example.namo2.domain.user.dto.SignUpReq;
 import com.example.namo2.domain.user.dto.SignUpRes;
 import com.example.namo2.domain.user.dto.SocialSignUpReq;
@@ -9,7 +9,7 @@ import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.category.PaletteRepository;
+import com.example.namo2.domain.category.dao.repository.PaletteRepository;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 import lombok.RequiredArgsConstructor;
