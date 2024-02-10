@@ -1,7 +1,6 @@
 package com.example.namo2.domain.category.ui;
 
 import com.example.namo2.domain.category.application.CategoryFacade;
-import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.ui.dto.CategoryRequest;
 import com.example.namo2.domain.category.ui.dto.CategoryResponse;
 import com.example.namo2.global.common.response.BaseResponse;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping("categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final CategoryService categoryService;
     private final CategoryFacade categoryFacade;
 
     @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
