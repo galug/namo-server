@@ -67,7 +67,7 @@ public class CategoryService {
         return new CategoryResponse.CategoryIdDto(category.getId());
     }
 
-    public void delete(Long categoryId) throws BaseException {
+    public void delete(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
         category.delete();

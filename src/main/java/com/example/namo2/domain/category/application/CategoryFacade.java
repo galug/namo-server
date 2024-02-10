@@ -43,4 +43,8 @@ public class CategoryFacade {
 
         return CategoryResponseConverter.toCategoryIdDto(modifiedCategory);
     }
+
+    public void deleteCategory(Long categoryId) {
+        categoryService.delete(categoryId);
+    }
 }

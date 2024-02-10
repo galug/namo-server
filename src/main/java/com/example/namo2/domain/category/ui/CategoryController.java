@@ -48,7 +48,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
     @DeleteMapping("/{categoryId}")
     public BaseResponse<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
-        categoryService.delete(categoryId);
+        categoryFacade.deleteCategory(categoryId);
         return new BaseResponse<>("삭제에 성공하셨습니다.");
     }
 
