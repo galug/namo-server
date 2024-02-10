@@ -74,4 +74,14 @@ public class CategoryService {
     }
 
 
+    public Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));
+    }
+
+    public Category modifyCategory(Long categoryId, CategoryRequest.PostCategoryDto dto, Palette palette) {
+        Category category = getCategory(categoryId);
+        category.update(dto.getName(), dto.isShare(), palette);
+        return category;
+    }
 }

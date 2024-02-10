@@ -41,7 +41,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
     @PatchMapping("/{categoryId}")
     public BaseResponse<CategoryResponse.CategoryIdDto> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody CategoryRequest.PostCategoryDto postcategoryDto) {
-        CategoryResponse.CategoryIdDto categoryIdDto = categoryService.update(categoryId, postcategoryDto);
+        CategoryResponse.CategoryIdDto categoryIdDto = categoryFacade.modifyCategory(categoryId, postcategoryDto);
         return new BaseResponse<>(categoryIdDto);
     }
 

@@ -36,4 +36,11 @@ public class CategoryFacade {
 
         return CategoryResponseConverter.toCategoryDtoList(categories);
     }
+
+    public CategoryResponse.CategoryIdDto modifyCategory(Long categoryId, CategoryRequest.PostCategoryDto dto) {
+        Palette palette = paletteService.getPalette(dto.getPaletteId());
+        Category modifiedCategory = categoryService.modifyCategory(categoryId, dto, palette);
+
+        return CategoryResponseConverter.toCategoryIdDto(modifiedCategory);
+    }
 }
