@@ -1,6 +1,7 @@
 package com.example.namo2.domain.category.ui.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 public class CategoryResponse {
@@ -9,14 +10,14 @@ public class CategoryResponse {
         throw new IllegalStateException("Utility class");
     }
 
-    @AllArgsConstructor
     @Getter
+    @AllArgsConstructor
     public static class CategoryIdDto {
         private Long id;
     }
 
-    @AllArgsConstructor
     @Getter
+    @AllArgsConstructor
     public static class CategoryDto {
         private Long categoryId;
         private String name;

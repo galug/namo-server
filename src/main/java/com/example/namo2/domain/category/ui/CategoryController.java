@@ -1,5 +1,6 @@
 package com.example.namo2.domain.category.ui;
 
+import com.example.namo2.domain.category.application.CategoryFacade;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.ui.dto.CategoryRequest;
 import com.example.namo2.domain.category.ui.dto.CategoryResponse;
@@ -18,13 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
+    private final CategoryFacade categoryFacade;
 
     @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
     @PostMapping("")
     public BaseResponse<CategoryResponse.CategoryIdDto> createCategory(@RequestBody CategoryRequest.PostCategoryDto postcategoryDto,
                                                                        HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        CategoryResponse.CategoryIdDto categoryIdDto = categoryService.create(userId, postcategoryDto);
+        CategoryResponse.CategoryIdDto categoryIdDto = categoryFacade.create(userId, postcategoryDto);
         return new BaseResponse<>(categoryIdDto);
     }
 
