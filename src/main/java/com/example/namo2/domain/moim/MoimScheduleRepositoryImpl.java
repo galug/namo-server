@@ -12,9 +12,9 @@ import org.springframework.data.domain.SliceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.namo2.entity.category.QCategory.category;
-import static com.example.namo2.entity.moimschedule.QMoimSchedule.moimSchedule;
-import static com.example.namo2.entity.moimschedule.QMoimScheduleAndUser.moimScheduleAndUser;
+import static com.example.namo2.domain.category.domain.QCategory.category;
+import static com.example.namo2.domain.moim.domain.QMoimSchedule.moimSchedule;
+import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.moimScheduleAndUser;
 
 public class MoimScheduleRepositoryImpl implements MoimScheduleRepositoryCustom {
     private final JPAQueryFactory queryFactory;

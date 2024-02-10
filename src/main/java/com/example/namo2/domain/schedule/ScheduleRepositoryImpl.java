@@ -3,14 +3,14 @@ package com.example.namo2.domain.schedule;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.moim.dto.MoimScheduleUserDto;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.GetScheduleRes;
 import com.example.namo2.domain.schedule.dto.OnlyDiaryDto;
 import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
+import com.example.namo2.domain.user.domain.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.entity.category.QCategory.category;
-import static com.example.namo2.entity.category.QPalette.palette;
-import static com.example.namo2.entity.moim.QMoimAndUser.moimAndUser;
-import static com.example.namo2.entity.moimschedule.QMoimSchedule.moimSchedule;
-import static com.example.namo2.entity.moimschedule.QMoimScheduleAndUser.moimScheduleAndUser;
-import static com.example.namo2.entity.schedule.QImage.image;
-import static com.example.namo2.entity.schedule.QSchedule.schedule;
+import static com.example.namo2.domain.category.domain.QCategory.category;
+import static com.example.namo2.domain.category.domain.QPalette.palette;
+import static com.example.namo2.domain.moim.domain.QMoimAndUser.moimAndUser;
+import static com.example.namo2.domain.moim.domain.QMoimSchedule.moimSchedule;
+import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.moimScheduleAndUser;
+import static com.example.namo2.domain.schedule.domain.QImage.image;
+import static com.example.namo2.domain.schedule.domain.QSchedule.schedule;
 
 @Slf4j
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
@@ -186,7 +186,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     private List<MoimScheduleRes> findIndivisualSchedule(Long moimId, LocalDateTime startDate, LocalDateTime endDate, List<User> users) {
-        return em.createQuery("select new com.example.namo2.moim.dto.MoimScheduleRes(" +
+        return em.createQuery("select new com.example.namo2.domain.moim.dto.MoimScheduleRes(" +
                         "s.name, s.period.startDate, s.period.endDate, s.period.dayInterval, u.id, u.name, mu.color)" +
                         " from Schedule s, MoimAndUser mu" +
                         " join s.user u " +
