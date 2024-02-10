@@ -1,8 +1,8 @@
-package com.example.namo2.domain.category;
+package com.example.namo2.domain.category.ui;
 
-import com.example.namo2.domain.category.dto.CategoryDto;
-import com.example.namo2.domain.category.dto.CategoryIdRes;
-import com.example.namo2.domain.category.dto.PostCategoryReq;
+import com.example.namo2.domain.category.application.CategoryFacade;
+import com.example.namo2.domain.category.ui.dto.CategoryRequest;
+import com.example.namo2.domain.category.ui.dto.CategoryResponse;
 import com.example.namo2.global.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,36 +17,36 @@ import java.util.List;
 @RequestMapping("categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final CategoryFacade categoryFacade;
 
     @Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
     @PostMapping("")
-    public BaseResponse<CategoryIdRes> createCategory(@RequestBody PostCategoryReq postcategoryReq,
-                                                      HttpServletRequest request) {
+    public BaseResponse<CategoryResponse.CategoryIdDto> createCategory(@RequestBody CategoryRequest.PostCategoryDto postcategoryDto,
+                                                                       HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        CategoryIdRes categoryIdRes = categoryService.create(userId, postcategoryReq);
-        return new BaseResponse<>(categoryIdRes);
+        CategoryResponse.CategoryIdDto categoryIdDto = categoryFacade.create(userId, postcategoryDto);
+        return new BaseResponse<>(categoryIdDto);
     }
 
     @Operation(summary = "카테고리 조회", description = "카테고리 조회 API")
     @GetMapping("")
-    public BaseResponse<List<CategoryDto>> findAllCategory(HttpServletRequest request) {
+    public BaseResponse<List<CategoryResponse.CategoryDto>> findAllCategory(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        List<CategoryDto> categories = categoryService.findAll(userId);
+        List<CategoryResponse.CategoryDto> categories = categoryFacade.getCategories(userId);
         return new BaseResponse<>(categories);
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
     @PatchMapping("/{categoryId}")
-    public BaseResponse<CategoryIdRes> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody PostCategoryReq postcategoryReq) {
-        CategoryIdRes categoryIdRes = categoryService.update(categoryId, postcategoryReq);
-        return new BaseResponse<>(categoryIdRes);
+    public BaseResponse<CategoryResponse.CategoryIdDto> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody CategoryRequest.PostCategoryDto postcategoryDto) {
+        CategoryResponse.CategoryIdDto categoryIdDto = categoryFacade.modifyCategory(categoryId, postcategoryDto);
+        return new BaseResponse<>(categoryIdDto);
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
     @DeleteMapping("/{categoryId}")
     public BaseResponse<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
-        categoryService.delete(categoryId);
+        categoryFacade.deleteCategory(categoryId);
         return new BaseResponse<>("삭제에 성공하셨습니다.");
     }
 

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.entity.moimmemo.QMoimMemoLocation.moimMemoLocation;
-import static com.example.namo2.entity.moimmemo.QMoimMemoLocationAndUser.moimMemoLocationAndUser;
+import static com.example.namo2.domain.memo.domain.QMoimMemoLocation.moimMemoLocation;
+import static com.example.namo2.domain.memo.domain.QMoimMemoLocationAndUser.moimMemoLocationAndUser;
 
 public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositoryCustom {
     private final JPAQueryFactory queryFactory;

@@ -4,7 +4,7 @@ import com.example.namo2.domain.schedule.domain.Schedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-import static com.example.namo2.entity.schedule.QImage.image;
+import static com.example.namo2.domain.schedule.domain.QImage.image;
 
 
 public class ImageRepositoryImpl implements ImageRepositoryCustom {
