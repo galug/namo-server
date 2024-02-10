@@ -34,7 +34,7 @@ public class CategoryController {
     @GetMapping("")
     public BaseResponse<List<CategoryResponse.CategoryDto>> findAllCategory(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        List<CategoryResponse.CategoryDto> categories = categoryService.findAll(userId);
+        List<CategoryResponse.CategoryDto> categories = categoryFacade.getCategories(userId);
         return new BaseResponse<>(categories);
     }
 

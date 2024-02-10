@@ -1,6 +1,7 @@
 package com.example.namo2.domain.category.application;
 
 import com.example.namo2.domain.category.application.converter.CategoryConverter;
+import com.example.namo2.domain.category.application.converter.CategoryResponseConverter;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
@@ -11,6 +12,8 @@ import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +28,12 @@ public class CategoryFacade {
         Category category = CategoryConverter.toCategory(dto, user, palette);
         Category savedCategory = categoryService.create(category);
 
-        return new CategoryResponse.CategoryIdDto(savedCategory.getId());
+        return CategoryResponseConverter.toCategoryIdDto(savedCategory);
+    }
+
+    public List<CategoryResponse.CategoryDto> getCategories(Long userId) {
+        List<Category> categories = categoryService.getCategories(userId);
+
+        return CategoryResponseConverter.toCategoryDtoList(categories);
     }
 }

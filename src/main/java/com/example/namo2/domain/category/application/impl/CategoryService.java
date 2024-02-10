@@ -53,6 +53,10 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    public List<Category> getCategories(Long userId) {
+        return categoryRepository.findCategoriesByUserIdAndStatusEquals(userId, CategoryStatus.ACTIVE);
+    }
+
 
     public CategoryResponse.CategoryIdDto update(Long categoryId, CategoryRequest.PostCategoryDto postcategoryDto) throws BaseException {
         Category category = categoryRepository.findById(categoryId)
