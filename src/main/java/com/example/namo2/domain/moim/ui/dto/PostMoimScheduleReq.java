@@ -1,4 +1,4 @@
-package com.example.namo2.domain.moim.dto;
+package com.example.namo2.domain.moim.ui.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,9 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class PatchMoimScheduleReq {
+public class PostMoimScheduleReq {
     @NotNull
-    private Long moimScheduleId;
+    private Long moimId;
     @NotBlank
     private String name;
 

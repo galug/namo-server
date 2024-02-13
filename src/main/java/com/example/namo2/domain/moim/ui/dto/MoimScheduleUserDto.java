@@ -1,4 +1,4 @@
-package com.example.namo2.domain.moim.dto;
+package com.example.namo2.domain.moim.ui.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;

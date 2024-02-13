@@ -1,7 +1,18 @@
-package com.example.namo2.domain.moim;
+package com.example.namo2.domain.moim.ui;
 
 import com.example.namo2.domain.memo.MoimMemoService;
-import com.example.namo2.domain.moim.dto.*;
+import com.example.namo2.domain.moim.application.impl.MoimService;
+import com.example.namo2.domain.moim.ui.dto.GetMoimRes;
+import com.example.namo2.domain.moim.ui.dto.LocationInfo;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleAlarmDto;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleRes;
+import com.example.namo2.domain.moim.ui.dto.PatchMoimName;
+import com.example.namo2.domain.moim.ui.dto.PatchMoimScheduleCategoryReq;
+import com.example.namo2.domain.moim.ui.dto.PatchMoimScheduleReq;
+import com.example.namo2.domain.moim.ui.dto.PostMoimRes;
+import com.example.namo2.domain.moim.ui.dto.PostMoimScheduleReq;
+import com.example.namo2.domain.moim.ui.dto.PostMoimScheduleText;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.SliceDiaryDto;

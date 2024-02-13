@@ -3,8 +3,8 @@ package com.example.namo2.domain.schedule;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.moim.dto.MoimScheduleRes;
-import com.example.namo2.domain.moim.dto.MoimScheduleUserDto;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleRes;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleUserDto;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.GetScheduleRes;
@@ -186,7 +186,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     private List<MoimScheduleRes> findIndivisualSchedule(Long moimId, LocalDateTime startDate, LocalDateTime endDate, List<User> users) {
-        return em.createQuery("select new com.example.namo2.domain.moim.dto.MoimScheduleRes(" +
+        return em.createQuery("select new com.example.namo2.domain.moim.ui.dto.MoimScheduleRes(" +
                         "s.name, s.period.startDate, s.period.endDate, s.period.dayInterval, u.id, u.name, mu.color)" +
                         " from Schedule s, MoimAndUser mu" +
                         " join s.user u " +
