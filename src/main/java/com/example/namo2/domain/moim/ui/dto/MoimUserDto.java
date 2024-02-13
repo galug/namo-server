@@ -1,4 +1,4 @@
-package com.example.namo2.domain.moim.dto;
+package com.example.namo2.domain.moim.ui.dto;
 
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import lombok.Getter;

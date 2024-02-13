@@ -1,9 +1,9 @@
 package com.example.namo2.domain.memo;
 
-import com.example.namo2.domain.moim.MoimScheduleRepository;
-import com.example.namo2.domain.moim.dto.LocationInfo;
-import com.example.namo2.domain.moim.dto.MoimMemoDto;
-import com.example.namo2.domain.moim.dto.MoimMemoLocationDto;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
+import com.example.namo2.domain.moim.ui.dto.LocationInfo;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.memo.domain.MoimMemo;

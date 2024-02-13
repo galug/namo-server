@@ -1,4 +1,4 @@
-package com.example.namo2.domain.moim.dto;
+package com.example.namo2.domain.moim.ui.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class MoimScheduleRes {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
                 .toInstant()
-                .getEpochSecond();;
+                .getEpochSecond();
         this.endDate = endDate.atZone(ZoneId.systemDefault())
                 .toInstant()
                 .getEpochSecond();

@@ -1,9 +1,14 @@
-package com.example.namo2.domain.moim;
+package com.example.namo2.domain.moim.application.impl;
 
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
 import com.example.namo2.domain.category.ui.dto.MoimCategoryDto;
 import com.example.namo2.domain.memo.MoimMemoRepository;
 import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.moim.dao.repository.MoimAndUserRepository;
+import com.example.namo2.domain.moim.dao.repository.MoimRepository;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.category.domain.Category;
@@ -16,15 +21,15 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.moim.dto.GetMoimRes;
-import com.example.namo2.domain.moim.dto.GetMoimUserRes;
-import com.example.namo2.domain.moim.dto.MoimScheduleAlarmDto;
-import com.example.namo2.domain.moim.dto.PatchMoimName;
-import com.example.namo2.domain.moim.dto.PatchMoimScheduleCategoryReq;
-import com.example.namo2.domain.moim.dto.PatchMoimScheduleReq;
-import com.example.namo2.domain.moim.dto.PostMoimScheduleReq;
-import com.example.namo2.domain.moim.dto.MoimScheduleRes;
-import com.example.namo2.domain.moim.dto.PostMoimScheduleText;
+import com.example.namo2.domain.moim.ui.dto.GetMoimRes;
+import com.example.namo2.domain.moim.ui.dto.GetMoimUserRes;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleAlarmDto;
+import com.example.namo2.domain.moim.ui.dto.PatchMoimName;
+import com.example.namo2.domain.moim.ui.dto.PatchMoimScheduleCategoryReq;
+import com.example.namo2.domain.moim.ui.dto.PatchMoimScheduleReq;
+import com.example.namo2.domain.moim.ui.dto.PostMoimScheduleReq;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleRes;
+import com.example.namo2.domain.moim.ui.dto.PostMoimScheduleText;
 import com.example.namo2.domain.schedule.ScheduleRepository;
 import com.example.namo2.domain.user.UserRepository;
 import com.example.namo2.global.utils.FileUtils;
@@ -68,30 +73,20 @@ public class MoimService {
 
     @Transactional(readOnly = false)
     public Long create(Long userId, String groupName, MultipartFile img) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
         String url = fileUtils.uploadImage(img);
-        Moim moim = Moim.builder()
-                .name(groupName)
-                .imgUrl(url)
-                .build();
+        Moim moim = Moim.builder().name(groupName).imgUrl(url).build();
         Moim savedMoim = moimRepository.save(moim);
 
         Integer color = MOIM_USERS_COLOR[0];
-        MoimAndUser moimAndUser = MoimAndUser.builder()
-                .user(user)
-                .moim(savedMoim)
-                .moimCustomName(groupName)
-                .color(color)
-                .build();
+        MoimAndUser moimAndUser = MoimAndUser.builder().user(user).moim(savedMoim).moimCustomName(groupName).color(color).build();
         moimAndUserRepository.save(moimAndUser);
 
         return savedMoim.getId();
     }
 
     public List<GetMoimRes> findMoims(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
         List<MoimAndUser> moimAndUsers = moimAndUserRepository.findMoimAndUserByUser(user);
 
         List<GetMoimRes> moims = new ArrayList<>();
@@ -99,11 +94,8 @@ public class MoimService {
         for (MoimAndUser moimAndUser : moimAndUsers) {
             Moim moim = moimAndUser.getMoim();
             List<MoimAndUser> groupUsers = moimAndUserRepository.findMoimAndUserByMoim(moim);
-            List<GetMoimUserRes> moimUsers = groupUsers.stream()
-                    .map((groupUser) -> new GetMoimUserRes(groupUser.getUser().getId(), groupUser.getUser().getName(), groupUser.getColor()))
-                    .collect(Collectors.toList());
-            moims.add(new GetMoimRes(moim.getId(), moimAndUser.getMoimCustomName(),
-                    moim.getImgUrl(), moim.getCode(), moimUsers));
+            List<GetMoimUserRes> moimUsers = groupUsers.stream().map((groupUser) -> new GetMoimUserRes(groupUser.getUser().getId(), groupUser.getUser().getName(), groupUser.getColor())).collect(Collectors.toList());
+            moims.add(new GetMoimRes(moim.getId(), moimAndUser.getMoimCustomName(), moim.getImgUrl(), moim.getCode(), moimUsers));
         }
         return moims;
     }
@@ -112,25 +104,18 @@ public class MoimService {
     public Long patchMoimName(PatchMoimName patchMoimName, Long userId) {
         User user = em.getReference(User.class, userId);
         Moim moim = em.getReference(Moim.class, patchMoimName.getMoimId());
-        MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
+        MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
         moimAndUser.updateCustomName(patchMoimName.getMoimName());
         return moim.getId();
     }
 
     @Transactional(readOnly = false)
     public Long participate(Long userId, String code) {
-        Moim moim = moimRepository.findMoimByCode(code)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
+        Moim moim = moimRepository.findMoimByCode(code).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
         User user = userRepository.getReferenceById(userId);
         duplicateParticipate(moim, user);
         Integer numberOfMoimer = moimAndUserRepository.countMoimAndUserByMoim(moim);
-        MoimAndUser moimAndUser = MoimAndUser.builder()
-                .user(user)
-                .moim(moim)
-                .moimCustomName(moim.getName())
-                .color(MOIM_USERS_COLOR[numberOfMoimer])
-                .build();
+        MoimAndUser moimAndUser = MoimAndUser.builder().user(user).moim(moim).moimCustomName(moim.getName()).color(MOIM_USERS_COLOR[numberOfMoimer]).build();
         moimAndUserRepository.save(moimAndUser);
         return moim.getId();
     }
@@ -145,26 +130,16 @@ public class MoimService {
     public void withdraw(Long userId, Long moimId) {
         User user = em.getReference(User.class, userId);
         Moim moim = em.getReference(Moim.class, moimId);
-        MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
+        MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
         moimAndUserRepository.delete(moimAndUser);
     }
 
     @Transactional(readOnly = false)
     public Long createSchedule(PostMoimScheduleReq scheduleReq) {
         Moim moim = moimRepository.getReferenceById(scheduleReq.getMoimId());
-        Period period = Period.builder()
-                .startDate(scheduleReq.getStartDate())
-                .endDate(scheduleReq.getEndDate())
-                .dayInterval(scheduleReq.getInterval())
-                .build();
+        Period period = Period.builder().startDate(scheduleReq.getStartDate()).endDate(scheduleReq.getEndDate()).dayInterval(scheduleReq.getInterval()).build();
         Location location = Location.create(scheduleReq.getX(), scheduleReq.getY(), scheduleReq.getLocationName());
-        MoimSchedule moimSchedule = MoimSchedule.builder()
-                .name(scheduleReq.getName())
-                .moim(moim)
-                .location(location)
-                .period(period)
-                .build();
+        MoimSchedule moimSchedule = MoimSchedule.builder().name(scheduleReq.getName()).moim(moim).location(location).period(period).build();
 
         MoimSchedule moimScheduleEntity = moimScheduleRepository.save(moimSchedule);
 
@@ -173,37 +148,21 @@ public class MoimService {
     }
 
     private void unionScheduleParticipant(List<Long> users, MoimSchedule moimScheduleEntity) {
-        Map<Long, Long> moimCategoryMap = categoryRepository
-                .findMoimCategoriesByUsers(users)
-                .stream().collect(Collectors.toMap(MoimCategoryDto::getUserId, MoimCategoryDto::getCategoryId));
+        Map<Long, Long> moimCategoryMap = categoryRepository.findMoimCategoriesByUsers(users).stream().collect(Collectors.toMap(MoimCategoryDto::getUserId, MoimCategoryDto::getCategoryId));
         for (Long userId : users) {
             User moimUsers = userRepository.getReferenceById(userId);
             Long categoryId = moimCategoryMap.get(moimUsers.getId());
             Category category = categoryRepository.getReferenceById(categoryId);
-            MoimScheduleAndUser moimScheduleAndUser = MoimScheduleAndUser
-                    .builder()
-                    .moimSchedule(moimScheduleEntity)
-                    .user(moimUsers)
-                    .category(category)
-                    .build();
+            MoimScheduleAndUser moimScheduleAndUser = MoimScheduleAndUser.builder().moimSchedule(moimScheduleEntity).user(moimUsers).category(category).build();
             moimScheduleAndUserRepository.save(moimScheduleAndUser);
         }
     }
 
     @Transactional(readOnly = false)
     public void updateSchedule(PatchMoimScheduleReq scheduleReq) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleReq.getMoimScheduleId())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
-        Period period = Period.builder()
-                .startDate(scheduleReq.getStartDate())
-                .endDate(scheduleReq.getEndDate())
-                .dayInterval(scheduleReq.getInterval())
-                .build();
-        Location location = Location.builder()
-                .locationName(scheduleReq.getLocationName())
-                .x(scheduleReq.getX())
-                .y(scheduleReq.getY())
-                .build();
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleReq.getMoimScheduleId()).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
+        Period period = Period.builder().startDate(scheduleReq.getStartDate()).endDate(scheduleReq.getEndDate()).dayInterval(scheduleReq.getInterval()).build();
+        Location location = Location.builder().locationName(scheduleReq.getLocationName()).x(scheduleReq.getX()).y(scheduleReq.getY()).build();
         moimSchedule.update(scheduleReq.getName(), period, location);
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
         unionScheduleParticipant(scheduleReq.getUsers(), moimSchedule);
@@ -213,10 +172,8 @@ public class MoimService {
     public void updateScheduleCategory(PatchMoimScheduleCategoryReq scheduleReq, Long userId) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleReq.getMoimScheduleId());
         User user = userRepository.getReferenceById(userId);
-        Category category = categoryRepository.findById(scheduleReq.getCategoryId())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE));
-        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+        Category category = categoryRepository.findById(scheduleReq.getCategoryId()).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE));
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
         moimScheduleAndUser.updateCategory(category);
     }
 
@@ -228,39 +185,29 @@ public class MoimService {
     public void createScheduleAlarm(MoimScheduleAlarmDto scheduleAlarmDto) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleAlarmDto.getMoimScheduleId());
         for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
-            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder()
-                    .alarmDate(alarmDate)
-                    .moimSchedule(moimSchedule)
-                    .build();
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).moimSchedule(moimSchedule).build();
             moimScheduleAlarmRepository.save(moimScheduleAlarm);
         }
     }
 
     @Transactional(readOnly = false)
     public void updateScheduleAlarm(MoimScheduleAlarmDto scheduleAlarmDto) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleAlarmDto.getMoimScheduleId())
-                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleAlarmDto.getMoimScheduleId()).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimSchedule(moimSchedule);
         for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
-            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder()
-                    .alarmDate(alarmDate)
-                    .moimSchedule(moimSchedule)
-                    .build();
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).moimSchedule(moimSchedule).build();
             moimScheduleAlarmRepository.save(moimScheduleAlarm);
         }
     }
 
     @Transactional(readOnly = false)
     public void deleteSchedule(Long moimScheduleId) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndLocationsByMoimSchedule(moimSchedule);
 
 //         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
         if (moimMemo != null) {
-            moimMemo.getMoimMemoLocations()
-                    .stream()
-                    .forEach((moimMemoLocation -> moimMemoService.delete(moimMemoLocation.getId())));
+            moimMemo.getMoimMemoLocations().stream().forEach((moimMemoLocation -> moimMemoService.delete(moimMemoLocation.getId())));
             moimMemoRepository.delete(moimMemo);
         }
 
@@ -271,12 +218,9 @@ public class MoimService {
 
     @Transactional(readOnly = false)
     public void createMoimScheduleText(Long moimScheduleId, Long userId, PostMoimScheduleText moimScheduleText) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
-                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
         moimScheduleAndUser.updateText(moimScheduleText.getText());
     }
 }
