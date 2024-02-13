@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class MoimScheduleRes {
+public class MoimScheduleDto {
     private String name;
 
     private Long startDate;
@@ -31,7 +31,7 @@ public class MoimScheduleRes {
 
 
     @QueryProjection
-    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval,
+    public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval,
                            Long moimId, Long moimScheduleId, Double x, Double y, String locationName) {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
@@ -49,7 +49,7 @@ public class MoimScheduleRes {
     }
 
     @QueryProjection
-    public MoimScheduleRes(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long userId, String userName, Integer color) {
+    public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long userId, String userName, Integer color) {
         this.name = name;
         this.startDate = startDate.atZone(ZoneId.systemDefault())
                 .toInstant()
