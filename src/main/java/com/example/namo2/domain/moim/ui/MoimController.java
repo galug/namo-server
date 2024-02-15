@@ -1,6 +1,7 @@
 package com.example.namo2.domain.moim.ui;
 
 import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.moim.application.MoimFacade;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.LocationInfo;
 import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
@@ -31,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/moims")
 public class MoimController {
+    private final MoimFacade moimFacade;
     private final MoimService moimService;
     private final MoimMemoService moimMemoService;
     private final Converter converter;
@@ -40,8 +42,8 @@ public class MoimController {
     public BaseResponse<MoimResponse.MoimIdDto> createMoim(@RequestPart MultipartFile img,
                                                            @RequestPart String groupName,
                                                            HttpServletRequest request) {
-        Long moimId = moimService.create((Long) request.getAttribute("userId"), groupName, img);
-        return new BaseResponse(new MoimResponse.MoimIdDto(moimId));
+        MoimResponse.MoimIdDto moimIdDto = moimFacade.createMoim((Long) request.getAttribute("userId"), groupName, img);
+        return new BaseResponse(moimIdDto);
     }
 
     @Operation(summary = "모임 조회", description = "모임 조회 API")
