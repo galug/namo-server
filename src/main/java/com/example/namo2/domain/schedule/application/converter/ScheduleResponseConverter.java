@@ -1,0 +1,114 @@
+package com.example.namo2.domain.schedule.application.converter;
+
+import static com.amazonaws.services.ec2.model.ResourceType.*;
+
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Slice;
+
+import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.domain.Alarm;
+import com.example.namo2.domain.schedule.domain.Schedule;
+import com.example.namo2.domain.schedule.ui.dto.DiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
+import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
+
+public class ScheduleResponseConverter {
+	public static ScheduleResponse.ScheduleIdRes toScheduleIdRes(Schedule schedule){
+		return new ScheduleResponse.ScheduleIdRes(schedule.getId());
+	}
+
+	public static ScheduleResponse.GetScheduleRes toGetScheduleRes(Schedule schedule){
+		Long startDate = schedule.getPeriod().getStartDate().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+		Long endDate = schedule.getPeriod().getEndDate().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
+		List<Integer> alarmDates = schedule.getAlarms().stream().map(Alarm::getAlarmDate).toList();
+
+		return ScheduleResponse.GetScheduleRes.builder()
+			.scheduleId(schedule.getId())
+			.name(schedule.getName())
+			.startDate(startDate)
+			.endDate(endDate)
+			.alarmDate(alarmDates)
+			.interval(schedule.getPeriod().getDayInterval())
+			.x(schedule.getLocation().getX())
+			.y(schedule.getLocation().getY())
+			.locationName(schedule.getLocation().getLocationName())
+			.categoryId(schedule.getCategory().getId())
+			.hasDiary(schedule.getHasDiary())
+			.isMoimSchedule(false)
+			.build();
+	}
+	public static ScheduleResponse.GetScheduleRes toGetScheduleRes(MoimScheduleAndUser moimScheduleAndUser){
+		Long startDate = moimScheduleAndUser.getMoimSchedule().getPeriod().getStartDate()
+			.atZone(ZoneId.systemDefault())
+			.toInstant()
+			.getEpochSecond();
+		Long endDate = moimScheduleAndUser.getMoimSchedule().getPeriod().getEndDate()
+			.atZone(ZoneId.systemDefault())
+			.toInstant()
+			.getEpochSecond();
+		List<Integer> alarmDates = moimScheduleAndUser.getMoimSchedule().getMoimScheduleAlarms().stream()
+			.map(MoimScheduleAlarm::getAlarmDate).toList();
+
+		return ScheduleResponse.GetScheduleRes.builder()
+			.scheduleId(moimScheduleAndUser.getMoimSchedule().getId())
+			.name(moimScheduleAndUser.getMoimSchedule().getName())
+			.startDate(startDate)
+			.endDate(endDate)
+			.alarmDate(alarmDates)
+			.interval(moimScheduleAndUser.getMoimSchedule().getPeriod().getDayInterval())
+			.x(moimScheduleAndUser.getMoimSchedule().getLocation().getX())
+			.y(moimScheduleAndUser.getMoimSchedule().getLocation().getY())
+			.locationName(moimScheduleAndUser.getMoimSchedule().getLocation().getLocationName())
+			.categoryId(moimScheduleAndUser.getCategory().getId())
+			.hasDiary(moimScheduleAndUser.getMoimSchedule().getMoimMemo() != null)
+			.isMoimSchedule(true)
+			.build();
+	}
+
+	public static ScheduleResponse.GetDiaryByUserRes toGetDiaryByUserRes(Schedule schedule){
+		return ScheduleResponse.GetDiaryByUserRes.builder()
+			.scheduleId(schedule.getId())
+			.contents(schedule.getContents())
+			.urls(schedule.getImages().stream()
+				.map(image -> image.getImgUrl())
+				.collect(Collectors.toList()))
+			.build();
+	}
+	public static ScheduleResponse.GetDiaryByScheduleRes toGetDiaryByScheduleRes(Schedule schedule, List<String> imgUrls){
+		return new ScheduleResponse.GetDiaryByScheduleRes(schedule.getContents(), imgUrls);
+	}
+
+	public static ScheduleResponse.SliceDiaryDto toSliceDiaryDto(Slice<ScheduleResponse.DiaryDto> slice){
+		return ScheduleResponse.SliceDiaryDto.builder()
+			.content(slice.getContent())
+			.currentPage(slice.getNumber())
+			.size(slice.getSize())
+			.first(slice.isFirst())
+			.last(slice.isLast())
+			.build();
+	}
+
+	public static ScheduleResponse.DiaryDto toDiaryDto(Schedule schedule){
+		return ScheduleResponse.DiaryDto.builder()
+			.scheduleId(schedule.getId())
+			.name(schedule.getName())
+			.startDate(schedule.getPeriod().getStartDate()
+				.atZone(ZoneId.systemDefault())
+				.toInstant()
+				.getEpochSecond())
+			.contents(schedule.getContents())
+			.categoryId(schedule.getCategory().getId())
+			.color(schedule.getCategory().getPalette().getId())
+			.placeName(schedule.getLocation().getLocationName())
+			.urls(schedule.getImages().stream()
+				.map(image -> image.getImgUrl())
+				.collect(Collectors.toList()))
+			.build();
+	}
+
+}

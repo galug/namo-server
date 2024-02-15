@@ -1,5 +1,6 @@
-package com.example.namo2.domain.user;
+package com.example.namo2.domain.user.application.impl;
 
+import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;

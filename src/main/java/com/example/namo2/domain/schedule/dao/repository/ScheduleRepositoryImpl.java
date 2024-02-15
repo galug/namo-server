@@ -5,16 +5,16 @@ import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.moim.dto.MoimScheduleUserDto;
+import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.schedule.ui.dto.DiaryDto;
-import com.example.namo2.domain.schedule.ui.dto.GetScheduleRes;
-import com.example.namo2.domain.schedule.ui.dto.OnlyDiaryDto;
-import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 import com.example.namo2.domain.user.domain.User;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -48,16 +48,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
      * 알람을 한 번에 가지고 오는 편이 성능상 더 좋은 퍼포먼스를 발휘할지도?
      */
     @Override
-    public List<GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
-        List<GetScheduleRes> results = findPersonalSchedulesByUserId(user, startDate, endDate);
-        List<GetScheduleRes> moimSchedules = findMoimSchedulesByUserId(user, startDate, endDate);
+    public List<ScheduleResponse.GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+        List<ScheduleResponse.GetScheduleRes> results = findPersonalSchedulesByUserId(user, startDate, endDate);
+        List<ScheduleResponse.GetScheduleRes> moimSchedules = findMoimSchedulesByUserId(user, startDate, endDate);
         if (moimSchedules != null) {
             results.addAll(moimSchedules);
         }
         return results;
     }
 
-    public List<GetScheduleRes> findPersonalSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ScheduleResponse.GetScheduleRes> findPersonalSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<Schedule> schedules = queryFactory
                 .select(schedule).distinct()
                 .from(schedule)
@@ -66,7 +66,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                         scheduleDateLoe(endDate),
                         scheduleDateGoe(startDate))
                 .fetch();
-        return schedules.stream().map(schedule -> new GetScheduleRes(schedule))
+        return schedules.stream().map(schedule -> ScheduleResponseConverter.toGetScheduleRes(schedule))
                 .collect(Collectors.toList());
     }
 
@@ -79,7 +79,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ScheduleResponse.GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory
                 .select(moimScheduleAndUser).distinct()
                 .from(moimScheduleAndUser)
@@ -92,7 +92,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 )
                 .fetch();
         return moimScheduleAndUsers.stream()
-                .map(GetScheduleRes::new).collect(Collectors.toList());
+                .map(ScheduleResponseConverter::toGetScheduleRes).collect(Collectors.toList());
     }
 
     private BooleanExpression moimScheduleDateGoe(LocalDateTime startDate) {
@@ -104,7 +104,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public SliceDiaryDto<DiaryDto> findScheduleDiaryByMonthDto(User user, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+    public ScheduleResponse.SliceDiaryDto findScheduleDiaryByMonthDto(User user, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
         List<Schedule> content = queryFactory
                 .select(schedule)
                 .from(schedule)
@@ -125,22 +125,22 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
             hasNext = true;
         }
         SliceImpl<Schedule> schedules = new SliceImpl<>(content, pageable, hasNext);
-        Slice<DiaryDto> diarySlices = schedules.map(DiaryDto::new);
-        return new SliceDiaryDto(diarySlices);
+        Slice<ScheduleResponse.DiaryDto> diarySlices = schedules.map(ScheduleResponseConverter::toDiaryDto);
+        return ScheduleResponseConverter.toSliceDiaryDto(diarySlices);
     }
 
     @Override
-    public List<OnlyDiaryDto> findAllScheduleDiary(User user) {
+    public List<ScheduleResponse.GetDiaryByUserRes> findAllScheduleDiary(User user) {
         List<Schedule> schedules = queryFactory
-                .select(schedule).distinct()
-                .from(schedule)
-                .leftJoin(schedule.images, image).fetchJoin()
-                .where(schedule.user.eq(user),
-                        schedule.hasDiary.isTrue()
-                )
-                .fetch();
-        return schedules.stream().map(OnlyDiaryDto::new)
-                .collect(Collectors.toList());
+            .select(schedule).distinct()
+            .from(schedule)
+            .leftJoin(schedule.images, image).fetchJoin()
+            .where(schedule.user.eq(user),
+                schedule.hasDiary.isTrue()
+            )
+            .fetch();
+        return schedules.stream().map(ScheduleResponseConverter::toGetDiaryByUserRes)
+            .collect(Collectors.toList());
     }
 
     @Override

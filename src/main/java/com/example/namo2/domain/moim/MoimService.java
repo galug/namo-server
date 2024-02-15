@@ -26,7 +26,7 @@ import com.example.namo2.domain.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.moim.dto.PostMoimScheduleText;
 import com.example.namo2.domain.schedule.dao.repository.ScheduleRepository;
-import com.example.namo2.domain.user.UserRepository;
+import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.global.utils.FileUtils;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -278,5 +278,19 @@ public class MoimService {
         MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
         moimScheduleAndUser.updateText(moimScheduleText.getText());
+    }
+
+    public MoimSchedule getMoimScheduleById(Long scheduleId){
+        return moimScheduleRepository.findById(scheduleId).orElseThrow(
+            () -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+    }
+
+    public MoimScheduleAndUser getMoimScheduleAndUserByMoimScheduleAndUser(MoimSchedule moimSchedule, User user){
+        return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
+            .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+    }
+
+    public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser){
+        moimScheduleAndUserRepository.delete(moimScheduleAndUser);
     }
 }

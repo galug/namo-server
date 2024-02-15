@@ -10,6 +10,10 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+memo, moim 도메인에서 사용중
+위 두개 도메인에서 사용 안되면 지우기
+ */
 @Getter
 public class DiaryDto {
     private Long scheduleId;

@@ -1,4 +1,4 @@
-package com.example.namo2.domain.user.dto;
+package com.example.namo2.domain.user.ui.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

@@ -8,7 +8,7 @@ import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.category.domain.Palette;
 import com.example.namo2.domain.category.ui.dto.CategoryRequest;
 import com.example.namo2.domain.category.ui.dto.CategoryResponse;
-import com.example.namo2.domain.user.UserService;
+import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

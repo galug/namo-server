@@ -1,9 +1,10 @@
-package com.example.namo2.domain.user;
+package com.example.namo2.domain.user.ui;
 
-import com.example.namo2.domain.user.dto.LogoutReq;
-import com.example.namo2.domain.user.dto.SignUpReq;
-import com.example.namo2.domain.user.dto.SignUpRes;
-import com.example.namo2.domain.user.dto.SocialSignUpReq;
+import com.example.namo2.domain.user.application.impl.AuthService;
+import com.example.namo2.domain.user.ui.dto.LogoutReq;
+import com.example.namo2.domain.user.ui.dto.SignUpReq;
+import com.example.namo2.domain.user.ui.dto.SignUpRes;
+import com.example.namo2.domain.user.ui.dto.SocialSignUpReq;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;

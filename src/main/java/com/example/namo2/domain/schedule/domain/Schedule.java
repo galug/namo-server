@@ -87,9 +87,16 @@ public class Schedule extends BaseTimeEntity {
         }
     }
 
+    public void setImgs(List<Image> imgs){
+        this.images = imgs;
+    }
     public void addAlarm(Alarm alarm) {
         alarms.add(alarm);
     }
+    public void addAlarms(List<Alarm> alarmList) {
+        this.alarms.addAll(alarmList);
+    }
+
 
     public List<Integer> findAlarms() {
         return alarms.stream()

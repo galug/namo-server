@@ -12,7 +12,7 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.user.UserRepository;
+import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.schedule.ui.dto.DiaryDto;
 import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
 import com.example.namo2.global.utils.FileUtils;

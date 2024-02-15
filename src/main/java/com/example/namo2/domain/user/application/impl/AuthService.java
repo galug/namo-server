@@ -1,10 +1,11 @@
-package com.example.namo2.domain.user;
+package com.example.namo2.domain.user.application.impl;
 
-import com.example.namo2.domain.user.dto.LogoutReq;
+import com.example.namo2.domain.user.dao.repository.UserRepository;
+import com.example.namo2.domain.user.ui.dto.LogoutReq;
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
-import com.example.namo2.domain.user.dto.SignUpReq;
-import com.example.namo2.domain.user.dto.SignUpRes;
-import com.example.namo2.domain.user.dto.SocialSignUpReq;
+import com.example.namo2.domain.user.ui.dto.SignUpReq;
+import com.example.namo2.domain.user.ui.dto.SignUpRes;
+import com.example.namo2.domain.user.ui.dto.SocialSignUpReq;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.category.domain.Category;

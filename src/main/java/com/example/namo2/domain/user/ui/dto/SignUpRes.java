@@ -1,17 +1,13 @@
-package com.example.namo2.domain.user.dto;
+package com.example.namo2.domain.user.ui.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LogoutReq {
-    @NotBlank
+public class SignUpRes {
     private String accessToken;
+    private String refreshToken;
 }

@@ -6,6 +6,10 @@ import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
+/*
+memo, moim 도메인에서 사용중
+위 두개 도메인에서 사용 안되면 지우기
+ */
 @Getter
 @NoArgsConstructor
 public class SliceDiaryDto<T> {
