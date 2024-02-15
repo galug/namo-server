@@ -1,15 +1,15 @@
-package com.example.namo2.domain.schedule.dto;
+package com.example.namo2.domain.schedule.ui.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor
-public class PatchScheduleReq {
+public class PostScheduleReq {
     @NotBlank
     private String name;
     @NotNull
@@ -18,8 +18,7 @@ public class PatchScheduleReq {
     private Long endDate;
     @NotNull
     private Integer interval;
-    private List<Integer> deleteAlarmDate;
-    private List<Integer> addAlarmDate;
+    private Set<Integer> alarmDate;
     private Double x;
     private Double y;
     private String locationName;

@@ -25,7 +25,7 @@ import com.example.namo2.domain.moim.dto.PatchMoimScheduleReq;
 import com.example.namo2.domain.moim.dto.PostMoimScheduleReq;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.moim.dto.PostMoimScheduleText;
-import com.example.namo2.domain.schedule.ScheduleRepository;
+import com.example.namo2.domain.schedule.dao.repository.ScheduleRepository;
 import com.example.namo2.domain.user.UserRepository;
 import com.example.namo2.global.utils.FileUtils;
 import jakarta.persistence.EntityManager;

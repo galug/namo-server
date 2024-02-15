@@ -1,4 +1,4 @@
-package com.example.namo2.domain.schedule.dto;
+package com.example.namo2.domain.schedule.ui.dto;
 
 import com.example.namo2.domain.schedule.domain.Image;
 import com.example.namo2.domain.schedule.domain.Schedule;

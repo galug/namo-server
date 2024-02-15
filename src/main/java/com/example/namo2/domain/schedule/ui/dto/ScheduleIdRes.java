@@ -1,4 +1,4 @@
-package com.example.namo2.domain.schedule.dto;
+package com.example.namo2.domain.schedule.ui.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

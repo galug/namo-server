@@ -1,4 +1,4 @@
-package com.example.namo2.domain.schedule;
+package com.example.namo2.domain.schedule.dao.repository;
 
 import com.example.namo2.domain.schedule.domain.Alarm;
 import org.springframework.data.jpa.repository.JpaRepository;

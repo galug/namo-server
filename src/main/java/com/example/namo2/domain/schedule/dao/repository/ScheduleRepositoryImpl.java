@@ -1,4 +1,4 @@
-package com.example.namo2.domain.schedule;
+package com.example.namo2.domain.schedule.dao.repository;
 
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
@@ -6,10 +6,10 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import com.example.namo2.domain.moim.dto.MoimScheduleUserDto;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
-import com.example.namo2.domain.schedule.dto.GetScheduleRes;
-import com.example.namo2.domain.schedule.dto.OnlyDiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.DiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.GetScheduleRes;
+import com.example.namo2.domain.schedule.ui.dto.OnlyDiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
 import com.example.namo2.domain.user.domain.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

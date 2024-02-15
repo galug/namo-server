@@ -1,6 +1,12 @@
-package com.example.namo2.domain.schedule;
+package com.example.namo2.domain.schedule.ui;
 
-import com.example.namo2.domain.schedule.dto.*;
+import com.example.namo2.domain.schedule.application.impl.ScheduleService;
+import com.example.namo2.domain.schedule.ui.dto.GetDiaryRes;
+import com.example.namo2.domain.schedule.ui.dto.GetScheduleRes;
+import com.example.namo2.domain.schedule.ui.dto.OnlyDiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.PostScheduleReq;
+import com.example.namo2.domain.schedule.ui.dto.ScheduleIdRes;
+import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.utils.Converter;
@@ -8,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +26,11 @@ import java.util.List;
 @Tag(name = "Schedule", description = "스케줄 관련 API")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/schedules")
 public class ScheduleController {
     private final ScheduleService scheduleService;
     private final Converter converter;
-
-    public ScheduleController(ScheduleService scheduleService, Converter converter) {
-        this.scheduleService = scheduleService;
-        this.converter = converter;
-    }
 
     @Operation(summary = "스케줄 생성", description = "스케줄 생성 API")
     @PostMapping("")
