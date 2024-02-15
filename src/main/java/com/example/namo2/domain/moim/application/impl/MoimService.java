@@ -49,7 +49,6 @@ import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FO
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MoimService {
     private final static int[] MOIM_USERS_COLOR = new int[]{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 
@@ -64,21 +63,10 @@ public class MoimService {
     private final ScheduleRepository scheduleRepository;
 
     private final MoimMemoService moimMemoService;
-    private final FileUtils fileUtils;
     private final EntityManager em;
 
-    @Transactional(readOnly = false)
-    public Long create(Long userId, String groupName, MultipartFile img) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
-        String url = fileUtils.uploadImage(img);
-        Moim moim = Moim.builder().name(groupName).imgUrl(url).build();
-        Moim savedMoim = moimRepository.save(moim);
-
-        Integer color = MOIM_USERS_COLOR[0];
-        MoimAndUser moimAndUser = MoimAndUser.builder().user(user).moim(savedMoim).moimCustomName(groupName).color(color).build();
-        moimAndUserRepository.save(moimAndUser);
-
-        return savedMoim.getId();
+    public Moim create(Moim moim) {
+        return moimRepository.save(moim);
     }
 
     public List<MoimResponse.MoimDto> findMoims(Long userId) {
