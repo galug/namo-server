@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_FAILURE;
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
@@ -66,13 +67,9 @@ public class MoimService {
         return moimRepository.save(moim);
     }
 
-    @Transactional(readOnly = false)
-    public Long patchMoimName(MoimRequest.PatchMoimNameDto patchMoimNameDto, Long userId) {
-        User user = em.getReference(User.class, userId);
-        Moim moim = em.getReference(Moim.class, patchMoimNameDto.getMoimId());
-        MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
-        moimAndUser.updateCustomName(patchMoimNameDto.getMoimName());
-        return moim.getId();
+    public Moim getMoim(Long moimId) {
+        return moimRepository.findById(moimId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_FAILURE));
     }
 
     @Transactional(readOnly = false)

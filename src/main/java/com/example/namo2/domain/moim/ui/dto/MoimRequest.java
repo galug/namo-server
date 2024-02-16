@@ -13,7 +13,7 @@ public class MoimRequest {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public class PatchMoimNameDto {
+    public static class PatchMoimNameDto {
         private Long moimId;
         private String moimName;
     }
