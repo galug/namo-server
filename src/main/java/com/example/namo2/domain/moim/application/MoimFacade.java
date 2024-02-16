@@ -7,6 +7,7 @@ import com.example.namo2.domain.moim.application.impl.MoimAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
+import com.example.namo2.domain.moim.ui.dto.MoimRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -52,5 +52,14 @@ public class MoimFacade {
         List<MoimAndUser> moimAndUsersInMoims = moimAndUserService
                 .getMoimAndUsers(moimsInUser);
         return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims);
+    }
+
+    @Transactional
+    public Long modifyMoimName(MoimRequest.PatchMoimNameDto patchMoimNameDto, Long userId) {
+        User user = userService.getUser(userId);
+        Moim moim = moimService.getMoim(patchMoimNameDto.getMoimId());
+        MoimAndUser moimAndUser = moimAndUserService.getMoimAndUser(moim, user);
+        moimAndUser.updateCustomName(patchMoimNameDto.getMoimName());
+        return moim.getId();
     }
 }

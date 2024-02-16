@@ -55,9 +55,9 @@ public class MoimController {
 
     @Operation(summary = "모임 이름 변경", description = "모임 이름 변경 API, 변경자 입장에서만 적용")
     @PatchMapping("/name")
-    public BaseResponse<Long> modifyUserName(@RequestBody MoimRequest.PatchMoimNameDto patchMoimNameDto,
+    public BaseResponse<Long> modifyMoimName(@RequestBody MoimRequest.PatchMoimNameDto patchMoimNameDto,
                                              HttpServletRequest request) {
-        Long moimId = moimService.patchMoimName(patchMoimNameDto, (Long) request.getAttribute("userId"));
+        Long moimId = moimFacade.modifyMoimName(patchMoimNameDto, (Long) request.getAttribute("userId"));
         return new BaseResponse(moimId);
     }
 
