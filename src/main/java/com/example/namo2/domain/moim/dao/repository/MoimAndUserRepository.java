@@ -17,6 +17,9 @@ public interface MoimAndUserRepository extends JpaRepository<MoimAndUser, Long> 
     @Query(value = "select gu from MoimAndUser gu join fetch gu.user where gu.moim= :moim")
     List<MoimAndUser> findMoimAndUserByMoim(Moim moim);
 
+    @Query(value = "select gu from MoimAndUser gu join fetch gu.user where gu.moim in :moims")
+    List<MoimAndUser> findMoimAndUserByMoim(List<Moim> moims);
+
     Optional<MoimAndUser> findMoimAndUserByUserAndMoim(User user, Moim moim);
 
     Integer countMoimAndUserByMoim(Moim moim);

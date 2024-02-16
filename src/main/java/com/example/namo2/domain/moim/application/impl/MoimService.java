@@ -24,17 +24,14 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.moim.ui.dto.GetMoimUserRes;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
 import com.example.namo2.domain.schedule.ScheduleRepository;
 import com.example.namo2.domain.user.UserRepository;
-import com.example.namo2.global.utils.FileUtils;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -67,21 +64,6 @@ public class MoimService {
 
     public Moim create(Moim moim) {
         return moimRepository.save(moim);
-    }
-
-    public List<MoimResponse.MoimDto> findMoims(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_USER_FAILURE));
-        List<MoimAndUser> moimAndUsers = moimAndUserRepository.findMoimAndUserByUser(user);
-
-        List<MoimResponse.MoimDto> moims = new ArrayList<>();
-
-        for (MoimAndUser moimAndUser : moimAndUsers) {
-            Moim moim = moimAndUser.getMoim();
-            List<MoimAndUser> groupUsers = moimAndUserRepository.findMoimAndUserByMoim(moim);
-            List<GetMoimUserRes> moimUsers = groupUsers.stream().map((groupUser) -> new GetMoimUserRes(groupUser.getUser().getId(), groupUser.getUser().getName(), groupUser.getColor())).collect(Collectors.toList());
-            moims.add(new MoimResponse.MoimDto(moim.getId(), moimAndUser.getMoimCustomName(), moim.getImgUrl(), moim.getCode(), moimUsers));
-        }
-        return moims;
     }
 
     @Transactional(readOnly = false)
