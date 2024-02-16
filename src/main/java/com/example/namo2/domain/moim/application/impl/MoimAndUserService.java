@@ -46,4 +46,8 @@ public class MoimAndUserService {
             throw new BaseException(BaseResponseStatus.DUPLICATE_PARTICIPATE_FAILURE);
         }
     }
+
+    public void removeMoimAndUser(MoimAndUser moimAndUser) {
+        moimAndUserRepository.delete(moimAndUser);
+    }
 }
