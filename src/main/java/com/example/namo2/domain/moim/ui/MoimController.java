@@ -49,7 +49,7 @@ public class MoimController {
     @Operation(summary = "모임 조회", description = "모임 조회 API")
     @GetMapping("")
     public BaseResponse<List<MoimResponse.MoimDto>> findMoims(HttpServletRequest request) {
-        List<MoimResponse.MoimDto> moims = moimService.findMoims((Long) request.getAttribute("userId"));
+        List<MoimResponse.MoimDto> moims = moimFacade.getMoims((Long) request.getAttribute("userId"));
         return new BaseResponse(moims);
     }
 

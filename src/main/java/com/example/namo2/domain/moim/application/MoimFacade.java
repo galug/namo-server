@@ -16,6 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -37,5 +41,16 @@ public class MoimFacade {
                 .toMoimAndUser(groupName, MOIM_USERS_COLOR[0], user, moim);
         moimAndUserService.create(moimAndUser);
         return MoimResponseConverter.toMoimIdDto(moim);
+    }
+
+    public List<MoimResponse.MoimDto> getMoims(Long userId) {
+        User user = userService.getUser(userId);
+        List<Moim> moimsInUser = moimAndUserService.getMoimAndUsers(user)
+                .stream().map(MoimAndUser::getMoim)
+                .collect(Collectors.toList());
+
+        List<MoimAndUser> moimAndUsersInMoims = moimAndUserService
+                .getMoimAndUsers(moimsInUser);
+        return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims);
     }
 }

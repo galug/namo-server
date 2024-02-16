@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +27,9 @@ public class Moim extends BaseTimeEntity {
     private String imgUrl;
 
     private String code;
+
+    @OneToMany(mappedBy = "moim", fetch = FetchType.LAZY)
+    List<MoimAndUser> moimAndUsers = new ArrayList<>();
 
     @Builder
     public Moim(Long id, String name, String imgUrl) {
