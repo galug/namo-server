@@ -3,12 +3,15 @@ package com.example.namo2.domain.moim.application;
 import com.example.namo2.domain.moim.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.moim.application.converter.MoimConverter;
 import com.example.namo2.domain.moim.application.converter.MoimResponseConverter;
+import com.example.namo2.domain.moim.application.converter.MoimScheduleConverter;
 import com.example.namo2.domain.moim.application.impl.MoimAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.ui.dto.MoimRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.utils.FileUtils;
@@ -84,5 +87,11 @@ public class MoimFacade {
         Moim moim = moimService.getMoim(moimId);
         MoimAndUser moimAndUser = moimAndUserService.getMoimAndUser(moim, user);
         moimAndUserService.removeMoimAndUser(moimAndUser);
+    }
+
+    @Transactional(readOnly = false)
+    public Long createSchedule(MoimScheduleRequest.PostMoimScheduleDto scheduleReq) {
+        Moim moim = moimService.getMoim(scheduleReq.getMoimId());
+        return 1L;
     }
 }

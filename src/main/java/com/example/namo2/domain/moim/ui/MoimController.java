@@ -75,57 +75,6 @@ public class MoimController {
         return BaseResponse.ok();
     }
 
-    @Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
-    @PostMapping("/schedule")
-    public BaseResponse<Long> createMoimSchedule(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleDto scheduleReq) {
-        Long scheduleId = moimService.createSchedule(scheduleReq);
-        return new BaseResponse(scheduleId);
-    }
-
-    @Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
-    @PatchMapping("/schedule")
-    public BaseResponse<Long> modifyMoimSchedule(@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleDto scheduleReq) {
-        moimService.updateSchedule(scheduleReq);
-        return BaseResponse.ok();
-    }
-
-    @Operation(summary = "모임 스케쥴 카테고리 수정", description = "모임 스케쥴 카테고리 수정 API")
-    @PatchMapping("/schedule/category")
-    public BaseResponse<Long> modifyMoimScheduleCategory(@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleReq, HttpServletRequest request) {
-        moimService.updateScheduleCategory(scheduleReq, (Long) request.getAttribute("userId"));
-        return BaseResponse.ok();
-    }
-
-    @Operation(summary = "모임 스케쥴 삭제", description = "모임 스케쥴 삭제 API")
-    @DeleteMapping("/schedule/{moimScheduleId}")
-    public BaseResponse<Long> removeMoimSchedule(@PathVariable Long moimScheduleId) {
-        moimService.deleteSchedule(moimScheduleId);
-        return BaseResponse.ok();
-    }
-
-    @Operation(summary = "월간 모임 스케쥴 조회", description = "월간 모임 스케쥴 조회 API")
-    @GetMapping("/schedule/{moimId}/{month}")
-    public BaseResponse<MoimScheduleDto> getMoimSchedules(@PathVariable("moimId") Long moimId,
-                                                          @PathVariable("month") String month) {
-        List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        List<MoimScheduleDto> schedules = moimService.findMoimSchedules(moimId, localDateTimes);
-        return new BaseResponse(schedules);
-    }
-
-    @Operation(summary = "모임 스케쥴 생성 알람", description = "모임 스케쥴 생성 알람 API")
-    @PostMapping("/schedule/alarm")
-    public BaseResponse createMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto) {
-        moimService.createScheduleAlarm(postMoimScheduleAlarmDto);
-        return BaseResponse.ok();
-    }
-
-    @Operation(summary = "모임 스케쥴 변경 알람", description = "모임 스케쥴 변경 알람 API")
-    @PatchMapping("/schedule/alarm")
-    public BaseResponse updateMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto) {
-        moimService.updateScheduleAlarm(postMoimScheduleAlarmDto);
-        return BaseResponse.ok();
-    }
-
     @Operation(summary = "모임 메모 생성", description = "모임 모임 매모 생성 API")
     @PostMapping("/schedule/memo/{moimScheduleId}")
     public BaseResponse<Object> createMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
