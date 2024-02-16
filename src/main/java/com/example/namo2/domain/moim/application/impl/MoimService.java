@@ -78,14 +78,6 @@ public class MoimService {
     }
 
     @Transactional(readOnly = false)
-    public void withdraw(Long userId, Long moimId) {
-        User user = em.getReference(User.class, userId);
-        Moim moim = em.getReference(Moim.class, moimId);
-        MoimAndUser moimAndUser = moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
-        moimAndUserRepository.delete(moimAndUser);
-    }
-
-    @Transactional(readOnly = false)
     public Long createSchedule(MoimScheduleRequest.PostMoimScheduleDto scheduleReq) {
         Moim moim = moimRepository.getReferenceById(scheduleReq.getMoimId());
         Period period = Period.builder().startDate(scheduleReq.getStartDate()).endDate(scheduleReq.getEndDate()).dayInterval(scheduleReq.getInterval()).build();

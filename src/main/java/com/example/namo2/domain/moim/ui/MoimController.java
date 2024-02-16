@@ -71,7 +71,7 @@ public class MoimController {
     @Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")
     @DeleteMapping("/withdraw/{moimId}")
     public BaseResponse removeMoimAndUser(@PathVariable("moimId") Long moimId, HttpServletRequest request) {
-        moimService.withdraw((Long) request.getAttribute("userId"), moimId);
+        moimFacade.removeMoimAndUser((Long) request.getAttribute("userId"), moimId);
         return BaseResponse.ok();
     }
 

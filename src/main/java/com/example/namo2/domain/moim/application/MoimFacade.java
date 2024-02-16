@@ -77,4 +77,12 @@ public class MoimFacade {
         moimAndUserService.create(moimAndUser);
         return moim.getId();
     }
+
+    @Transactional
+    public void removeMoimAndUser(Long userId, Long moimId) {
+        User user = userService.getUser(userId);
+        Moim moim = moimService.getMoim(moimId);
+        MoimAndUser moimAndUser = moimAndUserService.getMoimAndUser(moim, user);
+        moimAndUserService.removeMoimAndUser(moimAndUser);
+    }
 }
