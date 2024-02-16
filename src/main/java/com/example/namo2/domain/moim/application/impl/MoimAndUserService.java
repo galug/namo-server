@@ -9,7 +9,6 @@ import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,5 +35,15 @@ public class MoimAndUserService {
     public MoimAndUser getMoimAndUser(Moim moim, User user) {
         return moimAndUserRepository.findMoimAndUserByUserAndMoim(user, moim)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
+    }
+
+    public Integer getMoimMemberSize(Moim moim) {
+        return moimAndUserRepository.countMoimAndUserByMoim(moim);
+    }
+
+    public void validateExistsMoimAndUser(Moim moim, User user) {
+        if (moimAndUserRepository.existsMoimAndUserByMoimAndUser(moim, user)) {
+            throw new BaseException(BaseResponseStatus.DUPLICATE_PARTICIPATE_FAILURE);
+        }
     }
 }

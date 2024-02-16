@@ -64,7 +64,7 @@ public class MoimController {
     @Operation(summary = "모임 참여", description = "모임 참여 API")
     @PatchMapping("/participate/{code}")
     public BaseResponse<Long> createMoimAndUser(@PathVariable("code") String code, HttpServletRequest request) {
-        Long moimId = moimService.participate((Long) request.getAttribute("userId"), code);
+        Long moimId = moimFacade.createMoimAndUser((Long) request.getAttribute("userId"), code);
         return new BaseResponse(moimId);
     }
 
