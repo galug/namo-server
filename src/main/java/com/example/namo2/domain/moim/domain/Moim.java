@@ -28,9 +28,6 @@ public class Moim extends BaseTimeEntity {
 
     private String code;
 
-    @OneToMany(mappedBy = "moim", fetch = FetchType.LAZY)
-    List<MoimAndUser> moimAndUsers = new ArrayList<>();
-
     @Builder
     public Moim(Long id, String name, String imgUrl) {
         this.id = id;

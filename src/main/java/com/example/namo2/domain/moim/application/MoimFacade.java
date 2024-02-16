@@ -62,4 +62,19 @@ public class MoimFacade {
         moimAndUser.updateCustomName(patchMoimNameDto.getMoimName());
         return moim.getId();
     }
+
+    @Transactional
+    public Long createMoimAndUser(Long userId, String code) {
+        User user = userService.getUser(userId);
+        Moim moim = moimService.getMoim(code);
+
+        moimAndUserService.validateExistsMoimAndUser(moim, user);
+
+        Integer numberOfMoimMembers = moimAndUserService.getMoimMemberSize(moim);
+        MoimAndUser moimAndUser = MoimAndUserConverter
+                .toMoimAndUser(moim.getName(), MOIM_USERS_COLOR[numberOfMoimMembers], user, moim);
+
+        moimAndUserService.create(moimAndUser);
+        return moim.getId();
+    }
 }

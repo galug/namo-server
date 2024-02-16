@@ -72,21 +72,9 @@ public class MoimService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_FAILURE));
     }
 
-    @Transactional(readOnly = false)
-    public Long participate(Long userId, String code) {
-        Moim moim = moimRepository.findMoimByCode(code).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
-        User user = userRepository.getReferenceById(userId);
-        duplicateParticipate(moim, user);
-        Integer numberOfMoimer = moimAndUserRepository.countMoimAndUserByMoim(moim);
-        MoimAndUser moimAndUser = MoimAndUser.builder().user(user).moim(moim).moimCustomName(moim.getName()).color(MOIM_USERS_COLOR[numberOfMoimer]).build();
-        moimAndUserRepository.save(moimAndUser);
-        return moim.getId();
-    }
-
-    private void duplicateParticipate(Moim moim, User user) {
-        if (moimAndUserRepository.existsMoimAndUserByMoimAndUser(moim, user)) {
-            throw new BaseException(BaseResponseStatus.DUPLICATE_PARTICIPATE_FAILURE);
-        }
+    public Moim getMoim(String code) {
+        return moimRepository.findMoimByCode(code)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
     }
 
     @Transactional(readOnly = false)
