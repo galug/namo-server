@@ -18,14 +18,13 @@ public class MoimScheduleAlarm {
     private Integer alarmDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moim_schedule_id")
-    private MoimSchedule moimSchedule;
+    @JoinColumn(name = "moim_schedule_user_id")
+    private MoimScheduleAndUser moimScheduleAndUser;
 
     @Builder
-    public MoimScheduleAlarm(Long id, Integer alarmDate, MoimSchedule moimSchedule) {
+    public MoimScheduleAlarm(Long id, Integer alarmDate, MoimScheduleAndUser moimScheduleAndUser) {
         this.id = id;
         this.alarmDate = alarmDate;
-        this.moimSchedule = moimSchedule;
-        moimSchedule.getMoimScheduleAlarms().add(this);
+        this.moimScheduleAndUser = moimScheduleAndUser;
     }
 }
