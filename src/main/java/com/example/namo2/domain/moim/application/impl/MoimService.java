@@ -66,15 +66,6 @@ public class MoimService {
     }
 
     @Transactional(readOnly = false)
-    public void updateScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto scheduleAlarmDto) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleAlarmDto.getMoimScheduleId()).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
-            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).build();
-            moimScheduleAlarmRepository.save(moimScheduleAlarm);
-        }
-    }
-
-    @Transactional(readOnly = false)
     public void deleteSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
@@ -90,15 +81,5 @@ public class MoimService {
 
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
         moimScheduleRepository.delete(moimSchedule);
-    }
-
-    @Transactional(readOnly = false)
-    public void createMoimScheduleText(Long moimScheduleId,
-                                       Long userId,
-                                       MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
-        moimScheduleAndUser.updateText(moimScheduleText.getText());
     }
 }
