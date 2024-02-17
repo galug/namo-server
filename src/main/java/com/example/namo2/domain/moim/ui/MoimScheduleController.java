@@ -1,6 +1,7 @@
 package com.example.namo2.domain.moim.ui;
 
 import com.example.namo2.domain.moim.application.MoimFacade;
+import com.example.namo2.domain.moim.application.MoimScheduleFacade;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
@@ -30,40 +31,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/moims/schedule")
 public class MoimScheduleController {
-    private final MoimFacade moimFacade;
+    private final MoimScheduleFacade moimScheduleFacade;
     private final MoimService moimService;
     private final Converter converter;
 
     @Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
-    @PostMapping("/schedule")
+    @PostMapping("")
     public BaseResponse<Long> createMoimSchedule(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleDto scheduleReq) {
-        Long scheduleId = moimService.createSchedule(scheduleReq);
+        Long scheduleId = moimScheduleFacade.createSchedule(scheduleReq);
         return new BaseResponse(scheduleId);
     }
 
-    @Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
-    @PatchMapping("/schedule")
+    @Operation(summary = "모임 스케쥴 수정", description = "모임 스케쥴 수정 API")
+    @PatchMapping("")
     public BaseResponse<Long> modifyMoimSchedule(@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleDto scheduleReq) {
         moimService.updateSchedule(scheduleReq);
         return BaseResponse.ok();
     }
 
     @Operation(summary = "모임 스케쥴 카테고리 수정", description = "모임 스케쥴 카테고리 수정 API")
-    @PatchMapping("/schedule/category")
+    @PatchMapping("category")
     public BaseResponse<Long> modifyMoimScheduleCategory(@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleReq, HttpServletRequest request) {
         moimService.updateScheduleCategory(scheduleReq, (Long) request.getAttribute("userId"));
         return BaseResponse.ok();
     }
 
     @Operation(summary = "모임 스케쥴 삭제", description = "모임 스케쥴 삭제 API")
-    @DeleteMapping("/schedule/{moimScheduleId}")
+    @DeleteMapping("/{moimScheduleId}")
     public BaseResponse<Long> removeMoimSchedule(@PathVariable Long moimScheduleId) {
         moimService.deleteSchedule(moimScheduleId);
         return BaseResponse.ok();
     }
 
     @Operation(summary = "월간 모임 스케쥴 조회", description = "월간 모임 스케쥴 조회 API")
-    @GetMapping("/schedule/{moimId}/{month}")
+    @GetMapping("/{moimId}/{month}")
     public BaseResponse<MoimScheduleDto> getMoimSchedules(@PathVariable("moimId") Long moimId,
                                                           @PathVariable("month") String month) {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
@@ -72,14 +73,14 @@ public class MoimScheduleController {
     }
 
     @Operation(summary = "모임 스케쥴 생성 알람", description = "모임 스케쥴 생성 알람 API")
-    @PostMapping("/schedule/alarm")
+    @PostMapping("/alarm")
     public BaseResponse createMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto) {
         moimService.createScheduleAlarm(postMoimScheduleAlarmDto);
         return BaseResponse.ok();
     }
 
     @Operation(summary = "모임 스케쥴 변경 알람", description = "모임 스케쥴 변경 알람 API")
-    @PatchMapping("/schedule/alarm")
+    @PatchMapping("/alarm")
     public BaseResponse updateMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto) {
         moimService.updateScheduleAlarm(postMoimScheduleAlarmDto);
         return BaseResponse.ok();
