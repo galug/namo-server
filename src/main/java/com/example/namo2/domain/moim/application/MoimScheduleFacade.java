@@ -108,4 +108,17 @@ public class MoimScheduleFacade {
             moimScheduleAndUserService.createMoimScheduleAlarm(moimScheduleAlarm);
         }
     }
+
+    @Transactional
+    public void modifyMoimScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto moimScheduleAlarmDto, Long userId) {
+        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleAlarmDto.getMoimScheduleId());
+        User user = userService.getUser(userId);
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
+        moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUser);
+
+        for (Integer alarmDate : moimScheduleAlarmDto.getAlarmDates()) {
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleConverter.toMoimScheduleAlarm(moimScheduleAndUser, alarmDate);
+            moimScheduleAndUserService.createMoimScheduleAlarm(moimScheduleAlarm);
+        }
+    }
 }

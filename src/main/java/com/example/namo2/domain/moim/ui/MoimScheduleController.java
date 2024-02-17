@@ -1,6 +1,5 @@
 package com.example.namo2.domain.moim.ui;
 
-import com.example.namo2.domain.moim.application.MoimFacade;
 import com.example.namo2.domain.moim.application.MoimScheduleFacade;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
@@ -81,8 +80,17 @@ public class MoimScheduleController {
 
     @Operation(summary = "모임 스케쥴 변경 알람", description = "모임 스케쥴 변경 알람 API")
     @PatchMapping("/alarm")
-    public BaseResponse updateMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto) {
-        moimService.updateScheduleAlarm(postMoimScheduleAlarmDto);
+    public BaseResponse modifyMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto,
+                                                HttpServletRequest request) {
+        moimScheduleFacade.modifyMoimScheduleAlarm(postMoimScheduleAlarmDto, (Long) request.getAttribute("userId"));
+        return BaseResponse.ok();
+    }
+
+    @Operation(summary = "모임 스케줄 메모 텍스트 추가", description = "모임 스케줄 텍스트 추가 API")
+    @PatchMapping("/text/{moimScheduleId}")
+    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId,
+                                                       HttpServletRequest request,
+                                                       @RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
         return BaseResponse.ok();
     }
 }
