@@ -37,9 +37,6 @@ public class MoimSchedule extends BaseTimeEntity {
     @OneToMany(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
     private List<MoimScheduleAndUser> moimScheduleAndUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
-    private List<MoimScheduleAlarm> moimScheduleAlarms = new ArrayList<>();
-
     @OneToOne(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
     private MoimMemo moimMemo;
 
