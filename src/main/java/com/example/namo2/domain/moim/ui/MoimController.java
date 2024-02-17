@@ -124,7 +124,7 @@ public class MoimController {
     @Operation(summary = "모임 메모 삭제", description = "모임 메모 삭제 API")
     @DeleteMapping("/schedule/memo/{memoLocationId}")
     public BaseResponse<Object> deleteMoimMemo(@PathVariable Long memoLocationId) {
-        moimMemoService.delete(memoLocationId);
+        moimMemoService.deleteMoimMemoLocation(memoLocationId);
         return BaseResponse.ok();
     }
 }

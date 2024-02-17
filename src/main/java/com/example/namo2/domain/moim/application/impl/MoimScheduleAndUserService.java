@@ -3,6 +3,7 @@ package com.example.namo2.domain.moim.application.impl;
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.category.ui.dto.MoimCategoryDto;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
@@ -15,14 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MoimScheduleAndUserService {
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
+    private final MoimScheduleAlarmRepository moimScheduleAlarmRepository;
 
     public void createAll(List<MoimScheduleAndUser> moimScheduleAndUsers) {
         moimScheduleAndUserRepository.saveAll(moimScheduleAndUsers);
@@ -36,4 +36,9 @@ public class MoimScheduleAndUserService {
         return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
     }
+
+    public void removeMoimScheduleAlarm(MoimScheduleAndUser moimScheduleAndUser) {
+        moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimScheduleAndUser(moimScheduleAndUser);
+    }
+
 }
