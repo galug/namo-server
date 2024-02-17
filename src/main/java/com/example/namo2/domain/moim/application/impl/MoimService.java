@@ -1,43 +1,31 @@
 package com.example.namo2.domain.moim.application.impl;
 
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
-import com.example.namo2.domain.category.ui.dto.MoimCategoryDto;
 import com.example.namo2.domain.memo.MoimMemoRepository;
 import com.example.namo2.domain.memo.MoimMemoService;
-import com.example.namo2.domain.moim.dao.repository.MoimAndUserRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
-import com.example.namo2.domain.moim.ui.dto.MoimRequest;
-import com.example.namo2.domain.moim.ui.dto.MoimResponse;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.moim.domain.Moim;
-import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.schedule.domain.Location;
-import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
 import com.example.namo2.domain.schedule.ScheduleRepository;
 import com.example.namo2.domain.user.UserRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_FAILURE;
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
@@ -73,17 +61,6 @@ public class MoimService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
     }
 
-    @Transactional(readOnly = false)
-    public void updateScheduleCategory(
-            MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleReq,
-            Long userId) {
-        MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleReq.getMoimScheduleId());
-        User user = userRepository.getReferenceById(userId);
-        Category category = categoryRepository.findById(scheduleReq.getCategoryId()).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_CATEGORY_FAILURE));
-        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
-        moimScheduleAndUser.updateCategory(category);
-    }
-
     public List<MoimScheduleDto> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
         return scheduleRepository.findMonthScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
     }
@@ -92,7 +69,7 @@ public class MoimService {
     public void createScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto scheduleAlarmDto) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleAlarmDto.getMoimScheduleId());
         for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
-            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).moimSchedule(moimSchedule).build();
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).build();
             moimScheduleAlarmRepository.save(moimScheduleAlarm);
         }
     }
@@ -100,26 +77,27 @@ public class MoimService {
     @Transactional(readOnly = false)
     public void updateScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto scheduleAlarmDto) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleAlarmDto.getMoimScheduleId()).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimSchedule(moimSchedule);
         for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
-            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).moimSchedule(moimSchedule).build();
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).build();
             moimScheduleAlarmRepository.save(moimScheduleAlarm);
         }
     }
 
     @Transactional(readOnly = false)
     public void deleteSchedule(Long moimScheduleId) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndLocationsByMoimSchedule(moimSchedule);
 
 //         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
         if (moimMemo != null) {
-            moimMemo.getMoimMemoLocations().stream().forEach((moimMemoLocation -> moimMemoService.delete(moimMemoLocation.getId())));
+            moimMemo.getMoimMemoLocations()
+                    .stream()
+                    .forEach((moimMemoLocation -> moimMemoService.deleteMoimMemoLocation(moimMemoLocation.getId())));
             moimMemoRepository.delete(moimMemo);
         }
 
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
-        moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimSchedule(moimSchedule);
         moimScheduleRepository.delete(moimSchedule);
     }
 

@@ -21,4 +21,9 @@ public class MoimScheduleService {
         return moimScheduleRepository.findById(id)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
     }
+
+    public void delete(MoimSchedule moimSchedule) {
+        moimScheduleRepository.delete(moimSchedule);
+    }
+
 }

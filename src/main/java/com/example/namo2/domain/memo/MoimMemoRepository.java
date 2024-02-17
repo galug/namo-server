@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface MoimMemoRepository extends JpaRepository<MoimMemo, Long> {
-    public boolean existsMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
+    boolean existsMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
 
     @Query(value = "select distinct mm" +
             " from MoimMemo mm" +
@@ -16,15 +16,15 @@ public interface MoimMemoRepository extends JpaRepository<MoimMemo, Long> {
             " join fetch ms.moimScheduleAndUsers msu" +
             " join fetch msu.user" +
             " where ms.id = :moimScheduleId")
-    public MoimMemo findMoimMemoAndUsersByMoimSchedule(Long moimScheduleId);
+    MoimMemo findMoimMemoAndUsersByMoimSchedule(Long moimScheduleId);
 
-    public Optional<MoimMemo> findMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
+    MoimMemo findMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
 
 
     @Query("select mm" +
             " from MoimMemo mm" +
             " left join fetch mm.moimMemoLocations" +
             " where mm.moimSchedule =:moimSchedule")
-    public MoimMemo findMoimMemoAndLocationsByMoimSchedule(MoimSchedule moimSchedule);
+    MoimMemo findMoimMemoAndLocationsByMoimSchedule(MoimSchedule moimSchedule);
 
 }

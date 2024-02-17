@@ -2,6 +2,8 @@ package com.example.namo2.domain.moim.application;
 
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.application.converter.MoimScheduleConverter;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
@@ -14,15 +16,11 @@ import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
 
 @Component
 @RequiredArgsConstructor
@@ -32,6 +30,7 @@ public class MoimScheduleFacade {
     private final MoimService moimService;
     private final MoimScheduleService moimScheduleService;
     private final MoimScheduleAndUserService moimScheduleAndUserService;
+    private final MoimMemoService moimMemoService;
     private final CategoryService categoryService;
 
     /**
@@ -78,5 +77,22 @@ public class MoimScheduleFacade {
         Category category = categoryService.getCategory(scheduleCategoryDto.getCategoryId());
         MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
         moimScheduleAndUser.updateCategory(category);
+    }
+
+    /**
+     * 모임 스케줄 삭제는 모임 메모와 연관된 요소 있으므로 나중에
+     */
+    public void removeMoimSchedule(Long moimScheduleId) {
+        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
+        MoimMemo moimMemo = moimMemoService.getMoimMemo(moimSchedule);
+
+//         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
+        if (moimMemo != null) {
+            moimMemo.getMoimMemoLocations().stream().forEach((moimMemoLocation -> moimMemoService.deleteMoimMemoLocation(moimMemoLocation.getId())));
+            moimMemoService.deleteMoimMemo(moimMemo);
+        }
+
+        moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
+        moimScheduleService.delete(moimSchedule);
     }
 }

@@ -44,8 +44,7 @@ public class MoimMemoService {
     @Transactional(readOnly = false)
     public void create(Long moimScheduleId, LocationInfo locationInfo, List<MultipartFile> imgs) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(moimScheduleId);
-        Optional<MoimMemo> optionalMoimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
-        MoimMemo moimMemo = optionalMoimMemo.orElseGet(() -> createMoimMemo(moimSchedule));
+        MoimMemo moimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
         MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationInfo);
         createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
         createMoimMemoLocationImgs(imgs, moimMemoLocation);
@@ -121,7 +120,7 @@ public class MoimMemoService {
     }
 
     @Transactional(readOnly = false)
-    public void delete(Long moimLocationId) {
+    public void deleteMoimMemoLocation(Long moimLocationId) {
         MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
@@ -137,5 +136,13 @@ public class MoimMemoService {
 
     public SliceDiaryDto<DiaryDto> findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) {
         return moimScheduleRepository.findMoimScheduleMemoByMonth(userId, localDateTimes, pageable);
+    }
+
+    public MoimMemo getMoimMemo(MoimSchedule moimSchedule) {
+        return moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
+    }
+
+    public void deleteMoimMemo(MoimMemo moimMemo) {
+        moimMemoRepository.delete(moimMemo);
     }
 }
