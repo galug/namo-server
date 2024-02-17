@@ -45,7 +45,7 @@ public class MoimScheduleController {
     @Operation(summary = "모임 스케쥴 수정", description = "모임 스케쥴 수정 API")
     @PatchMapping("")
     public BaseResponse<Long> modifyMoimSchedule(@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleDto scheduleReq) {
-        moimService.updateSchedule(scheduleReq);
+        moimScheduleFacade.modifyMoimSchedule(scheduleReq);
         return BaseResponse.ok();
     }
 

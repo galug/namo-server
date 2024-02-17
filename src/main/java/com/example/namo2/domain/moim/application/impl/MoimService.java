@@ -48,10 +48,7 @@ import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FO
 @Service
 @RequiredArgsConstructor
 public class MoimService {
-    private final static int[] MOIM_USERS_COLOR = new int[]{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-
     private final MoimRepository moimRepository;
-    private final MoimAndUserRepository moimAndUserRepository;
     private final MoimScheduleRepository moimScheduleRepository;
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
     private final MoimScheduleAlarmRepository moimScheduleAlarmRepository;
@@ -61,7 +58,6 @@ public class MoimService {
     private final ScheduleRepository scheduleRepository;
 
     private final MoimMemoService moimMemoService;
-    private final EntityManager em;
 
     public Moim create(Moim moim) {
         return moimRepository.save(moim);
@@ -75,16 +71,6 @@ public class MoimService {
     public Moim getMoim(String code) {
         return moimRepository.findMoimByCode(code)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
-    }
-
-    @Transactional(readOnly = false)
-    public void updateSchedule(MoimScheduleRequest.PatchMoimScheduleDto scheduleReq) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleReq.getMoimScheduleId()).orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
-        Period period = Period.builder().startDate(scheduleReq.getStartDate()).endDate(scheduleReq.getEndDate()).dayInterval(scheduleReq.getInterval()).build();
-        Location location = Location.builder().locationName(scheduleReq.getLocationName()).x(scheduleReq.getX()).y(scheduleReq.getY()).build();
-        moimSchedule.update(scheduleReq.getName(), period, location);
-        moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
-//        unionScheduleParticipant(scheduleReq.getUsers(), moimSchedule);
     }
 
     @Transactional(readOnly = false)

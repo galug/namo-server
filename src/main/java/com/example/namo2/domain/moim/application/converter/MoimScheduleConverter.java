@@ -27,7 +27,23 @@ public class MoimScheduleConverter {
                 .build();
     }
 
+    public static Period toPeriod(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
+        return Period.builder()
+                .startDate(moimScheduleDto.getStartDate())
+                .endDate(moimScheduleDto.getEndDate())
+                .dayInterval(moimScheduleDto.getInterval())
+                .build();
+    }
+
     public static Location toLocation(MoimScheduleRequest.PostMoimScheduleDto moimScheduleDto) {
+        return Location.builder()
+                .x(moimScheduleDto.getX())
+                .y(moimScheduleDto.getY())
+                .locationName(moimScheduleDto.getLocationName())
+                .build();
+    }
+
+    public static Location toLocation(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
         return Location.builder()
                 .x(moimScheduleDto.getX())
                 .y(moimScheduleDto.getY())

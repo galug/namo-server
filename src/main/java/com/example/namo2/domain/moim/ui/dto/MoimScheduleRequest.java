@@ -41,7 +41,7 @@ public class MoimScheduleRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public class PatchMoimScheduleDto {
+    public static class PatchMoimScheduleDto {
         @NotNull
         private Long moimScheduleId;
         @NotBlank
