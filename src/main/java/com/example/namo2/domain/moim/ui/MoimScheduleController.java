@@ -74,8 +74,8 @@ public class MoimScheduleController {
 
     @Operation(summary = "모임 스케쥴 생성 알람", description = "모임 스케쥴 생성 알람 API")
     @PostMapping("/alarm")
-    public BaseResponse createMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto) {
-        moimService.createScheduleAlarm(postMoimScheduleAlarmDto);
+    public BaseResponse createMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto, HttpServletRequest request) {
+        moimScheduleFacade.createMoimScheduleAlarm(postMoimScheduleAlarmDto, (Long) request.getAttribute("userId"));
         return BaseResponse.ok();
     }
 

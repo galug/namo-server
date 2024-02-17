@@ -84,7 +84,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .select(moimScheduleAndUser).distinct()
                 .from(moimScheduleAndUser)
                 .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
-                .leftJoin(moimSchedule.moimScheduleAlarms).fetchJoin()
+                .leftJoin(moimScheduleAndUser.moimScheduleAlarms).fetchJoin()
                 .leftJoin(moimSchedule.moimMemo).fetchJoin()
                 .where(moimScheduleAndUser.user.eq(user),
                         moimScheduleDateLoe(endDate),
