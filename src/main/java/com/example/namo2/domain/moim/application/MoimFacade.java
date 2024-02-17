@@ -88,10 +88,4 @@ public class MoimFacade {
         MoimAndUser moimAndUser = moimAndUserService.getMoimAndUser(moim, user);
         moimAndUserService.removeMoimAndUser(moimAndUser);
     }
-
-    @Transactional(readOnly = false)
-    public Long createSchedule(MoimScheduleRequest.PostMoimScheduleDto scheduleReq) {
-        Moim moim = moimService.getMoim(scheduleReq.getMoimId());
-        return 1L;
-    }
 }

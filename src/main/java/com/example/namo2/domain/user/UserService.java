@@ -5,6 +5,8 @@ import com.example.namo2.global.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 @Service
@@ -16,5 +18,9 @@ public class UserService {
     public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+    }
+
+    public List<User> getUsers(List<Long> users) {
+        return userRepository.findUsersById(users);
     }
 }
