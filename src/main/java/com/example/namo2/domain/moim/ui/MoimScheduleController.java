@@ -52,7 +52,7 @@ public class MoimScheduleController {
     @Operation(summary = "모임 스케쥴 카테고리 수정", description = "모임 스케쥴 카테고리 수정 API")
     @PatchMapping("category")
     public BaseResponse<Long> modifyMoimScheduleCategory(@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleReq, HttpServletRequest request) {
-        moimService.updateScheduleCategory(scheduleReq, (Long) request.getAttribute("userId"));
+        moimScheduleFacade.modifyMoimScheduleCategory(scheduleReq, (Long) request.getAttribute("userId"));
         return BaseResponse.ok();
     }
 
