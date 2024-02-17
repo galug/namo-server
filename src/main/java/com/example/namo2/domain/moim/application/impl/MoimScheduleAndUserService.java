@@ -1,12 +1,9 @@
 package com.example.namo2.domain.moim.application.impl;
 
-import com.example.namo2.domain.category.dao.repository.CategoryRepository;
-import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.category.ui.dto.MoimCategoryDto;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
-import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
@@ -39,6 +36,10 @@ public class MoimScheduleAndUserService {
 
     public void removeMoimScheduleAlarm(MoimScheduleAndUser moimScheduleAndUser) {
         moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimScheduleAndUser(moimScheduleAndUser);
+    }
+
+    public void createMoimScheduleAlarm(MoimScheduleAlarm moimScheduleAlarm) {
+        moimScheduleAlarmRepository.save(moimScheduleAlarm);
     }
 
 }

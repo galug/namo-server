@@ -10,6 +10,7 @@ import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.schedule.domain.Location;
@@ -94,5 +95,17 @@ public class MoimScheduleFacade {
 
         moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
         moimScheduleService.delete(moimSchedule);
+    }
+
+    @Transactional
+    public void createMoimScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto moimScheduleAlarmDto, Long userId) {
+        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleAlarmDto.getMoimScheduleId());
+        User user = userService.getUser(userId);
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
+
+        for (Integer alarmDate : moimScheduleAlarmDto.getAlarmDates()) {
+            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleConverter.toMoimScheduleAlarm(moimScheduleAndUser, alarmDate);
+            moimScheduleAndUserService.createMoimScheduleAlarm(moimScheduleAlarm);
+        }
     }
 }

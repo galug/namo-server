@@ -66,15 +66,6 @@ public class MoimService {
     }
 
     @Transactional(readOnly = false)
-    public void createScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto scheduleAlarmDto) {
-        MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(scheduleAlarmDto.getMoimScheduleId());
-        for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {
-            MoimScheduleAlarm moimScheduleAlarm = MoimScheduleAlarm.builder().alarmDate(alarmDate).build();
-            moimScheduleAlarmRepository.save(moimScheduleAlarm);
-        }
-    }
-
-    @Transactional(readOnly = false)
     public void updateScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto scheduleAlarmDto) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(scheduleAlarmDto.getMoimScheduleId()).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         for (Integer alarmDate : scheduleAlarmDto.getAlarmDates()) {

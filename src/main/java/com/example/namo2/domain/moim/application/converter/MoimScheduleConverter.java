@@ -3,6 +3,7 @@ package com.example.namo2.domain.moim.application.converter;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.schedule.domain.Location;
@@ -79,6 +80,13 @@ public class MoimScheduleConverter {
                 .user(user)
                 .moimSchedule(moimSchedule)
                 .category(category)
+                .build();
+    }
+
+    public static MoimScheduleAlarm toMoimScheduleAlarm(MoimScheduleAndUser moimScheduleAndUser, Integer alarmDate) {
+        return MoimScheduleAlarm.builder()
+                .alarmDate(alarmDate)
+                .moimScheduleAndUser(moimScheduleAndUser)
                 .build();
     }
 }

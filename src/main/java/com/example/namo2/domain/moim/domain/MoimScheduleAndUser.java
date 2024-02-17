@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "moim_schedule_and_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,6 +35,9 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "moimScheduleAndUser", fetch = FetchType.LAZY)
+    private List<MoimScheduleAlarm> moimScheduleAlarms = new ArrayList<>();
 
     @Builder
     public MoimScheduleAndUser(Long id, String memo, User user, MoimSchedule moimSchedule, Category category) {

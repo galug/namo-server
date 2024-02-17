@@ -94,7 +94,7 @@ public class MoimScheduleRequest {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public class PostMoimScheduleTextDto {
+    public static class PostMoimScheduleTextDto {
         private String text;
     }
 }
