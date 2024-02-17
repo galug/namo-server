@@ -14,6 +14,8 @@ import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,14 +45,27 @@ public class MoimScheduleFacade {
                 .toMoimSchedule(moim, period, location, moimScheduleDto);
         MoimSchedule savedMoimSchedule = moimScheduleService.create(moimSchedule);
 
-        List<User> users = userService.getUsers(moimScheduleDto.getUsers());
+        createMoimScheduleAndUsers(moimScheduleDto.getUsers(), savedMoimSchedule);
+
+        return savedMoimSchedule.getId();
+    }
+
+    private void createMoimScheduleAndUsers(List<Long> usersId, MoimSchedule savedMoimSchedule) {
+        List<User> users = userService.getUsers(usersId);
         List<Category> categories = categoryService
                 .getMoimUsersCategories(users);
         List<MoimScheduleAndUser> moimScheduleAndUsers = MoimScheduleConverter
                 .toMoimScheduleAndUsers(categories, savedMoimSchedule, users);
         moimScheduleAndUserService.createAll(moimScheduleAndUsers);
-
-        return savedMoimSchedule.getId();
     }
 
+    @Transactional
+    public void modifyMoimSchedule(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
+        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleDto.getMoimScheduleId());
+        Period period = MoimScheduleConverter.toPeriod(moimScheduleDto);
+        Location location = MoimScheduleConverter.toLocation(moimScheduleDto);
+        moimSchedule.update(moimScheduleDto.getName(), period, location);
+        moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
+        createMoimScheduleAndUsers(moimScheduleDto.getUsers(), moimSchedule);
+    }
 }
