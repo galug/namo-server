@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
+
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -67,5 +69,14 @@ public class MoimScheduleFacade {
         moimSchedule.update(moimScheduleDto.getName(), period, location);
         moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
         createMoimScheduleAndUsers(moimScheduleDto.getUsers(), moimSchedule);
+    }
+
+    @Transactional
+    public void modifyMoimScheduleCategory(MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleCategoryDto, Long userId) {
+        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleCategoryDto.getMoimScheduleId());
+        User user = userService.getUser(userId);
+        Category category = categoryService.getCategory(scheduleCategoryDto.getCategoryId());
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
+        moimScheduleAndUser.updateCategory(category);
     }
 }

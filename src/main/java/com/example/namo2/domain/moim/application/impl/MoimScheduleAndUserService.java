@@ -8,6 +8,8 @@ import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,5 +30,10 @@ public class MoimScheduleAndUserService {
 
     public void removeMoimScheduleAndUser(MoimSchedule moimSchedule) {
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
+    }
+
+    public MoimScheduleAndUser getMoimScheduleAndUser(MoimSchedule moimSchedule, User user) {
+        return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
     }
 }

@@ -76,7 +76,7 @@ public class MoimScheduleRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public class PatchMoimScheduleCategoryDto {
+    public static class PatchMoimScheduleCategoryDto {
         @NotNull
         private Long moimScheduleId;
 
@@ -86,7 +86,7 @@ public class MoimScheduleRequest {
 
     @NoArgsConstructor
     @Getter
-    public class PostMoimScheduleAlarmDto {
+    public static class PostMoimScheduleAlarmDto {
         private Long moimScheduleId;
         private List<Integer> alarmDates;
     }
