@@ -85,6 +85,15 @@ public class MoimController {
         return BaseResponse.ok();
     }
 
+    @Operation(summary = "모임 메모 텍스트 추가", description = "모임 메모 텍스트 추가 API")
+    @PatchMapping("/schedule/memo/text/{moimScheduleId}")
+    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId,
+                                                       HttpServletRequest request,
+                                                       @RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
+        moimService.createMoimScheduleText(moimScheduleId, (Long) request.getAttribute("userId"), moimScheduleText);
+        return BaseResponse.ok();
+    }
+
     @Operation(summary = "모임 메모 장소 수정", description = "모임 메모 장소 수정 API")
     @PatchMapping("/schedule/memo/{memoLocationId}")
     public BaseResponse<Object> updateMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,

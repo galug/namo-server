@@ -2,8 +2,8 @@ package com.example.namo2.domain.moim.ui;
 
 import com.example.namo2.domain.moim.application.MoimScheduleFacade;
 import com.example.namo2.domain.moim.application.impl.MoimService;
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.utils.Converter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,10 +64,10 @@ public class MoimScheduleController {
 
     @Operation(summary = "월간 모임 스케쥴 조회", description = "월간 모임 스케쥴 조회 API")
     @GetMapping("/{moimId}/{month}")
-    public BaseResponse<MoimScheduleDto> getMoimSchedules(@PathVariable("moimId") Long moimId,
-                                                          @PathVariable("month") String month) {
+    public BaseResponse<MoimScheduleResponse.MoimScheduleDto> getMoimSchedules(@PathVariable("moimId") Long moimId,
+                                                                               @PathVariable("month") String month) {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        List<MoimScheduleDto> schedules = moimService.findMoimSchedules(moimId, localDateTimes);
+        List<MoimScheduleResponse.MoimScheduleDto> schedules = moimScheduleFacade.getMoimSchedules(moimId, localDateTimes);
         return new BaseResponse(schedules);
     }
 
@@ -83,14 +83,6 @@ public class MoimScheduleController {
     public BaseResponse modifyMoimScheduleAlarm(@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto,
                                                 HttpServletRequest request) {
         moimScheduleFacade.modifyMoimScheduleAlarm(postMoimScheduleAlarmDto, (Long) request.getAttribute("userId"));
-        return BaseResponse.ok();
-    }
-
-    @Operation(summary = "모임 스케줄 메모 텍스트 추가", description = "모임 스케줄 텍스트 추가 API")
-    @PatchMapping("/text/{moimScheduleId}")
-    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId,
-                                                       HttpServletRequest request,
-                                                       @RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
         return BaseResponse.ok();
     }
 }
