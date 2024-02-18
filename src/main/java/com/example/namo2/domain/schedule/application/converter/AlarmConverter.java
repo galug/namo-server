@@ -8,7 +8,7 @@ import com.example.namo2.domain.schedule.ui.dto.ScheduleRequest;
 
 public class AlarmConverter {
 
-	public static List<Alarm> toAlarms(ScheduleRequest.PostScheduleReq req, Schedule schedule){
+	public static List<Alarm> toAlarms(ScheduleRequest.PostScheduleDto req, Schedule schedule){
 		return req.getAlarmDate().stream().map(alarm ->
 			Alarm.builder()
 				.alarmDate(alarm)

@@ -48,7 +48,7 @@ public class ScheduleFacade {
 	private final FileUtils fileUtils;
 
 	@Transactional
-	public ScheduleResponse.ScheduleIdRes createSchedule(ScheduleRequest.PostScheduleReq req, Long userId)
+	public ScheduleResponse.ScheduleIdDto createSchedule(ScheduleRequest.PostScheduleDto req, Long userId)
 		throws BaseException {
 
 		User user = userService.getUser(userId);
@@ -59,11 +59,11 @@ public class ScheduleFacade {
 		schedule.addAlarms(alarms);
 		Schedule saveSchedule = scheduleService.createSchedule(schedule);
 
-		return new ScheduleResponse.ScheduleIdRes(saveSchedule.getId());
+		return ScheduleResponseConverter.toScheduleIdRes(saveSchedule);
 	}
 
 	@Transactional
-	public ScheduleResponse.ScheduleIdRes createDiary(Long scheduleId, String content, List<MultipartFile> imgs)
+	public ScheduleResponse.ScheduleIdDto createDiary(Long scheduleId, String content, List<MultipartFile> imgs)
 		throws BaseException {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		schedule.updateDiaryContents(content);
@@ -71,27 +71,27 @@ public class ScheduleFacade {
 			List<String> urls = fileUtils.uploadImages(imgs);
 			List<Image> imgList = urls.stream().map(url -> ImageConverter.toImage(url, schedule)).toList();
 			imageService.createImgs(imgList);
-			schedule.setImgs(imgList);
 		}
 		return ScheduleResponseConverter.toScheduleIdRes(schedule);
 	}
+
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetScheduleRes> getSchedulesByUser(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
+	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUser(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
 		User user = userService.getUser(userId);
 		return scheduleService.getSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
 	}
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetScheduleRes> getMoimSchedulesByUser(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
+	public List<ScheduleResponse.GetScheduleDto> getMoimSchedulesByUser(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
 		User user = userService.getUser(userId);
 		return scheduleService.getMoimSchedulesByUser(user, localDateTimes.get(0), localDateTimes.get(1));
 	}
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetScheduleRes> getAllSchedulesByUser(Long userId) {
+	public List<ScheduleResponse.GetScheduleDto> getAllSchedulesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllSchedulesByUser(user);
 	}
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetScheduleRes> getAllMoimSchedulesByUser(Long userId) {
+	public List<ScheduleResponse.GetScheduleDto> getAllMoimSchedulesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllMoimSchedulesByUser(user);
 	}
@@ -104,12 +104,12 @@ public class ScheduleFacade {
 		return scheduleService.getScheduleDiaryByUser(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
 	}
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetDiaryByUserRes> getAllDiariesByUser(Long userId) {
+	public List<ScheduleResponse.GetDiaryByUserDto> getAllDiariesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllDiariesByUser(user);
 	}
 	@Transactional(readOnly = true)
-	public ScheduleResponse.GetDiaryByScheduleRes getDiaryBySchedule(Long scheduleId) {
+	public ScheduleResponse.GetDiaryByScheduleDto getDiaryBySchedule(Long scheduleId) {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		schedule.existDairy(); //다이어리 없으면 exception발생
 		List<String> imgUrls = schedule.getImages().stream()
@@ -119,9 +119,9 @@ public class ScheduleFacade {
 		return ScheduleResponseConverter.toGetDiaryByScheduleRes(schedule, imgUrls);
 	}
 	@Transactional
-	public ScheduleResponse.ScheduleIdRes modifySchedule(
+	public ScheduleResponse.ScheduleIdDto modifySchedule(
 		Long scheduleId,
-		ScheduleRequest.PostScheduleReq req
+		ScheduleRequest.PostScheduleDto req
 	) throws BaseException {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		Category category = categoryService.getCategory(req.getCategoryId());
@@ -155,7 +155,8 @@ public class ScheduleFacade {
 	}
 
 	@Transactional
-	public void removeSchedule(Long scheduleId, Integer kind, Long userId) throws BaseException {
+	public void removeSchedule(Long scheduleId, Integer kind, Long userId
+	) throws BaseException {
 		if (kind == 0) {//개인 스케줄
 			Schedule schedule = scheduleService.getScheduleById(scheduleId);
 			scheduleService.removeSchedule(schedule);

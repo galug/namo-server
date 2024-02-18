@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ScheduleRepositoryCustom {
-    List<ScheduleResponse.GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
+    List<ScheduleResponse.GetScheduleDto> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 
     ScheduleResponse.SliceDiaryDto findScheduleDiaryByMonthDto(User user, LocalDateTime startDate, LocalDateTime endTime, Pageable pageable);
 
-    List<ScheduleResponse.GetDiaryByUserRes> findAllScheduleDiary(User user);
+    List<ScheduleResponse.GetDiaryByUserDto> findAllScheduleDiary(User user);
 
     Schedule findOneScheduleAndImages(Long scheduleId);
 
     List<MoimScheduleRes> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
 
-    public List<ScheduleResponse.GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
+    public List<ScheduleResponse.GetScheduleDto> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 }

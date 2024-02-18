@@ -1,7 +1,6 @@
 package com.example.namo2.domain.schedule.ui;
 
 import com.example.namo2.domain.schedule.application.ScheduleFacade;
-import com.example.namo2.domain.schedule.application.impl.ScheduleService;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleRequest;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 import com.example.namo2.global.common.exception.BaseException;
@@ -26,53 +25,52 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
 public class ScheduleController {
-    private final ScheduleService scheduleService;
     private final ScheduleFacade scheduleFacade;
     private final Converter converter;
 
     @Operation(summary = "스케줄 생성", description = "스케줄 생성 API")
     @PostMapping("")
-    public BaseResponse<ScheduleResponse.ScheduleIdRes> createSchedule(
-        @Valid @RequestBody ScheduleRequest.PostScheduleReq postScheduleReq
+    public BaseResponse<ScheduleResponse.ScheduleIdDto> createSchedule(
+        @Valid @RequestBody ScheduleRequest.PostScheduleDto postScheduleDto
         , HttpServletRequest request
     ) throws BaseException {
-        ScheduleResponse.ScheduleIdRes scheduleIdRes = scheduleFacade.createSchedule(
-            postScheduleReq
+        ScheduleResponse.ScheduleIdDto scheduleIddto = scheduleFacade.createSchedule(
+            postScheduleDto
             , (Long) request.getAttribute("userId")
         );
-        return new BaseResponse<>(scheduleIdRes);
+        return new BaseResponse<>(scheduleIddto);
     }
 
     @Operation(summary = "스케줄 다이어리 생성", description = "스케줄 다이어리 생성 API")
     @PostMapping("/diary")
-    public BaseResponse<ScheduleResponse.ScheduleIdRes> createDiary(
+    public BaseResponse<ScheduleResponse.ScheduleIdDto> createDiary(
         @RequestPart(required = false) List<MultipartFile> imgs,
         @RequestPart String scheduleId,
         @RequestPart(required = false) String content
     ) throws BaseException {
-        ScheduleResponse.ScheduleIdRes scheduleIdRes = scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
-        return new BaseResponse<>(scheduleIdRes);
+        ScheduleResponse.ScheduleIdDto dto = scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
+        return new BaseResponse<>(dto);
     }
 
     @Operation(summary = "스케줄 월별 조회", description = "스케줄 월별 조회 API")
     @GetMapping("/{month}")
-    public BaseResponse<List<ScheduleResponse.GetScheduleRes>> getSchedulesByUser(
+    public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getSchedulesByUser(
         @PathVariable("month") String month,
         HttpServletRequest request
     ) throws BaseException {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        List<ScheduleResponse.GetScheduleRes> userSchedule = scheduleFacade.getSchedulesByUser((Long) request.getAttribute("userId"), localDateTimes);
+        List<ScheduleResponse.GetScheduleDto> userSchedule = scheduleFacade.getSchedulesByUser((Long) request.getAttribute("userId"), localDateTimes);
         return new BaseResponse<>(userSchedule);
     }
 
     @Operation(summary = "모임 스케줄 월별 조회", description = "모임 스케줄 월별 조회 API")
     @GetMapping("/moim/{month}")
-    public BaseResponse<List<ScheduleResponse.GetScheduleRes>> getMoimSchedulesByUser(
+    public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getMoimSchedulesByUser(
         @PathVariable("month") String month
         , HttpServletRequest request
     ) throws BaseException {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        List<ScheduleResponse.GetScheduleRes> userSchedule = scheduleFacade.getMoimSchedulesByUser(
+        List<ScheduleResponse.GetScheduleDto> userSchedule = scheduleFacade.getMoimSchedulesByUser(
             (Long) request.getAttribute("userId"),
             localDateTimes
         );
@@ -81,8 +79,8 @@ public class ScheduleController {
 
     @Operation(summary = "모든 스케줄 조회", description = "모든 스케줄 조회 API")
     @GetMapping("/all")
-    public BaseResponse<List<ScheduleResponse.GetScheduleRes>> getAllSchedulesByUser(HttpServletRequest request) throws BaseException {
-        List<ScheduleResponse.GetScheduleRes> userSchedule = scheduleFacade.getAllSchedulesByUser(
+    public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllSchedulesByUser(HttpServletRequest request) throws BaseException {
+        List<ScheduleResponse.GetScheduleDto> userSchedule = scheduleFacade.getAllSchedulesByUser(
             (Long) request.getAttribute("userId")
         );
         return new BaseResponse<>(userSchedule);
@@ -90,8 +88,8 @@ public class ScheduleController {
 
     @Operation(summary = "모든 모임 스케줄 조회", description = "모든 모임 스케줄 조회 API")
     @GetMapping("/moim/all")
-    public BaseResponse<List<ScheduleResponse.GetScheduleRes>> getAllMoimSchedulesByUser(HttpServletRequest request) throws BaseException {
-        List<ScheduleResponse.GetScheduleRes> moimSchedule = scheduleFacade.getAllMoimSchedulesByUser(
+    public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllMoimSchedulesByUser(HttpServletRequest request) throws BaseException {
+        List<ScheduleResponse.GetScheduleDto> moimSchedule = scheduleFacade.getAllMoimSchedulesByUser(
             (Long) request.getAttribute("userId")
         );
         return new BaseResponse<>(moimSchedule);
@@ -113,30 +111,30 @@ public class ScheduleController {
     //유저별 다이어리 조회
     @Operation(summary = "개인 스케줄 다이어리 전체 조회", description = "개인 스케줄 다이어리 전체 조회 API")
     @GetMapping("/diary/all")
-    public BaseResponse<List<ScheduleResponse.GetDiaryByUserRes>> findALLDiary(HttpServletRequest request) throws BaseException {
+    public BaseResponse<List<ScheduleResponse.GetDiaryByUserDto>> findALLDiary(HttpServletRequest request) throws BaseException {
         Long userId = (Long) request.getAttribute("userId");
-        List<ScheduleResponse.GetDiaryByUserRes> diaries = scheduleFacade.getAllDiariesByUser(userId);
+        List<ScheduleResponse.GetDiaryByUserDto> diaries = scheduleFacade.getAllDiariesByUser(userId);
         return new BaseResponse<>(diaries);
     }
 
     //스케줄 별 다이어리 조회 == 1개 조회
     @Operation(summary = "스케줄 다이어리 개별 조회", description = "스케줄 다이어리 개별 조회 API")
     @GetMapping("/diary/day/{scheduleId}")
-    public BaseResponse<ScheduleResponse.GetDiaryByScheduleRes> findDiaryById (
+    public BaseResponse<ScheduleResponse.GetDiaryByScheduleDto> findDiaryById (
         @PathVariable("scheduleId") Long scheduleId,
         HttpServletRequest request
     ) throws BaseException {
-        ScheduleResponse.GetDiaryByScheduleRes diary = scheduleFacade.getDiaryBySchedule(scheduleId);
+        ScheduleResponse.GetDiaryByScheduleDto diary = scheduleFacade.getDiaryBySchedule(scheduleId);
         return new BaseResponse<>(diary);
     }
 
     @Operation(summary = "스케줄 수정", description = "스케줄 수정 API")
     @PatchMapping("/{schedule}")
-    public BaseResponse<ScheduleResponse.ScheduleIdRes> modifyUserSchedule(
+    public BaseResponse<ScheduleResponse.ScheduleIdDto> modifyUserSchedule(
             @PathVariable("schedule") Long scheduleId,
-            @RequestBody ScheduleRequest.PostScheduleReq postScheduleReq) throws BaseException {
-        ScheduleResponse.ScheduleIdRes scheduleIdRes = scheduleFacade.modifySchedule(scheduleId, postScheduleReq);
-        return new BaseResponse<>(scheduleIdRes);
+            @RequestBody ScheduleRequest.PostScheduleDto req) throws BaseException {
+        ScheduleResponse.ScheduleIdDto dto = scheduleFacade.modifySchedule(scheduleId, req);
+        return new BaseResponse<>(dto);
     }
 
     @Operation(summary="스케줄 다이어리 수정", description = "스케줄 다이어리 수정 API")

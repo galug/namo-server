@@ -8,9 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class ScheduleRequest {
+	private ScheduleRequest() {
+		throw new IllegalStateException("Utility class");
+	}
 	@Getter
 	@AllArgsConstructor
-	public static class PostScheduleReq {
+	public static class PostScheduleDto {
 		@NotBlank
 		private String name;
 		@NotNull
