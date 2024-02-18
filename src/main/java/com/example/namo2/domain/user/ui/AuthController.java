@@ -1,7 +1,6 @@
 package com.example.namo2.domain.user.ui;
 
 import com.example.namo2.domain.user.application.UserFacade;
-import com.example.namo2.domain.user.application.impl.AuthService;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
@@ -22,10 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-
-    private final AuthService authService;
     private final UserFacade userFacade;
-
 
     @Operation(summary = "kakao 회원가입", description = "kakao 소셜 로그인을 통한 회원가입")
     @PostMapping(value = "/kakao/signup")
@@ -45,14 +41,14 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "토큰 재발급")
     @PostMapping(value = "/reissuance")
     public BaseResponse<UserResponse.SignUpDto> reissueAccessToken(@Valid @RequestBody UserRequest.SignUpDto signUpDto) throws BaseException {
-        UserResponse.SignUpDto signupDto = authService.reissueAccessToken(signUpDto);
+        UserResponse.SignUpDto signupDto = userFacade.reissueAccessToken(signUpDto);
         return new BaseResponse<>(signupDto);
     }
 
     @Operation(summary = "로그아웃", description = "로그아웃")
     @PostMapping(value = "/logout")
-    public BaseResponse logout(@Valid @RequestBody UserRequest.LogoutDto logoutDto) throws BaseException {
-        authService.logout(logoutDto);
+    public BaseResponse<?> logout(@Valid @RequestBody UserRequest.LogoutDto logoutDto) throws BaseException {
+        userFacade.logout(logoutDto);
         return BaseResponse.ok();
     }
 }

@@ -30,6 +30,11 @@ public class UserService {
         return userRepository.findUserByEmail(email);
     }
 
+    public User getUserByRefreshToken(String refreshToken){
+        return userRepository.findUserByRefreshToken(refreshToken)
+            .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+    }
+
     public void updateRefreshToken(Long userId, String refreshToken
     ) throws BaseException {
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));

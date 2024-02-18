@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
@@ -22,6 +25,7 @@ import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
@@ -30,15 +34,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-@Transactional
 @RequiredArgsConstructor
 public class UserFacade {
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
+	private final RedisTemplate<String, String> redisTemplate;
 	private final UserService userService;
 	private final PaletteService paletteService;
 	private final CategoryService categoryService;
-
+	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpReq
 	) throws BaseException {
 		try {
@@ -63,7 +67,7 @@ public class UserFacade {
 			throw new BaseException(SOCIAL_LOGIN_FAILURE);
 		}
 	}
-
+	@Transactional
 	public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpReq
 	) throws BaseException {
 		try {
@@ -85,6 +89,29 @@ public class UserFacade {
 		} catch (IOException e) {
 			throw new BaseException(SOCIAL_LOGIN_FAILURE);
 		}
+	}
+	@Transactional
+	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto
+	) throws BaseException {
+		if (!jwtUtils.validateToken(signUpDto.getRefreshToken())) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+		validateLogout(signUpDto);
+
+		User user = userService.getUserByRefreshToken(signUpDto.getRefreshToken());
+		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(user.getId());
+		user.updateRefreshToken(signUpRes.getRefreshToken());
+		return signUpRes;
+	}
+	@Transactional
+	public void logout(UserRequest.LogoutDto logoutDto) {
+		// AccessToken 만료시 종료
+		if (!jwtUtils.validateToken(logoutDto.getAccessToken())) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+
+		Long expiration = jwtUtils.getExpiration(logoutDto.getAccessToken());
+		redisTemplate.opsForValue().set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 	}
 
 	private User saveOrNot(User user) {
@@ -114,5 +141,10 @@ public class UserFacade {
 		categoryService.create(groupCategory);
 	}
 
-
+	private void validateLogout(UserRequest.SignUpDto signUpDto) {
+		String blackToken = redisTemplate.opsForValue().get(signUpDto.getAccessToken());
+		if (StringUtils.hasText(blackToken)) {
+			throw new BaseException(BaseResponseStatus.LOGOUT_ERROR);
+		}
+	}
 }
