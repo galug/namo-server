@@ -18,7 +18,7 @@ public class MoimScheduleResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public class MoimScheduleDto {
+    public static class MoimScheduleDto {
         private String name;
 
         private Long startDate;
@@ -73,4 +73,19 @@ public class MoimScheduleResponse {
             this.hasDiaryPlace = hasDiaryPlace;
         }
     }
+
+    @NoArgsConstructor
+    @Getter
+    public static class MoimScheduleUserDto {
+        private Long userId;
+        private String userName;
+        private Integer color;
+
+        public MoimScheduleUserDto(Long userId, String userName, Integer color) {
+            this.userId = userId;
+            this.userName = userName;
+            this.color = color;
+        }
+    }
+
 }

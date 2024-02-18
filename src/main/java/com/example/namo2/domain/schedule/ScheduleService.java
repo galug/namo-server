@@ -203,4 +203,8 @@ public class ScheduleService {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         return scheduleRepository.findMoimSchedulesByUserId(user, null, null);
     }
+
+    public List<Schedule> getSchedules(List<User> users) {
+        return scheduleRepository.findSchedulesByUsers(users);
+    }
 }

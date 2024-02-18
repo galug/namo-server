@@ -13,19 +13,14 @@ import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
-import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
 import com.example.namo2.domain.schedule.ScheduleRepository;
 import com.example.namo2.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_FAILURE;
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
@@ -61,10 +56,6 @@ public class MoimService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
     }
 
-    public List<MoimScheduleDto> findMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
-        return scheduleRepository.findMonthScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
-    }
-
     @Transactional(readOnly = false)
     public void deleteSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
@@ -81,5 +72,15 @@ public class MoimService {
 
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
         moimScheduleRepository.delete(moimSchedule);
+    }
+
+    @Transactional(readOnly = false)
+    public void createMoimScheduleText(Long moimScheduleId,
+                                       Long userId,
+                                       MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
+        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
+        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+        moimScheduleAndUser.updateText(moimScheduleText.getText());
     }
 }

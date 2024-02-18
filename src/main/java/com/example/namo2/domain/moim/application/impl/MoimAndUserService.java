@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +27,10 @@ public class MoimAndUserService {
 
     public List<MoimAndUser> getMoimAndUsers(User user) {
         return moimAndUserRepository.findMoimAndUserByUser(user);
+    }
+
+    public List<MoimAndUser> getMoimAndUsers(Moim moim) {
+        return moimAndUserRepository.findMoimAndUserByMoim(moim);
     }
 
     public List<MoimAndUser> getMoimAndUsers(List<Moim> moims) {

@@ -4,23 +4,31 @@ import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.memo.MoimMemoService;
 import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.moim.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.moim.application.converter.MoimScheduleConverter;
+import com.example.namo2.domain.moim.application.converter.MoimScheduleResponseConverter;
+import com.example.namo2.domain.moim.application.impl.MoimAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.domain.Moim;
+import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
+import com.example.namo2.domain.schedule.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -29,9 +37,11 @@ import java.util.List;
 public class MoimScheduleFacade {
     private final UserService userService;
     private final MoimService moimService;
+    private final MoimAndUserService moimAndUserService;
     private final MoimScheduleService moimScheduleService;
     private final MoimScheduleAndUserService moimScheduleAndUserService;
     private final MoimMemoService moimMemoService;
+    private final ScheduleService scheduleService;
     private final CategoryService categoryService;
 
     /**
@@ -120,5 +130,16 @@ public class MoimScheduleFacade {
             MoimScheduleAlarm moimScheduleAlarm = MoimScheduleConverter.toMoimScheduleAlarm(moimScheduleAndUser, alarmDate);
             moimScheduleAndUserService.createMoimScheduleAlarm(moimScheduleAlarm);
         }
+    }
+
+    public List<MoimScheduleResponse.MoimScheduleDto> getMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
+        Moim moim = moimService.getMoim(moimId);
+        List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
+        List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
+
+        List<Schedule> indivisualsSchedules = scheduleService.getSchedules(users);
+        List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService
+                .getMoimSchedules(localDateTimes, users);
+        return MoimScheduleResponseConverter.toMoimScheduleDtos(indivisualsSchedules, moimScheduleAndUsers, moimAndUsersInMoim);
     }
 }

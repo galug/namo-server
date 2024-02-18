@@ -1,6 +1,6 @@
 package com.example.namo2.domain.schedule;
 
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleDto;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
@@ -21,7 +21,7 @@ public interface ScheduleRepositoryCustom {
 
     Schedule findOneScheduleAndImages(Long scheduleId);
 
-    List<MoimScheduleDto> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
+    List<MoimScheduleResponse.MoimScheduleDto> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
 
     List<GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 }
