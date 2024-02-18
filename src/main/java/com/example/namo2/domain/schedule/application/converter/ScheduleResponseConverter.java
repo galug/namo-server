@@ -18,16 +18,18 @@ import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
 
 public class ScheduleResponseConverter {
-	public static ScheduleResponse.ScheduleIdRes toScheduleIdRes(Schedule schedule){
-		return new ScheduleResponse.ScheduleIdRes(schedule.getId());
+	public static ScheduleResponse.ScheduleIdDto toScheduleIdRes(Schedule schedule){
+		return ScheduleResponse.ScheduleIdDto.builder()
+			.scheduleId(schedule.getId())
+			.build();
 	}
 
-	public static ScheduleResponse.GetScheduleRes toGetScheduleRes(Schedule schedule){
+	public static ScheduleResponse.GetScheduleDto toGetScheduleRes(Schedule schedule){
 		Long startDate = schedule.getPeriod().getStartDate().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
 		Long endDate = schedule.getPeriod().getEndDate().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond();
 		List<Integer> alarmDates = schedule.getAlarms().stream().map(Alarm::getAlarmDate).toList();
 
-		return ScheduleResponse.GetScheduleRes.builder()
+		return ScheduleResponse.GetScheduleDto.builder()
 			.scheduleId(schedule.getId())
 			.name(schedule.getName())
 			.startDate(startDate)
@@ -42,7 +44,7 @@ public class ScheduleResponseConverter {
 			.isMoimSchedule(false)
 			.build();
 	}
-	public static ScheduleResponse.GetScheduleRes toGetScheduleRes(MoimScheduleAndUser moimScheduleAndUser){
+	public static ScheduleResponse.GetScheduleDto toGetScheduleRes(MoimScheduleAndUser moimScheduleAndUser){
 		Long startDate = moimScheduleAndUser.getMoimSchedule().getPeriod().getStartDate()
 			.atZone(ZoneId.systemDefault())
 			.toInstant()
@@ -54,7 +56,7 @@ public class ScheduleResponseConverter {
 		List<Integer> alarmDates = moimScheduleAndUser.getMoimSchedule().getMoimScheduleAlarms().stream()
 			.map(MoimScheduleAlarm::getAlarmDate).toList();
 
-		return ScheduleResponse.GetScheduleRes.builder()
+		return ScheduleResponse.GetScheduleDto.builder()
 			.scheduleId(moimScheduleAndUser.getMoimSchedule().getId())
 			.name(moimScheduleAndUser.getMoimSchedule().getName())
 			.startDate(startDate)
@@ -70,8 +72,8 @@ public class ScheduleResponseConverter {
 			.build();
 	}
 
-	public static ScheduleResponse.GetDiaryByUserRes toGetDiaryByUserRes(Schedule schedule){
-		return ScheduleResponse.GetDiaryByUserRes.builder()
+	public static ScheduleResponse.GetDiaryByUserDto toGetDiaryByUserRes(Schedule schedule){
+		return ScheduleResponse.GetDiaryByUserDto.builder()
 			.scheduleId(schedule.getId())
 			.contents(schedule.getContents())
 			.urls(schedule.getImages().stream()
@@ -79,8 +81,11 @@ public class ScheduleResponseConverter {
 				.collect(Collectors.toList()))
 			.build();
 	}
-	public static ScheduleResponse.GetDiaryByScheduleRes toGetDiaryByScheduleRes(Schedule schedule, List<String> imgUrls){
-		return new ScheduleResponse.GetDiaryByScheduleRes(schedule.getContents(), imgUrls);
+	public static ScheduleResponse.GetDiaryByScheduleDto toGetDiaryByScheduleRes(Schedule schedule, List<String> imgUrls){
+		return ScheduleResponse.GetDiaryByScheduleDto.builder()
+			.contents(schedule.getContents())
+			.urls(imgUrls)
+			.build();
 	}
 
 	public static ScheduleResponse.SliceDiaryDto toSliceDiaryDto(Slice<ScheduleResponse.DiaryDto> slice){
