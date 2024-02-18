@@ -9,10 +9,12 @@ import com.example.namo2.domain.schedule.application.converter.ScheduleResponseC
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 import com.example.namo2.domain.user.domain.User;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Pageable;
@@ -43,21 +45,20 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         this.em = em;
     }
 
-
     /**
      * 알람을 한 번에 가지고 오는 편이 성능상 더 좋은 퍼포먼스를 발휘할지도?
      */
     @Override
-    public List<ScheduleResponse.GetScheduleRes> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
-        List<ScheduleResponse.GetScheduleRes> results = findPersonalSchedulesByUserId(user, startDate, endDate);
-        List<ScheduleResponse.GetScheduleRes> moimSchedules = findMoimSchedulesByUserId(user, startDate, endDate);
+    public List<ScheduleResponse.GetScheduleDto> findSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+        List<ScheduleResponse.GetScheduleDto> results = findPersonalSchedulesByUserId(user, startDate, endDate);
+        List<ScheduleResponse.GetScheduleDto> moimSchedules = findMoimSchedulesByUserId(user, startDate, endDate);
         if (moimSchedules != null) {
             results.addAll(moimSchedules);
         }
         return results;
     }
 
-    public List<ScheduleResponse.GetScheduleRes> findPersonalSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ScheduleResponse.GetScheduleDto> findPersonalSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<Schedule> schedules = queryFactory
                 .select(schedule).distinct()
                 .from(schedule)
@@ -79,7 +80,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<ScheduleResponse.GetScheduleRes> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ScheduleResponse.GetScheduleDto> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate) {
         List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory
                 .select(moimScheduleAndUser).distinct()
                 .from(moimScheduleAndUser)
@@ -130,7 +131,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<ScheduleResponse.GetDiaryByUserRes> findAllScheduleDiary(User user) {
+    public List<ScheduleResponse.GetDiaryByUserDto> findAllScheduleDiary(User user) {
         List<Schedule> schedules = queryFactory
             .select(schedule).distinct()
             .from(schedule)
@@ -186,22 +187,23 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     private List<MoimScheduleRes> findIndivisualSchedule(Long moimId, LocalDateTime startDate, LocalDateTime endDate, List<User> users) {
-        return em.createQuery("select new com.example.namo2.domain.moim.dto.MoimScheduleRes(" +
-                        "s.name, s.period.startDate, s.period.endDate, s.period.dayInterval, u.id, u.name, mu.color)" +
-                        " from Schedule s, MoimAndUser mu" +
-                        " join s.user u " +
-                        " join s.category c" +
-                        " where s.user in (:users) " +
-                        "and s.period.startDate <= :endDate " +
-                        "and s.period.endDate >= :startDate " +
-                        "and c.share = :share " +
-                        "and mu.user = s.user and mu.moim.id = :moimId", MoimScheduleRes.class)
-                .setParameter("users", users)
-                .setParameter("moimId", moimId)
-                .setParameter("endDate", endDate)
-                .setParameter("startDate", startDate)
-                .setParameter("share", true)
-                .getResultList();
+       return queryFactory.select(
+           Projections.fields(MoimScheduleRes.class,
+               schedule.name,
+               schedule.period.startDate,
+               schedule.period.endDate,
+               schedule.period.dayInterval,
+               moimAndUser.user))
+           .from(schedule, moimAndUser)
+           .join(schedule.user).fetchJoin()
+           .join(schedule.category).fetchJoin()
+           .where(schedule.user.in(users)
+               .and(schedule.period.startDate.loe(endDate))
+               .and(schedule.period.endDate.goe(startDate))
+               .and(schedule.category.share.eq(true))
+               .and(moimAndUser.user.eq(schedule.user))
+               .and(moimAndUser.moim.id.eq(moimId)))
+           .fetch();
     }
 
     private Map<MoimSchedule, List<MoimScheduleUserDto>> findMoimScheduleAndScheduleUserMap(LocalDateTime startDate, LocalDateTime endDate, List<User> users, Map<Long, MoimScheduleUserDto> moimAndUserDtoMap) {
