@@ -140,7 +140,7 @@ public class ScheduleService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
         // 마지막 사람이면 모임 스케줄 삭제
         if (moimSchedule.isLastScheduleMember()) {
-            moimService.deleteSchedule(scheduleId);
+            moimService.removeSchedule(scheduleId);
             return;
         }
         moimScheduleAndUserRepository.delete(moimScheduleAndUser);

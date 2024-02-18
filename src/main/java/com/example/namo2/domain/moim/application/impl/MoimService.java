@@ -57,7 +57,7 @@ public class MoimService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteSchedule(Long moimScheduleId) {
+    public void removeSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndLocationsByMoimSchedule(moimSchedule);
@@ -66,7 +66,7 @@ public class MoimService {
         if (moimMemo != null) {
             moimMemo.getMoimMemoLocations()
                     .stream()
-                    .forEach((moimMemoLocation -> moimMemoService.deleteMoimMemoLocation(moimMemoLocation.getId())));
+                    .forEach((moimMemoLocation -> moimMemoService.removeMoimMemoLocation(moimMemoLocation.getId())));
             moimMemoRepository.delete(moimMemo);
         }
 

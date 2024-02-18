@@ -38,6 +38,10 @@ public class MoimScheduleAndUserService {
         moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimScheduleAndUser(moimScheduleAndUser);
     }
 
+    public void removeMoimScheduleAlarm(List<MoimScheduleAndUser> moimScheduleAndUser) {
+        moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimScheduleAndUser(moimScheduleAndUser);
+    }
+
     public void createMoimScheduleAlarm(MoimScheduleAlarm moimScheduleAlarm) {
         moimScheduleAlarmRepository.save(moimScheduleAlarm);
     }

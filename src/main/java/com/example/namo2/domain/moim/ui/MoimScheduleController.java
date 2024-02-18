@@ -58,7 +58,7 @@ public class MoimScheduleController {
     @Operation(summary = "모임 스케쥴 삭제", description = "모임 스케쥴 삭제 API")
     @DeleteMapping("/{moimScheduleId}")
     public BaseResponse<Long> removeMoimSchedule(@PathVariable Long moimScheduleId) {
-        moimService.deleteSchedule(moimScheduleId);
+        moimScheduleFacade.removeMoimSchedule(moimScheduleId);
         return BaseResponse.ok();
     }
 

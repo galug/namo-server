@@ -1,33 +1,31 @@
 package com.example.namo2.domain.memo;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
+import com.example.namo2.domain.moim.ui.dto.LocationInfo;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
+import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.memo.domain.MoimMemoLocation;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.UserRepository;
+import com.example.namo2.domain.schedule.dto.DiaryDto;
+import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
+import com.example.namo2.global.utils.FileUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.memo.domain.MoimMemoLocation;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
-import com.example.namo2.domain.moim.domain.MoimSchedule;
-import com.example.namo2.domain.moim.ui.dto.LocationInfo;
-import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
-import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
-import com.example.namo2.domain.user.dao.repository.UserRepository;
-import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.global.utils.FileUtils;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -121,7 +119,7 @@ public class MoimMemoService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteMoimMemoLocation(Long moimLocationId) {
+    public void removeMoimMemoLocation(Long moimLocationId) {
         MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
@@ -143,7 +141,7 @@ public class MoimMemoService {
         return moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
     }
 
-    public void deleteMoimMemo(MoimMemo moimMemo) {
+    public void removeMoimMemo(MoimMemo moimMemo) {
         moimMemoRepository.delete(moimMemo);
     }
 }
