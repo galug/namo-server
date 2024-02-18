@@ -14,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ImageService {
 	private final ImageRepository imageRepository;
-	public Image createImg(Image img){
-		return imageRepository.save(img);
-	}
 	public List<Image> createImgs(List<Image> imgs){
 		return imageRepository.saveAll(imgs);
 	}

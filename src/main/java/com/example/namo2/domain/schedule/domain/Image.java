@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
-@AllArgsConstructor
 public class Image extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +24,11 @@ public class Image extends BaseTimeEntity {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    @Builder
+    public Image(Long id, String imgUrl, Schedule schedule) {
+        this.id = id;
+        this.imgUrl = imgUrl;
+        this.schedule = schedule;
+        schedule.getImages().add(this);
+    }
 }
