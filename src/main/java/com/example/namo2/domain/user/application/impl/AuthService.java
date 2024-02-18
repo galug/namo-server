@@ -35,91 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 
     private final UserRepository userDao;
-    private final PaletteRepository paletteRepository;
-    private final CategoryRepository categoryRepository;
     private final JwtUtils jwtUtils;
-    private final SocialUtils socialUtils;
     private final RedisTemplate<String, String> redisTemplate;
 
-    @Transactional(readOnly = false)
-    public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpDto) throws BaseException {
-        try {
-            HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpDto);
-            socialUtils.validateSocialAccessToken(con);
-
-            String result = socialUtils.findSocialLoginUsersInfo(con);
-
-            Map<String, String> response = socialUtils.findResponseFromNaver(result);
-            User user = User.builder()
-                    .email((String) response.get("email"))
-                    .name((String) response.get("name"))
-                    .birthday((String) response.get("birthday"))
-                    .build();
-            User savedUser = saveOrFind(user);
-            UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
-            updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
-            return signUpRes;
-        } catch (IOException e) {
-            throw new BaseException(SOCIAL_LOGIN_FAILURE);
-        }
-    }
-
-    @Transactional(readOnly = false)
-    public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) throws BaseException {
-        try {
-            HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpDto);
-            socialUtils.validateSocialAccessToken(con);
-
-            String result = socialUtils.findSocialLoginUsersInfo(con);
-
-            log.debug("result = " + result);
-
-            Map<String, String> response = socialUtils.findResponseFromKakako(result);
-            User user = User.builder()
-                    .email((String) response.get("email"))
-                    .name((String) response.get("nickname"))
-                    .birthday((String) response.getOrDefault("birthday", null))
-                    .build();
-            User savedUser = saveOrFind(user);
-            UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
-            updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
-            return signUpRes;
-        } catch (IOException e) {
-            throw new BaseException(SOCIAL_LOGIN_FAILURE);
-        }
-    }
-
-    public User saveOrFind(User user) {
-        Optional<User> userByEmail = userDao.findUserByEmail(user.getEmail());
-        if (userByEmail.isEmpty()) {
-            User save = userDao.save(user);
-            makeBaseCategory(save);
-            return save;
-        }
-        return userByEmail.get();
-    }
-
-    private void makeBaseCategory(User save) {
-        Category baseCategory = Category.builder()
-                .name("기본")
-                .palette(paletteRepository.getReferenceById(1L))
-                .share(Boolean.TRUE)
-                .user(save)
-                .build();
-        Category groupCategory = Category.builder()
-                .name("모임")
-                .palette(paletteRepository.getReferenceById(4L))
-                .share(Boolean.TRUE)
-                .user(save)
-                .build();
-        categoryRepository.save(baseCategory);
-        categoryRepository.save(groupCategory);
-    }
-
-    public void updateRefreshToken(Long userId, String refreshToken) throws BaseException {
-        User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        user.updateRefreshToken(refreshToken);
-    }
 
     @Transactional(readOnly = false)
     public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) throws BaseException {

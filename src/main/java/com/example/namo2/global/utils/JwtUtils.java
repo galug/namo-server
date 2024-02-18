@@ -1,6 +1,7 @@
 package com.example.namo2.global.utils;
 
 
+import com.example.namo2.domain.user.application.converter.UserResponseConverter;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
@@ -39,8 +40,7 @@ public class JwtUtils {
     public UserResponse.SignUpDto generateTokens(Long userId) {
         String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken(userId);
-        UserResponse.SignUpDto signUpDto = new UserResponse.SignUpDto(accessToken, refreshToken);
-        return signUpDto;
+		return UserResponseConverter.toSignUpDto(accessToken, refreshToken);
     }
 
     private String createAccessToken(Long userId) {
