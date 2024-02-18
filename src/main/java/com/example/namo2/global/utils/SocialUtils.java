@@ -1,7 +1,7 @@
 package com.example.namo2.global.utils;
 
+import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.domain.user.dto.SocialSignUpReq;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class SocialUtils {
     private static final String naverApiURL = "https://openapi.naver.com/v1/nid/me";
     private static final String kakaoApiURL = "https://kapi.kakao.com/v2/user/me";
 
-    public HttpURLConnection connectKakaoResourceServer(SocialSignUpReq signUpReq) throws IOException {
+    public HttpURLConnection connectKakaoResourceServer(UserRequest.SocialSignUpDto signUpReq) throws IOException {
         URL url = new URL(kakaoApiURL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -32,7 +32,7 @@ public class SocialUtils {
         return conn;
     }
 
-    public HttpURLConnection connectNaverResourceServer(SocialSignUpReq signUpReq) throws IOException {
+    public HttpURLConnection connectNaverResourceServer(UserRequest.SocialSignUpDto signUpReq) throws IOException {
         URL url = new URL(naverApiURL);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");

@@ -1,9 +1,9 @@
 package com.example.namo2.global.utils;
 
 
+import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.domain.user.dto.SignUpRes;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -36,11 +36,11 @@ public class JwtUtils {
     private String secretKey;
 
 
-    public SignUpRes generateTokens(Long userId) {
+    public UserResponse.SignUpDto generateTokens(Long userId) {
         String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken(userId);
-        SignUpRes signUpRes = new SignUpRes(accessToken, refreshToken);
-        return signUpRes;
+        UserResponse.SignUpDto signUpDto = new UserResponse.SignUpDto(accessToken, refreshToken);
+        return signUpDto;
     }
 
     private String createAccessToken(Long userId) {

@@ -1,11 +1,14 @@
-package com.example.namo2.domain.user;
+package com.example.namo2.domain.user.application.impl;
 
-import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.global.common.exception.BaseException;
-import lombok.RequiredArgsConstructor;
+import static com.example.namo2.global.common.response.BaseResponseStatus.*;
+
 import org.springframework.stereotype.Service;
 
-import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
+import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.dao.repository.UserRepository;
+import com.example.namo2.global.common.exception.BaseException;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

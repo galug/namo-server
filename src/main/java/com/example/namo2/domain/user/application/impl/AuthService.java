@@ -1,23 +1,6 @@
-package com.example.namo2.domain.user;
+package com.example.namo2.domain.user.application.impl;
 
-import com.example.namo2.domain.user.dto.LogoutReq;
-import com.example.namo2.domain.category.dao.repository.CategoryRepository;
-import com.example.namo2.domain.user.dto.SignUpReq;
-import com.example.namo2.domain.user.dto.SignUpRes;
-import com.example.namo2.domain.user.dto.SocialSignUpReq;
-import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.category.dao.repository.PaletteRepository;
-import com.example.namo2.global.utils.JwtUtils;
-import com.example.namo2.global.utils.SocialUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,9 +8,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.namo2.global.common.response.BaseResponseStatus.EXPIRATION_REFRESH_TOKEN;
-import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
-import static com.example.namo2.global.common.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import com.example.namo2.domain.category.dao.repository.CategoryRepository;
+import com.example.namo2.domain.category.dao.repository.PaletteRepository;
+import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.dao.repository.UserRepository;
+import com.example.namo2.domain.user.ui.dto.UserRequest;
+import com.example.namo2.domain.user.ui.dto.UserResponse;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
+import com.example.namo2.global.utils.JwtUtils;
+import com.example.namo2.global.utils.SocialUtils;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -43,9 +42,9 @@ public class AuthService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional(readOnly = false)
-    public SignUpRes signupNaver(SocialSignUpReq signUpReq) throws BaseException {
+    public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpDto) throws BaseException {
         try {
-            HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpReq);
+            HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpDto);
             socialUtils.validateSocialAccessToken(con);
 
             String result = socialUtils.findSocialLoginUsersInfo(con);
@@ -57,7 +56,7 @@ public class AuthService {
                     .birthday((String) response.get("birthday"))
                     .build();
             User savedUser = saveOrFind(user);
-            SignUpRes signUpRes = jwtUtils.generateTokens(savedUser.getId());
+            UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
             updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
             return signUpRes;
         } catch (IOException e) {
@@ -66,9 +65,9 @@ public class AuthService {
     }
 
     @Transactional(readOnly = false)
-    public SignUpRes signupKakao(SocialSignUpReq signUpReq) throws BaseException {
+    public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) throws BaseException {
         try {
-            HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpReq);
+            HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpDto);
             socialUtils.validateSocialAccessToken(con);
 
             String result = socialUtils.findSocialLoginUsersInfo(con);
@@ -82,7 +81,7 @@ public class AuthService {
                     .birthday((String) response.getOrDefault("birthday", null))
                     .build();
             User savedUser = saveOrFind(user);
-            SignUpRes signUpRes = jwtUtils.generateTokens(savedUser.getId());
+            UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
             updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
             return signUpRes;
         } catch (IOException e) {
@@ -123,34 +122,34 @@ public class AuthService {
     }
 
     @Transactional(readOnly = false)
-    public SignUpRes reissueAccessToken(SignUpReq signUpReq) throws BaseException {
-        if (!jwtUtils.validateToken(signUpReq.getRefreshToken())) {
+    public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) throws BaseException {
+        if (!jwtUtils.validateToken(signUpDto.getRefreshToken())) {
             throw new BaseException(EXPIRATION_REFRESH_TOKEN);
         }
-        validateLogout(signUpReq);
+        validateLogout(signUpDto);
 
-        User user = userDao.findUserByRefreshToken(signUpReq.getRefreshToken())
+        User user = userDao.findUserByRefreshToken(signUpDto.getRefreshToken())
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 
-        SignUpRes signUpRes = jwtUtils.generateTokens(user.getId());
+        UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(user.getId());
         user.updateRefreshToken(signUpRes.getRefreshToken());
         return signUpRes;
     }
 
-    private void validateLogout(SignUpReq signUpReq) {
-        String blackToken = redisTemplate.opsForValue().get(signUpReq.getAccessToken());
+    private void validateLogout(UserRequest.SignUpDto signUpDto) {
+        String blackToken = redisTemplate.opsForValue().get(signUpDto.getAccessToken());
         if (StringUtils.hasText(blackToken)) {
             throw new BaseException(BaseResponseStatus.LOGOUT_ERROR);
         }
     }
 
-    public void logout(LogoutReq logoutReq) {
+    public void logout(UserRequest.LogoutDto logoutDto) {
         // AccessToken 만료시 종료
-        if (!jwtUtils.validateToken(logoutReq.getAccessToken())) {
+        if (!jwtUtils.validateToken(logoutDto.getAccessToken())) {
             throw new BaseException(EXPIRATION_REFRESH_TOKEN);
         }
 
-        Long expiration = jwtUtils.getExpiration(logoutReq.getAccessToken());
-        redisTemplate.opsForValue().set(logoutReq.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+        Long expiration = jwtUtils.getExpiration(logoutDto.getAccessToken());
+        redisTemplate.opsForValue().set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
     }
 }

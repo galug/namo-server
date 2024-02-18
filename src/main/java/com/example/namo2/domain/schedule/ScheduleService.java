@@ -1,6 +1,8 @@
 package com.example.namo2.domain.schedule;
 
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
+import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
@@ -13,14 +15,12 @@ import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.schedule.domain.Image;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.schedule.dto.GetDiaryRes;
 import com.example.namo2.domain.schedule.dto.GetScheduleRes;
 import com.example.namo2.domain.schedule.dto.OnlyDiaryDto;
 import com.example.namo2.domain.schedule.dto.PostScheduleReq;
 import com.example.namo2.domain.schedule.dto.ScheduleIdRes;
 import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
-import com.example.namo2.domain.user.UserRepository;
 import com.example.namo2.global.utils.Converter;
 import com.example.namo2.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
