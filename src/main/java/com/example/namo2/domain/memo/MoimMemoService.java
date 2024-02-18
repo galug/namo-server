@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -120,7 +119,7 @@ public class MoimMemoService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteMoimMemoLocation(Long moimLocationId) {
+    public void removeMoimMemoLocation(Long moimLocationId) {
         MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
@@ -142,7 +141,7 @@ public class MoimMemoService {
         return moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
     }
 
-    public void deleteMoimMemo(MoimMemo moimMemo) {
+    public void removeMoimMemo(MoimMemo moimMemo) {
         moimMemoRepository.delete(moimMemo);
     }
 }

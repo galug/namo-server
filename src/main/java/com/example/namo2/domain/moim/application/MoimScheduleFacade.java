@@ -93,18 +93,21 @@ public class MoimScheduleFacade {
     /**
      * 모임 스케줄 삭제는 모임 메모와 연관된 요소 있으므로 나중에
      */
+    @Transactional
     public void removeMoimSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
         MoimMemo moimMemo = moimMemoService.getMoimMemo(moimSchedule);
+        List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService.getMoimScheduleAndUsers(moimSchedule);
 
 //         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
         if (moimMemo != null) {
-            moimMemo.getMoimMemoLocations().stream().forEach((moimMemoLocation -> moimMemoService.deleteMoimMemoLocation(moimMemoLocation.getId())));
-            moimMemoService.deleteMoimMemo(moimMemo);
+            moimMemo.getMoimMemoLocations().stream().forEach((moimMemoLocation -> moimMemoService.removeMoimMemoLocation(moimMemoLocation.getId())));
+            moimMemoService.removeMoimMemo(moimMemo);
         }
 
+        moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUsers);
         moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
-        moimScheduleService.delete(moimSchedule);
+        moimScheduleService.remove(moimSchedule);
     }
 
     @Transactional

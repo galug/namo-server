@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MoimScheduleService {
     private final MoimScheduleRepository moimScheduleRepository;
-    private final ScheduleRepository scheduleRepository;
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
 
     public MoimSchedule create(MoimSchedule moimSchedule) {
@@ -33,14 +32,8 @@ public class MoimScheduleService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
     }
 
-    public void delete(MoimSchedule moimSchedule) {
+    public void remove(MoimSchedule moimSchedule) {
         moimScheduleRepository.delete(moimSchedule);
-    }
-
-
-
-    public List<MoimScheduleResponse.MoimScheduleDto> findMoimSchedulesOrigin(Long moimId, List<LocalDateTime> localDateTimes) {
-        return scheduleRepository.findMonthScheduleInMoim(moimId, localDateTimes.get(0), localDateTimes.get(1));
     }
 
     public List<MoimScheduleAndUser> getMoimSchedules(
@@ -49,5 +42,9 @@ public class MoimScheduleService {
                 .findMoimScheduleAndUserWithMoimScheduleByUsersAndDates(
                         localDateTimes.get(0), localDateTimes.get(1), users
                 );
+    }
+
+    public List<MoimScheduleAndUser> getMoimScheduleAndUsers(MoimSchedule moimSchedule) {
+        return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimSchedule(moimSchedule);
     }
 }
