@@ -143,6 +143,7 @@ public class MoimScheduleFacade {
         List<Schedule> indivisualsSchedules = scheduleService.getSchedules(users);
         List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService
                 .getMoimSchedules(localDateTimes, users);
-        return MoimScheduleResponseConverter.toMoimScheduleDtos(indivisualsSchedules, moimScheduleAndUsers, moimAndUsersInMoim);
+        return MoimScheduleResponseConverter
+                .toMoimScheduleDtos(indivisualsSchedules, moimScheduleAndUsers, moimAndUsersInMoim);
     }
 }

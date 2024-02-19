@@ -2,6 +2,7 @@ package com.example.namo2.domain.moim.ui.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,7 @@ public class MoimScheduleResponse {
 
 
         @QueryProjection
+        @Builder
         public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval,
                                Long moimId, Long moimScheduleId, Double x, Double y, String locationName) {
             this.name = name;
@@ -54,6 +56,7 @@ public class MoimScheduleResponse {
         }
 
         @QueryProjection
+        @Builder
         public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval, Long userId, String userName, Integer color) {
             this.name = name;
             this.startDate = startDate.atZone(ZoneId.systemDefault())
@@ -81,6 +84,7 @@ public class MoimScheduleResponse {
         private String userName;
         private Integer color;
 
+        @Builder
         public MoimScheduleUserDto(Long userId, String userName, Integer color) {
             this.userId = userId;
             this.userName = userName;
