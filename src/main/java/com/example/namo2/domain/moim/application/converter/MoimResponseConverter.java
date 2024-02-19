@@ -13,7 +13,9 @@ public class MoimResponseConverter {
     }
 
     public static MoimResponse.MoimIdDto toMoimIdDto(Moim moim) {
-        return new MoimResponse.MoimIdDto(moim.getId());
+        return MoimResponse.MoimIdDto.builder()
+                .moimId(moim.getId())
+                .build();
     }
 
     public static List<MoimResponse.MoimDto> toMoimDtos(List<MoimAndUser> moimAndUsers) {
@@ -29,11 +31,13 @@ public class MoimResponseConverter {
     }
 
     public static MoimResponse.MoimDto toMoimDto(Moim moim, List<MoimAndUser> moimAndUsers) {
-        return new MoimResponse.MoimDto(moim.getId()
-                , moim.getName()
-                , moim.getImgUrl()
-                , moim.getCode()
-                , toMoimUserDtos(moimAndUsers));
+        return MoimResponse.MoimDto.builder()
+                .groupId(moim.getId())
+                .groupName(moim.getName())
+                .groupImgUrl(moim.getImgUrl())
+                .groupCode(moim.getCode())
+                .moimUsers(toMoimUserDtos(moimAndUsers))
+                .build();
     }
 
     private static List<MoimResponse.MoimUserDto> toMoimUserDtos(List<MoimAndUser> moimAndUsers) {
@@ -43,6 +47,11 @@ public class MoimResponseConverter {
     }
 
     private static MoimResponse.MoimUserDto toMoimUserDto(MoimAndUser moimAndUser) {
-        return new MoimResponse.MoimUserDto(moimAndUser.getUser().getId(), moimAndUser.getUser().getName(), moimAndUser.getColor());
+        return MoimResponse.MoimUserDto
+                .builder()
+                .userId(moimAndUser.getUser().getId())
+                .userName(moimAndUser.getUser().getName())
+                .color(moimAndUser.getColor())
+                .build();
     }
 }

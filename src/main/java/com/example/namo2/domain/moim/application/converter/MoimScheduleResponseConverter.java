@@ -16,34 +16,21 @@ public class MoimScheduleResponseConverter {
         throw new IllegalStateException("Util Classes");
     }
 
+    
     public static List<MoimScheduleResponse.MoimScheduleDto> toMoimScheduleDtos(
             List<Schedule> indivisualsSchedules,
             List<MoimScheduleAndUser> moimScheduleAndUsers,
             List<MoimAndUser> moimAndUsers) {
-        Map<User, Integer> usersColor = moimAndUsers.stream().collect(
-                Collectors.toMap(
-                        MoimAndUser::getUser, MoimAndUser::getColor
-                ));
-        List<MoimScheduleResponse.MoimScheduleDto> result = indivisualsSchedules.stream()
-                .map((schedule -> toMoimScheduleDto(schedule, usersColor.get(schedule.getUser()))))
-                .collect(Collectors.toList());
+        List<MoimScheduleResponse.MoimScheduleDto> result = getMoimScheduleDtos(indivisualsSchedules, moimAndUsers);
 
-        Map<User, MoimScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap = moimAndUsers.stream()
-                .collect(Collectors.toMap(
-                        MoimAndUser::getUser,
-                        (moimAndUser -> toMoimScheduleUserDto(moimAndUser))
-                ));
+        Map<User, MoimScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap = getMoimScheduleUserDtoMap(moimAndUsers);
+        Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap
+                = getMoimScheduleMappingUserDtoMap(moimScheduleAndUsers, moimScheduleUserDtoMap);
+        addMoimSchedulesToResult(moimAndUsers, result, moimScheduleMappingUserDtoMap);
+        return result;
+    }
 
-        Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap = moimScheduleAndUsers.stream().collect(
-                Collectors.groupingBy(
-                        (MoimScheduleAndUser::getMoimSchedule),
-                        Collectors.mapping(
-                                (moimScheduleAndUser -> moimScheduleUserDtoMap.get(moimScheduleAndUser.getUser())),
-                                Collectors.toList()
-                        )
-                )
-        );
-
+    private static void addMoimSchedulesToResult(List<MoimAndUser> moimAndUsers, List<MoimScheduleResponse.MoimScheduleDto> result, Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap) {
         for (MoimSchedule moimSchedule : moimScheduleMappingUserDtoMap.keySet()) {
             MoimScheduleResponse.MoimScheduleDto moimScheduleDto = toMoimScheduleDto(moimSchedule);
             moimScheduleDto.setUsers(
@@ -53,6 +40,36 @@ public class MoimScheduleResponseConverter {
             );
             result.add(moimScheduleDto);
         }
+    }
+
+    private static Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> getMoimScheduleMappingUserDtoMap(List<MoimScheduleAndUser> moimScheduleAndUsers, Map<User, MoimScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap) {
+        return moimScheduleAndUsers.stream().collect(
+                Collectors.groupingBy(
+                        (MoimScheduleAndUser::getMoimSchedule),
+                        Collectors.mapping(
+                                (moimScheduleAndUser -> moimScheduleUserDtoMap.get(moimScheduleAndUser.getUser())),
+                                Collectors.toList()
+                        )
+                )
+        );
+    }
+
+    private static Map<User, MoimScheduleResponse.MoimScheduleUserDto> getMoimScheduleUserDtoMap(List<MoimAndUser> moimAndUsers) {
+        return moimAndUsers.stream()
+                .collect(Collectors.toMap(
+                        MoimAndUser::getUser,
+                        (moimAndUser -> toMoimScheduleUserDto(moimAndUser))
+                ));
+    }
+
+    private static List<MoimScheduleResponse.MoimScheduleDto> getMoimScheduleDtos(List<Schedule> indivisualsSchedules, List<MoimAndUser> moimAndUsers) {
+        Map<User, Integer> usersColor = moimAndUsers.stream().collect(
+                Collectors.toMap(
+                        MoimAndUser::getUser, MoimAndUser::getColor
+                ));
+        List<MoimScheduleResponse.MoimScheduleDto> result = indivisualsSchedules.stream()
+                .map((schedule -> toMoimScheduleDto(schedule, usersColor.get(schedule.getUser()))))
+                .collect(Collectors.toList());
         return result;
     }
 
@@ -82,11 +99,12 @@ public class MoimScheduleResponseConverter {
         );
     }
 
-    public static MoimScheduleResponse.MoimScheduleUserDto toMoimScheduleUserDto(MoimAndUser moimAndUser) {
-        return new MoimScheduleResponse.MoimScheduleUserDto(
-                moimAndUser.getUser().getId(),
-                moimAndUser.getUser().getName(),
-                moimAndUser.getColor()
-        );
+    private static MoimScheduleResponse.MoimScheduleUserDto toMoimScheduleUserDto(MoimAndUser moimAndUser) {
+        return MoimScheduleResponse.MoimScheduleUserDto
+                .builder()
+                .userId(moimAndUser.getId())
+                .userName(moimAndUser.getUser().getName())
+                .color(moimAndUser.getColor())
+                .build();
     }
 }

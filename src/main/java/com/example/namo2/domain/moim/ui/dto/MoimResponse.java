@@ -1,6 +1,7 @@
 package com.example.namo2.domain.moim.ui.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,12 +14,14 @@ public class MoimResponse {
 
     @AllArgsConstructor
     @Getter
+    @Builder
     public static class MoimIdDto {
         private Long moimId;
     }
 
     @Getter
     @AllArgsConstructor
+    @Builder
     public static class MoimDto {
         private Long groupId;
         private String groupName;
@@ -30,6 +33,7 @@ public class MoimResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     public static class MoimUserDto {
         private Long userId;
         private String userName;
