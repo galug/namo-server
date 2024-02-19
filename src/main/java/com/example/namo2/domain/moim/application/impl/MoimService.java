@@ -1,22 +1,19 @@
 package com.example.namo2.domain.moim.application.impl;
 
-import com.example.namo2.domain.category.dao.repository.CategoryRepository;
 import com.example.namo2.domain.memo.MoimMemoRepository;
 import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.dao.repository.MoimRepository;
-import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
-import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.moim.domain.Moim;
-import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.schedule.ScheduleRepository;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.user.UserRepository;
+import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,12 +31,12 @@ public class MoimService {
     private final MoimRepository moimRepository;
     private final MoimScheduleRepository moimScheduleRepository;
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
-    private final MoimScheduleAlarmRepository moimScheduleAlarmRepository;
     private final MoimMemoRepository moimMemoRepository;
     private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
-    private final ScheduleRepository scheduleRepository;
 
+    /**
+     * 추후 MoimMemo Refactoring 작업에서 제거할 예정
+     */
     private final MoimMemoService moimMemoService;
 
     public Moim create(Moim moim) {
@@ -56,7 +53,6 @@ public class MoimService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
     }
 
-    @Transactional(readOnly = false)
     public void removeSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
@@ -74,6 +70,9 @@ public class MoimService {
         moimScheduleRepository.delete(moimSchedule);
     }
 
+    /**
+     * 추후 모임 메모 리팩토링 작업에서 제거 예정
+     */
     @Transactional(readOnly = false)
     public void createMoimScheduleText(Long moimScheduleId,
                                        Long userId,

@@ -10,15 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MoimAndUserService {
-    private final static int[] MOIM_USERS_COLOR = new int[]{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-
     private final MoimAndUserRepository moimAndUserRepository;
 
     public MoimAndUser create(MoimAndUser moimAndUser) {

@@ -4,8 +4,6 @@ import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepositor
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
-import com.example.namo2.domain.schedule.ScheduleRepository;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;

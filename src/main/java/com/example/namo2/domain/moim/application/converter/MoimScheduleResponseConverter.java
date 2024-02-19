@@ -7,7 +7,6 @@ import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.user.domain.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

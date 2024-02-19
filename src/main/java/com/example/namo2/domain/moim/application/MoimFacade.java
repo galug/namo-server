@@ -3,15 +3,12 @@ package com.example.namo2.domain.moim.application;
 import com.example.namo2.domain.moim.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.moim.application.converter.MoimConverter;
 import com.example.namo2.domain.moim.application.converter.MoimResponseConverter;
-import com.example.namo2.domain.moim.application.converter.MoimScheduleConverter;
 import com.example.namo2.domain.moim.application.impl.MoimAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
-import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.ui.dto.MoimRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.utils.FileUtils;
@@ -25,7 +22,6 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MoimFacade {
     private final static int[] MOIM_USERS_COLOR = new int[]{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
     private final MoimService moimService;
@@ -33,7 +29,7 @@ public class MoimFacade {
     private final MoimAndUserService moimAndUserService;
     private final FileUtils fileUtils;
 
-    @Transactional
+    @Transactional(readOnly = false)
     public MoimResponse.MoimIdDto createMoim(Long userId, String groupName, MultipartFile img) {
         User user = userService.getUser(userId);
         String url = fileUtils.uploadImage(img);
@@ -46,6 +42,7 @@ public class MoimFacade {
         return MoimResponseConverter.toMoimIdDto(moim);
     }
 
+    @Transactional(readOnly = true)
     public List<MoimResponse.MoimDto> getMoims(Long userId) {
         User user = userService.getUser(userId);
         List<Moim> moimsInUser = moimAndUserService.getMoimAndUsers(user)
@@ -57,7 +54,7 @@ public class MoimFacade {
         return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public Long modifyMoimName(MoimRequest.PatchMoimNameDto patchMoimNameDto, Long userId) {
         User user = userService.getUser(userId);
         Moim moim = moimService.getMoim(patchMoimNameDto.getMoimId());
@@ -66,7 +63,7 @@ public class MoimFacade {
         return moim.getId();
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public Long createMoimAndUser(Long userId, String code) {
         User user = userService.getUser(userId);
         Moim moim = moimService.getMoim(code);
@@ -81,7 +78,7 @@ public class MoimFacade {
         return moim.getId();
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void removeMoimAndUser(Long userId, Long moimId) {
         User user = userService.getUser(userId);
         Moim moim = moimService.getMoim(moimId);

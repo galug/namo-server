@@ -33,7 +33,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MoimScheduleFacade {
     private final UserService userService;
     private final MoimService moimService;
@@ -71,7 +70,7 @@ public class MoimScheduleFacade {
         moimScheduleAndUserService.createAll(moimScheduleAndUsers);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void modifyMoimSchedule(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleDto.getMoimScheduleId());
         Period period = MoimScheduleConverter.toPeriod(moimScheduleDto);
@@ -81,7 +80,7 @@ public class MoimScheduleFacade {
         createMoimScheduleAndUsers(moimScheduleDto.getUsers(), moimSchedule);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void modifyMoimScheduleCategory(MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleCategoryDto, Long userId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleCategoryDto.getMoimScheduleId());
         User user = userService.getUser(userId);
@@ -93,7 +92,7 @@ public class MoimScheduleFacade {
     /**
      * 모임 스케줄 삭제는 모임 메모와 연관된 요소 있으므로 나중에
      */
-    @Transactional
+    @Transactional(readOnly = false)
     public void removeMoimSchedule(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
         MoimMemo moimMemo = moimMemoService.getMoimMemo(moimSchedule);
@@ -110,7 +109,7 @@ public class MoimScheduleFacade {
         moimScheduleService.remove(moimSchedule);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void createMoimScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto moimScheduleAlarmDto, Long userId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleAlarmDto.getMoimScheduleId());
         User user = userService.getUser(userId);
@@ -122,7 +121,7 @@ public class MoimScheduleFacade {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void modifyMoimScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto moimScheduleAlarmDto, Long userId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleAlarmDto.getMoimScheduleId());
         User user = userService.getUser(userId);
@@ -135,6 +134,7 @@ public class MoimScheduleFacade {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<MoimScheduleResponse.MoimScheduleDto> getMoimSchedules(Long moimId, List<LocalDateTime> localDateTimes) {
         Moim moim = moimService.getMoim(moimId);
         List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);

@@ -1,6 +1,5 @@
 package com.example.namo2.domain.moim.dao.repository;
 
-import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import org.springframework.data.jpa.repository.JpaRepository;
