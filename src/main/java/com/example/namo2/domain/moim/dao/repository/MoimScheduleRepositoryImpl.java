@@ -1,13 +1,10 @@
 package com.example.namo2.domain.moim.dao.repository;
 
-import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepositoryCustom;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import jakarta.persistence.EntityManager;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;

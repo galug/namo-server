@@ -3,11 +3,8 @@ package com.example.namo2.domain.moim.application.converter;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
-import com.example.namo2.domain.user.domain.User;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MoimResponseConverter {

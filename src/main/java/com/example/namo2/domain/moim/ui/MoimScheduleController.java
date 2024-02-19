@@ -31,7 +31,6 @@ import java.util.List;
 @RequestMapping("/moims/schedule")
 public class MoimScheduleController {
     private final MoimScheduleFacade moimScheduleFacade;
-    private final MoimService moimService;
     private final Converter converter;
 
     @Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
