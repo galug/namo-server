@@ -15,12 +15,8 @@ import org.springframework.util.StringUtils;
 
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
-import com.example.namo2.domain.category.dao.repository.CategoryRepository;
-import com.example.namo2.domain.category.dao.repository.PaletteRepository;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.user.application.converter.UserResponseConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
-import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
@@ -42,6 +38,7 @@ public class UserFacade {
 	private final UserService userService;
 	private final PaletteService paletteService;
 	private final CategoryService categoryService;
+
 	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpReq
 	) throws BaseException {
@@ -55,9 +52,9 @@ public class UserFacade {
 
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
 			User user = User.builder()
-				.email((String) response.get("email"))
-				.name((String) response.get("nickname"))
-				.birthday((String) response.getOrDefault("birthday", null))
+				.email(response.get("email"))
+				.name(response.get("nickname"))
+				.birthday(response.getOrDefault("birthday", null))
 				.build();
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
@@ -78,9 +75,9 @@ public class UserFacade {
 
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
 			User user = User.builder()
-				.email((String) response.get("email"))
-				.name((String) response.get("name"))
-				.birthday((String) response.get("birthday"))
+				.email(response.get("email"))
+				.name(response.get("name"))
+				.birthday(response.get("birthday"))
 				.build();
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
@@ -90,6 +87,7 @@ public class UserFacade {
 			throw new BaseException(SOCIAL_LOGIN_FAILURE);
 		}
 	}
+
 	@Transactional
 	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto
 	) throws BaseException {
@@ -103,6 +101,7 @@ public class UserFacade {
 		user.updateRefreshToken(signUpRes.getRefreshToken());
 		return signUpRes;
 	}
+
 	@Transactional
 	public void logout(UserRequest.LogoutDto logoutDto) {
 		// AccessToken 만료시 종료
