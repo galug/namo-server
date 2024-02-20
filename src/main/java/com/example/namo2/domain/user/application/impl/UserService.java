@@ -2,6 +2,7 @@ package com.example.namo2.domain.user.application.impl;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -22,10 +23,16 @@ public class UserService {
     public User createUser(User user){
         return userRepository.save(user);
     }
+
     public User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
     }
+
+    public List<User> getUsers(List<Long> users) {
+        return userRepository.findUsersById(users);
+    }
+
     public Optional<User> getUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }

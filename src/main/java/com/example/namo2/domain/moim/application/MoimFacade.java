@@ -9,7 +9,7 @@ import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
-import com.example.namo2.domain.user.UserService;
+import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;

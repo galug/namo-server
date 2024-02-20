@@ -1,5 +1,11 @@
 package com.example.namo2.domain.moim.application;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.memo.MoimMemoService;
@@ -22,14 +28,10 @@ import com.example.namo2.domain.schedule.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.user.UserService;
+import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
