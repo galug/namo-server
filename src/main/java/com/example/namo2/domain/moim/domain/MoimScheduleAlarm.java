@@ -1,6 +1,14 @@
 package com.example.namo2.domain.moim.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,14 +26,13 @@ public class MoimScheduleAlarm {
     private Integer alarmDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "moim_schedule_id")
-    private MoimSchedule moimSchedule;
+    @JoinColumn(name = "moim_schedule_user_id")
+    private MoimScheduleAndUser moimScheduleAndUser;
 
     @Builder
-    public MoimScheduleAlarm(Long id, Integer alarmDate, MoimSchedule moimSchedule) {
+    public MoimScheduleAlarm(Long id, Integer alarmDate, MoimScheduleAndUser moimScheduleAndUser) {
         this.id = id;
         this.alarmDate = alarmDate;
-        this.moimSchedule = moimSchedule;
-        moimSchedule.getMoimScheduleAlarms().add(this);
+        this.moimScheduleAndUser = moimScheduleAndUser;
     }
 }

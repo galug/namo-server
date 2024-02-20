@@ -1,13 +1,25 @@
 package com.example.namo2.domain.moim.domain;
 
-import com.example.namo2.global.common.entity.BaseTimeEntity;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.user.domain.User;
-import jakarta.persistence.*;
+import com.example.namo2.global.common.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "moim_schedule_and_user")
@@ -32,6 +44,9 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "moimScheduleAndUser", fetch = FetchType.LAZY)
+    private List<MoimScheduleAlarm> moimScheduleAlarms = new ArrayList<>();
 
     @Builder
     public MoimScheduleAndUser(Long id, String memo, User user, MoimSchedule moimSchedule, Category category) {

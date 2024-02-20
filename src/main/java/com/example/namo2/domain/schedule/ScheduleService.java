@@ -6,9 +6,9 @@ import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.domain.Alarm;
 import com.example.namo2.domain.schedule.domain.Period;
-import com.example.namo2.domain.moim.MoimScheduleAndUserRepository;
-import com.example.namo2.domain.moim.MoimScheduleRepository;
-import com.example.namo2.domain.moim.MoimService;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
+import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.schedule.domain.Image;
@@ -140,7 +140,7 @@ public class ScheduleService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
         // 마지막 사람이면 모임 스케줄 삭제
         if (moimSchedule.isLastScheduleMember()) {
-            moimService.deleteSchedule(scheduleId);
+            moimService.removeSchedule(scheduleId);
             return;
         }
         moimScheduleAndUserRepository.delete(moimScheduleAndUser);
@@ -202,5 +202,9 @@ public class ScheduleService {
     public List<GetScheduleRes> findMoimALLSchedule(Long userId) {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         return scheduleRepository.findMoimSchedulesByUserId(user, null, null);
+    }
+
+    public List<Schedule> getSchedules(List<User> users) {
+        return scheduleRepository.findSchedulesByUsers(users);
     }
 }

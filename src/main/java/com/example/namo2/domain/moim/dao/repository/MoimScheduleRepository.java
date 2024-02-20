@@ -1,4 +1,4 @@
-package com.example.namo2.domain.moim;
+package com.example.namo2.domain.moim.dao.repository;
 
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;

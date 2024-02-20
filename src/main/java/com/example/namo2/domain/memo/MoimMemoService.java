@@ -1,9 +1,9 @@
 package com.example.namo2.domain.memo;
 
-import com.example.namo2.domain.moim.MoimScheduleRepository;
-import com.example.namo2.domain.moim.dto.LocationInfo;
-import com.example.namo2.domain.moim.dto.MoimMemoDto;
-import com.example.namo2.domain.moim.dto.MoimMemoLocationDto;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
+import com.example.namo2.domain.moim.ui.dto.LocationInfo;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.memo.domain.MoimMemo;
@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,8 +43,7 @@ public class MoimMemoService {
     @Transactional(readOnly = false)
     public void create(Long moimScheduleId, LocationInfo locationInfo, List<MultipartFile> imgs) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(moimScheduleId);
-        Optional<MoimMemo> optionalMoimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
-        MoimMemo moimMemo = optionalMoimMemo.orElseGet(() -> createMoimMemo(moimSchedule));
+        MoimMemo moimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
         MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationInfo);
         createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
         createMoimMemoLocationImgs(imgs, moimMemoLocation);
@@ -121,7 +119,7 @@ public class MoimMemoService {
     }
 
     @Transactional(readOnly = false)
-    public void delete(Long moimLocationId) {
+    public void removeMoimMemoLocation(Long moimLocationId) {
         MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
@@ -137,5 +135,13 @@ public class MoimMemoService {
 
     public SliceDiaryDto<DiaryDto> findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) {
         return moimScheduleRepository.findMoimScheduleMemoByMonth(userId, localDateTimes, pageable);
+    }
+
+    public MoimMemo getMoimMemo(MoimSchedule moimSchedule) {
+        return moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
+    }
+
+    public void removeMoimMemo(MoimMemo moimMemo) {
+        moimMemoRepository.delete(moimMemo);
     }
 }

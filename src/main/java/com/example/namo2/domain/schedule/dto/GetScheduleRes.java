@@ -66,7 +66,7 @@ public class GetScheduleRes {
         this.locationName = moimScheduleAndUser.getMoimSchedule().getLocation().getLocationName();
         this.categoryId = moimScheduleAndUser.getCategory().getId();
         this.interval = moimScheduleAndUser.getMoimSchedule().getPeriod().getDayInterval();
-        this.alarmDate = moimScheduleAndUser.getMoimSchedule().getMoimScheduleAlarms()
+        this.alarmDate = moimScheduleAndUser.getMoimScheduleAlarms()
                 .stream().map(MoimScheduleAlarm::getAlarmDate).collect(Collectors.toList());
         this.isMoimSchedule = true;
         this.hasDiary = moimScheduleAndUser.getMoimSchedule().getMoimMemo() != null;

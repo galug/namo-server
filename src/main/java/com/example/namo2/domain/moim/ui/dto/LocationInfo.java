@@ -1,11 +1,7 @@
-package com.example.namo2.domain.moim.dto;
+package com.example.namo2.domain.moim.ui.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
