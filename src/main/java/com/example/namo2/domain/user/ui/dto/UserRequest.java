@@ -2,17 +2,14 @@ package com.example.namo2.domain.user.ui.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class UserRequest {
 	private UserRequest() {
 		throw new IllegalStateException("Utility class");
 	}
 
-	@Setter
 	@Getter
 	@AllArgsConstructor
 	@NoArgsConstructor
@@ -21,9 +18,9 @@ public class UserRequest {
 		private String accessToken;
 	}
 
-	@Setter
 	@Getter
 	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class SignUpDto {
 		@NotBlank
 		private String accessToken;
@@ -31,11 +28,11 @@ public class UserRequest {
 		private String refreshToken;
 	}
 
-	@Data
+	@Getter
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class SocialSignUpDto {
 		@NotBlank
-		String accessToken;
+		private String accessToken;
 	}
 }

@@ -1,14 +1,15 @@
 package com.example.namo2.domain.user.ui.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 public class UserResponse {
+
+	private UserResponse() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	@Getter
-	@AllArgsConstructor
-	@NoArgsConstructor
 	@Builder
 	public static class SignUpDto {
 		private String accessToken;
