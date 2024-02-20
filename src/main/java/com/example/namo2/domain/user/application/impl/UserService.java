@@ -7,9 +7,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.dao.repository.UserRepository;
+import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 
 import lombok.RequiredArgsConstructor;
@@ -42,8 +41,7 @@ public class UserService {
             .orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
     }
 
-    public void updateRefreshToken(Long userId, String refreshToken
-    ) throws BaseException {
+    public void updateRefreshToken(Long userId, String refreshToken) {
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         user.updateRefreshToken(refreshToken);
     }

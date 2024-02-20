@@ -40,8 +40,7 @@ public class UserFacade {
 	private final CategoryService categoryService;
 
 	@Transactional
-	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpReq
-	) throws BaseException {
+	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpReq) {
 		try {
 			HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpReq);
 			socialUtils.validateSocialAccessToken(con);
@@ -65,8 +64,7 @@ public class UserFacade {
 		}
 	}
 	@Transactional
-	public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpReq
-	) throws BaseException {
+	public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpReq) {
 		try {
 			HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpReq);
 			socialUtils.validateSocialAccessToken(con);
@@ -89,8 +87,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto
-	) throws BaseException {
+	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
 		if (!jwtUtils.validateToken(signUpDto.getRefreshToken())) {
 			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
 		}
