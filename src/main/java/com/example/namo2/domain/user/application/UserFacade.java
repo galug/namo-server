@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.example.namo2.domain.category.application.converter.CategoryConverter;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
@@ -40,9 +42,9 @@ public class UserFacade {
 	private final CategoryService categoryService;
 
 	@Transactional
-	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpReq) {
+	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) {
 		try {
-			HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpReq);
+			HttpURLConnection con = socialUtils.connectKakaoResourceServer(signUpDto);
 			socialUtils.validateSocialAccessToken(con);
 
 			String result = socialUtils.findSocialLoginUsersInfo(con);
@@ -50,11 +52,7 @@ public class UserFacade {
 			log.debug("result = " + result);
 
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
-			User user = User.builder()
-				.email(response.get("email"))
-				.name(response.get("nickname"))
-				.birthday(response.getOrDefault("birthday", null))
-				.build();
+			User user = UserConverter.toUser(response);
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -63,20 +61,17 @@ public class UserFacade {
 			throw new BaseException(SOCIAL_LOGIN_FAILURE);
 		}
 	}
+
 	@Transactional
-	public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpReq) {
+	public UserResponse.SignUpDto signupNaver(UserRequest.SocialSignUpDto signUpDto) {
 		try {
-			HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpReq);
+			HttpURLConnection con = socialUtils.connectNaverResourceServer(signUpDto);
 			socialUtils.validateSocialAccessToken(con);
 
 			String result = socialUtils.findSocialLoginUsersInfo(con);
 
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
-			User user = User.builder()
-				.email(response.get("email"))
-				.name(response.get("name"))
-				.birthday(response.get("birthday"))
-				.build();
+			User user = UserConverter.toUser(response);
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -121,18 +116,19 @@ public class UserFacade {
 	}
 
 	private void makeBaseCategory(User save) {
-		Category baseCategory = Category.builder()
-			.name("기본")
-			.palette(paletteService.getReferenceById(1L))
-			.share(Boolean.TRUE)
-			.user(save)
-			.build();
-		Category groupCategory = Category.builder()
-			.name("모임")
-			.palette(paletteService.getReferenceById(4L))
-			.share(Boolean.TRUE)
-			.user(save)
-			.build();
+		Category baseCategory = CategoryConverter.toCategory(
+				"기본",
+				paletteService.getReferenceById(1L),
+				Boolean.TRUE,
+				save
+		);
+		Category groupCategory = CategoryConverter.toCategory(
+				"모임",
+				paletteService.getReferenceById(4L),
+				Boolean.TRUE,
+				save
+		);
+
 		categoryService.create(baseCategory);
 		categoryService.create(groupCategory);
 	}
