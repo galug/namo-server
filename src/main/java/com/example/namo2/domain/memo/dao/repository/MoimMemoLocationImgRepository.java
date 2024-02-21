@@ -1,4 +1,4 @@
-package com.example.namo2.domain.memo;
+package com.example.namo2.domain.memo.dao.repository;
 
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;

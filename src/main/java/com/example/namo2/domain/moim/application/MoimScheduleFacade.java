@@ -2,7 +2,7 @@ package com.example.namo2.domain.moim.application;
 
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.moim.application.converter.MoimScheduleConverter;

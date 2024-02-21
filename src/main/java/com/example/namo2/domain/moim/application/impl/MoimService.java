@@ -1,7 +1,7 @@
 package com.example.namo2.domain.moim.application.impl;
 
-import com.example.namo2.domain.memo.MoimMemoRepository;
-import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
+import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.dao.repository.MoimRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;

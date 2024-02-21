@@ -1,9 +1,9 @@
-package com.example.namo2.domain.memo;
+package com.example.namo2.domain.memo.dao.repository;
 
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -22,7 +22,7 @@ public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositor
     }
 
     @Override
-    public List<MoimMemoLocationDto> findMoimMemo(Long moimScheduleId) {
+    public List<MoimMemoResponse.MoimMemoLocationDto> findMoimMemo(Long moimScheduleId) {
         List<MoimMemoLocation> moimMemoLocations = queryFactory.select(moimMemoLocation).distinct()
                 .from(moimMemoLocation)
                 .join(moimMemoLocation.moimMemo).fetchJoin()
@@ -30,13 +30,13 @@ public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositor
                 .where(moimMemoLocation.moimMemo.moimSchedule.id.eq(moimScheduleId))
                 .fetch();
 
-        List<MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocations.stream()
-                .map(moimMemoLocation -> new MoimMemoLocationDto(moimMemoLocation.getId(),
+        List<MoimMemoResponse.MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocations.stream()
+                .map(moimMemoLocation -> new MoimMemoResponse.MoimMemoLocationDto(moimMemoLocation.getId(),
                         moimMemoLocation.getName(), moimMemoLocation.getTotalAmount(),
                         moimMemoLocation.getMoimMemoLocationImgs().stream().map(MoimMemoLocationImg::getUrl).collect(Collectors.toList())))
                 .collect(Collectors.toList());
         List<Long> moimMemoLocationIds = moimMemoLocationDtos.stream()
-                .map(MoimMemoLocationDto::getMoimMemoLocationId)
+                .map(MoimMemoResponse.MoimMemoLocationDto::getMoimMemoLocationId)
                 .collect(Collectors.toList());
 
         Map<Long, List<MoimMemoLocationAndUser>> locationAndUsersMap = queryFactory.select(moimMemoLocationAndUser)

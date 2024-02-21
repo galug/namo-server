@@ -1,9 +1,12 @@
-package com.example.namo2.domain.memo;
+package com.example.namo2.domain.memo.application.impl;
 
+import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationAndUserRepository;
+import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationImgRepository;
+import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationRepository;
+import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
-import com.example.namo2.domain.moim.ui.dto.LocationInfo;
-import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
-import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.memo.domain.MoimMemo;
@@ -41,26 +44,19 @@ public class MoimMemoService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = false)
-    public void create(Long moimScheduleId, LocationInfo locationInfo, List<MultipartFile> imgs) {
+    public void create(Long moimScheduleId, MoimMemoRequest.LocationDto locationDto, List<MultipartFile> imgs) {
         MoimSchedule moimSchedule = moimScheduleRepository.getReferenceById(moimScheduleId);
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
-        MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationInfo);
-        createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
+        MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationDto);
+        createMoimMemoLocationAndUser(locationDto.getParticipants(), moimMemoLocation);
         createMoimMemoLocationImgs(imgs, moimMemoLocation);
     }
 
-    private MoimMemo createMoimMemo(MoimSchedule moimSchedule) {
-        MoimMemo moimMemo = MoimMemo.builder()
-                .moimSchedule(moimSchedule)
-                .build();
-        return moimMemoRepository.save(moimMemo);
-    }
-
-    private MoimMemoLocation createMoimMemoLocation(MoimMemo moimMemo, LocationInfo locationInfo) {
+    private MoimMemoLocation createMoimMemoLocation(MoimMemo moimMemo, MoimMemoRequest.LocationDto locationDto) {
         MoimMemoLocation moimMemoLocation = MoimMemoLocation.builder()
                 .moimMemo(moimMemo)
-                .name(locationInfo.getName())
-                .totalAmount(locationInfo.getMoney())
+                .name(locationDto.getName())
+                .totalAmount(locationDto.getMoney())
                 .build();
         return moimMemoLocationRepository.save(moimMemoLocation);
     }
@@ -90,22 +86,22 @@ public class MoimMemoService {
         }
     }
 
-    public MoimMemoDto find(Long moimScheduleId) {
+    public MoimMemoResponse.MoimMemoDto find(Long moimScheduleId) {
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndUsersByMoimSchedule(moimScheduleId);
-        MoimMemoDto moimMemoDto = new MoimMemoDto(moimMemo);
-        List<MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocationRepository.findMoimMemo(moimScheduleId);
+        MoimMemoResponse.MoimMemoDto moimMemoDto = new MoimMemoResponse.MoimMemoDto(moimMemo);
+        List<MoimMemoResponse.MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocationRepository.findMoimMemo(moimScheduleId);
         moimMemoDto.addMoimMemoLocationDto(moimMemoLocationDtos);
         return moimMemoDto;
     }
 
     @Transactional(readOnly = false)
-    public void update(Long moimLocationId, LocationInfo locationInfo, List<MultipartFile> imgs) {
+    public void update(Long moimLocationId, MoimMemoRequest.LocationDto locationDto, List<MultipartFile> imgs) {
         MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
         deleteMoimImgs(moimMemoLocation);
-        moimMemoLocation.update(locationInfo.getName(), locationInfo.getMoney());
-        createMoimMemoLocationAndUser(locationInfo.getParticipants(), moimMemoLocation);
+        moimMemoLocation.update(locationDto.getName(), locationDto.getMoney());
+        createMoimMemoLocationAndUser(locationDto.getParticipants(), moimMemoLocation);
         createMoimMemoLocationImgs(imgs, moimMemoLocation);
     }
 
