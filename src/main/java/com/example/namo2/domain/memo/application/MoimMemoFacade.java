@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -49,16 +50,16 @@ public class MoimMemoFacade {
 
     private MoimMemo getMoimMemo(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
-        return moimMemoService.getMoimMemo(moimSchedule)
+        return moimMemoService.getMoimMemoOrNull(moimSchedule)
                 .orElse(
                         moimMemoService.create(MoimMemoConverter.toMoimMemo(moimSchedule))
                 );
     }
 
-    private void createMoimMemoLocationAndUsers(MoimMemoRequest.LocationDto locationDto, MoimMemoLocation savedMoimMemoLocation) {
+    private void createMoimMemoLocationAndUsers(MoimMemoRequest.LocationDto locationDto, MoimMemoLocation moimMemoLocation) {
         List<User> users = userService.getUsers(locationDto.getParticipants());
         List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = MoimMemoLocationConverter
-                .toMoimMemoLocationLocationAndUsers(savedMoimMemoLocation, users);
+                .toMoimMemoLocationLocationAndUsers(moimMemoLocation, users);
         moimMemoLocationService.createMoimMemoLocationAndUsers(moimMemoLocationAndUsers);
     }
 
@@ -69,12 +70,36 @@ public class MoimMemoFacade {
         if (imgs == null) {
             return;
         }
-        // imgs 가 3을 넘어갈 시 적절한 경고 Exception 날리기
+        /**
+         * imgs 에 대한 validation 처리 필요
+         * 값이 3개 이상일 경우 OVER_IMAGES_FAILURE 필요
+         */
         List<String> urls = fileUtils.uploadImages(imgs);
         for (String url : urls) {
             MoimMemoLocationImg moimMemoLocationImg = MoimMemoLocationConverter
                     .toMoimMemoLocationLocationImg(moimMemoLocation, url);
             moimMemoLocationService.createMoimMemoLocationImg(moimMemoLocationImg);
         }
+    }
+
+    @Transactional(readOnly = false)
+    public void modifyMoimMemoLocation(Long memoLocationId, MoimMemoRequest.LocationDto locationDto, List<MultipartFile> imgs) {
+        MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocation(memoLocationId);
+        moimMemoLocation.update(locationDto.getName(), locationDto.getMoney());
+
+        moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocation);
+        createMoimMemoLocationAndUsers(locationDto, moimMemoLocation);
+
+        removeMoimMemoLocationImgs(moimMemoLocation);
+        createMoimMemoLocationImgs(imgs, moimMemoLocation);
+    }
+
+    private void removeMoimMemoLocationImgs(MoimMemoLocation moimMemoLocation) {
+        List<String> urls = moimMemoLocation.getMoimMemoLocationImgs()
+                .stream()
+                .map(MoimMemoLocationImg::getUrl)
+                .collect(Collectors.toList());
+        fileUtils.deleteImages(urls);
+        moimMemoLocationService.removeMoimMemoLocationImgs(moimMemoLocation);
     }
 }

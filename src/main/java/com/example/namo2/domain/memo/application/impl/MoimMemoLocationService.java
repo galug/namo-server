@@ -6,6 +6,8 @@ import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationRepository;
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +30,18 @@ public class MoimMemoLocationService {
 
     public MoimMemoLocationImg createMoimMemoLocationImg(MoimMemoLocationImg moimMemoLocationImg) {
         return moimMemoLocationImgRepository.save(moimMemoLocationImg);
+    }
+
+    public MoimMemoLocation getMoimMemoLocation(Long memoLocationId) {
+        return moimMemoLocationRepository.findMoimMemoLocationById(memoLocationId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_MEMO_LOCATION_FAILURE));
+    }
+
+    public void removeMoimMemoLocationAndUsers(MoimMemoLocation moimMemoLocation) {
+        moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
+    }
+
+    public void removeMoimMemoLocationImgs(MoimMemoLocation moimMemoLocation) {
+        moimMemoLocationImgRepository.deleteMoimMemoLocationImgByMoimMemoLocation(moimMemoLocation);
     }
 }

@@ -54,15 +54,6 @@ public class MoimMemoController {
         return BaseResponse.ok();
     }
 
-    @Operation(summary = "모임 메모 텍스트 추가", description = "모임 메모 텍스트 추가 API")
-    @PatchMapping("/schedule/memo/text/{moimScheduleId}")
-    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId,
-                                                       HttpServletRequest request,
-                                                       @RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
-        moimService.createMoimScheduleText(moimScheduleId, (Long) request.getAttribute("userId"), moimScheduleText);
-        return BaseResponse.ok();
-    }
-
     @Operation(summary = "모임 메모 장소 수정", description = "모임 메모 장소 수정 API")
     @PatchMapping("/schedule/memo/{memoLocationId}")
     public BaseResponse<Object> updateMoimMemo(@RequestPart(required = false) List<MultipartFile> imgs,
@@ -71,7 +62,7 @@ public class MoimMemoController {
                                                @RequestPart(required = true) String money,
                                                @RequestPart(required = true) String participants) {
         MoimMemoRequest.LocationDto locationDto = new MoimMemoRequest.LocationDto(name, money, participants);
-        moimMemoService.update(memoLocationId, locationDto, imgs);
+        moimMemoFacade.modifyMoimMemoLocation(memoLocationId, locationDto, imgs);
         return BaseResponse.ok();
     }
 
@@ -94,6 +85,15 @@ public class MoimMemoController {
     @DeleteMapping("/schedule/memo/{memoLocationId}")
     public BaseResponse<Object> deleteMoimMemo(@PathVariable Long memoLocationId) {
         moimMemoService.removeMoimMemoLocation(memoLocationId);
+        return BaseResponse.ok();
+    }
+
+    @Operation(summary = "모임 메모 텍스트 추가", description = "모임 메모 텍스트 추가 API")
+    @PatchMapping("/schedule/memo/text/{moimScheduleId}")
+    public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId,
+                                                       HttpServletRequest request,
+                                                       @RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
+        moimService.createMoimScheduleText(moimScheduleId, (Long) request.getAttribute("userId"), moimScheduleText);
         return BaseResponse.ok();
     }
 }
