@@ -1,5 +1,6 @@
 package com.example.namo2.domain.memo.ui;
 
+import com.example.namo2.domain.memo.application.MoimMemoFacade;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
@@ -38,6 +39,7 @@ import java.util.List;
 public class MoimMemoController {
     private final MoimMemoService moimMemoService;
     private final MoimService moimService;
+    private final MoimMemoFacade moimMemoFacade;
     private final Converter converter;
 
     @Operation(summary = "모임 메모 생성", description = "모임 모임 매모 생성 API")
@@ -48,7 +50,7 @@ public class MoimMemoController {
                                                @RequestParam(defaultValue = "0") String money,
                                                @RequestPart(required = true) String participants) {
         MoimMemoRequest.LocationDto locationDto = new MoimMemoRequest.LocationDto(name, money, participants);
-        moimMemoService.create(moimScheduleId, locationDto, imgs);
+        moimMemoFacade.create(moimScheduleId, locationDto, imgs);
         return BaseResponse.ok();
     }
 

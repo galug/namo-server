@@ -3,7 +3,6 @@ package com.example.namo2.domain.memo.ui.dto;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,7 +51,7 @@ public class MoimMemoResponse {
 
     @NoArgsConstructor
     @Getter
-    public class MoimMemoLocationDto {
+    public static class MoimMemoLocationDto {
         private Long moimMemoLocationId;
         private String name;
         private Integer money;

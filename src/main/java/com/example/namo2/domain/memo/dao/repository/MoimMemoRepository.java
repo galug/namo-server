@@ -18,7 +18,7 @@ public interface MoimMemoRepository extends JpaRepository<MoimMemo, Long> {
             " where ms.id = :moimScheduleId")
     MoimMemo findMoimMemoAndUsersByMoimSchedule(Long moimScheduleId);
 
-    MoimMemo findMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
+    Optional<MoimMemo> findMoimMemoByMoimSchedule(MoimSchedule moimSchedule);
 
 
     @Query("select mm" +
