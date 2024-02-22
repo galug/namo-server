@@ -1,5 +1,12 @@
 package com.example.namo2.domain.moim.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.namo2.domain.moim.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.moim.application.converter.MoimConverter;
 import com.example.namo2.domain.moim.application.converter.MoimResponseConverter;
@@ -9,16 +16,11 @@ import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
-import com.example.namo2.domain.user.UserService;
+import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.utils.FileUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

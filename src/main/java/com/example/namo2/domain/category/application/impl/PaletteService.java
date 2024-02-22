@@ -18,4 +18,8 @@ public class PaletteService {
         return paletteRepository.findById(paletteId)
                 .orElseThrow(() -> new BaseException(NOT_FOUND_PALETTE_FAILURE));
     }
+
+    public Palette getReferenceById(Long id){
+        return paletteRepository.getReferenceById(id);
+    }
 }
