@@ -33,6 +33,7 @@ import com.example.namo2.domain.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
+
 @Component
 @RequiredArgsConstructor
 public class MoimScheduleFacade {
