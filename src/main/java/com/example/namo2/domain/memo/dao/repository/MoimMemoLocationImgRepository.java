@@ -5,6 +5,7 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -12,6 +13,10 @@ public interface MoimMemoLocationImgRepository extends JpaRepository<MoimMemoLoc
     @Modifying
     @Query("delete from MoimMemoLocationImg mli where mli.moimMemoLocation = :moimMemoLocation")
     void deleteMoimMemoLocationImgByMoimMemoLocation(MoimMemoLocation moimMemoLocation);
+
+    @Modifying
+    @Query("delete from MoimMemoLocationImg mli where mli.moimMemoLocation in :moimMemoLocations")
+    void deleteMoimMemoLocationImgByMoimMemoLocation(@Param("moimMemoLocations") List<MoimMemoLocation> moimMemoLocation);
 
     @Query("select mli " +
             "from MoimMemoLocationImg mli " +

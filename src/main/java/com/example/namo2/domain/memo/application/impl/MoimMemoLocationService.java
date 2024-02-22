@@ -3,6 +3,7 @@ package com.example.namo2.domain.memo.application.impl;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationAndUserRepository;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationImgRepository;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationRepository;
+import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
@@ -41,7 +42,28 @@ public class MoimMemoLocationService {
         moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
     }
 
+    public void removeMoimMemoLocationAndUsers(List<MoimMemoLocation> moimMemoLocation) {
+        moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
+    }
+
     public void removeMoimMemoLocationImgs(MoimMemoLocation moimMemoLocation) {
         moimMemoLocationImgRepository.deleteMoimMemoLocationImgByMoimMemoLocation(moimMemoLocation);
+    }
+
+    public void removeMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
+        moimMemoLocationImgRepository.deleteMoimMemoLocationImgByMoimMemoLocation(moimMemoLocations);
+    }
+
+    public void removeMoimMemoLocation(MoimMemoLocation moimMemoLocation) {
+        moimMemoLocationRepository.delete(moimMemoLocation);
+    }
+
+    public List<MoimMemoLocation> getMoimMemoLocation(MoimMemo moimMemo) {
+        return moimMemoLocationRepository.findMoimMemo(moimMemo);
+    }
+
+    public List<MoimMemoLocationImg> getMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
+        return moimMemoLocationImgRepository
+                .findMoimMemoLocationImgsByMoimMemoLocations(moimMemoLocations);
     }
 }

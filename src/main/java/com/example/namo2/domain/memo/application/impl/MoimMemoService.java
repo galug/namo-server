@@ -1,25 +1,23 @@
 package com.example.namo2.domain.memo.application.impl;
 
-import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationAndUserRepository;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationImgRepository;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoLocationRepository;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
-import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
-import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
-import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
+import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +32,6 @@ public class MoimMemoService {
     private final MoimMemoRepository moimMemoRepository;
     private final MoimScheduleRepository moimScheduleRepository;
     private final MoimMemoLocationRepository moimMemoLocationRepository;
-    private final MoimMemoLocationAndUserRepository moimMemoLocationAndUserRepository;
     private final MoimMemoLocationImgRepository moimMemoLocationImgRepository;
 
     public MoimMemoResponse.MoimMemoDto find(Long moimScheduleId) {
@@ -52,21 +49,6 @@ public class MoimMemoService {
                 .collect(Collectors.toList());
         moimMemoLocationImgRepository.deleteMoimMemoLocationImgByMoimMemoLocation(moimMemoLocation);
         fileUtils.deleteImages(deleteUrls);
-    }
-
-    @Transactional(readOnly = false)
-    public void removeMoimMemoLocation(Long moimLocationId) {
-//        MoimMemoLocation moimMemoLocation = moimMemoLocationRepository.findMoimMemoLocationById(moimLocationId)
-//                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_DIARY_FAILURE));
-//        moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
-//        deleteMoimImgs(moimMemoLocation);
-//
-//        MoimMemo moimMemo = moimMemoLocation.getMoimMemo();
-//        if (moimMemo.isLastMoimMemoLocations()) {
-//            moimMemoRepository.delete(moimMemo);
-//            return;
-//        }
-//        moimMemoLocationRepository.delete(moimMemoLocation);
     }
 
     public SliceDiaryDto<DiaryDto> findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) {

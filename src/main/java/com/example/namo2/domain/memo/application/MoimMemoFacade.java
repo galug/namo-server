@@ -102,4 +102,13 @@ public class MoimMemoFacade {
         fileUtils.deleteImages(urls);
         moimMemoLocationService.removeMoimMemoLocationImgs(moimMemoLocation);
     }
+
+    @Transactional(readOnly = false)
+    public void removeMoimMemoLocation(Long memoLocationId) {
+        MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocation(memoLocationId);
+
+        moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocation);
+        removeMoimMemoLocationImgs(moimMemoLocation);
+        moimMemoLocationService.removeMoimMemoLocation(moimMemoLocation);
+    }
 }
