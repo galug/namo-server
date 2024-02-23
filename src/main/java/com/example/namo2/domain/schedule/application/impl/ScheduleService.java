@@ -63,4 +63,7 @@ public class ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
+    public List<Schedule> getSchedules(List<User> users) {
+        return scheduleRepository.findSchedulesByUsers(users);
+    }
 }

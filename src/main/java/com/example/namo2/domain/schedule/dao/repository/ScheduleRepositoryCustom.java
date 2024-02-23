@@ -1,9 +1,9 @@
 package com.example.namo2.domain.schedule.dao.repository;
 
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 import com.example.namo2.domain.user.domain.User;
-import com.example.namo2.domain.moim.dto.MoimScheduleRes;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public interface ScheduleRepositoryCustom {
 
     Schedule findOneScheduleAndImages(Long scheduleId);
 
-    List<MoimScheduleRes> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
+    List<MoimScheduleResponse.MoimScheduleDto> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
 
     public List<ScheduleResponse.GetScheduleDto> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 }

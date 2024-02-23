@@ -1,12 +1,9 @@
 package com.example.namo2.domain.schedule.application;
 
-import static com.example.namo2.global.common.response.BaseResponseStatus.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.joda.time.convert.PeriodConverter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.moim.MoimService;
+import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.application.converter.AlarmConverter;
 import com.example.namo2.domain.schedule.application.converter.ImageConverter;
 import com.example.namo2.domain.schedule.application.converter.ScheduleConverter;
 import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
-import com.example.namo2.domain.schedule.application.impl.AlarmService;
 import com.example.namo2.domain.schedule.application.impl.ImageService;
 import com.example.namo2.domain.schedule.application.impl.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Alarm;
@@ -168,7 +164,7 @@ public class ScheduleFacade {
 
 		// 마지막 사람이면 모임 스케줄 삭제
 		if (moimSchedule.isLastScheduleMember()) {
-			moimService.deleteSchedule(scheduleId);
+			moimService.removeSchedule(scheduleId);
 			return;
 		}
 		moimService.removeMoimScheduleAndUser(moimScheduleAndUser);

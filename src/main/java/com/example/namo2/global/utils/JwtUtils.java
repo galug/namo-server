@@ -1,9 +1,19 @@
 package com.example.namo2.global.utils;
 
+import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
+import java.security.Key;
+import java.util.Date;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.example.namo2.domain.user.application.converter.UserResponseConverter;
+import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.domain.user.ui.dto.SignUpRes;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -14,14 +24,6 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.security.Key;
-import java.util.Date;
-import java.util.Optional;
-
-import static com.example.namo2.global.common.response.BaseResponseStatus.EXPIRATION_ACCESS_TOKEN;
 
 @Slf4j
 @NoArgsConstructor
@@ -36,11 +38,10 @@ public class JwtUtils {
     private String secretKey;
 
 
-    public SignUpRes generateTokens(Long userId) {
+    public UserResponse.SignUpDto generateTokens(Long userId) {
         String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken(userId);
-        SignUpRes signUpRes = new SignUpRes(accessToken, refreshToken);
-        return signUpRes;
+		return UserResponseConverter.toSignUpDto(accessToken, refreshToken);
     }
 
     private String createAccessToken(Long userId) {

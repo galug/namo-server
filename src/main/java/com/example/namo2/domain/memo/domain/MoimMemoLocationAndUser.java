@@ -1,7 +1,7 @@
 package com.example.namo2.domain.memo.domain;
 
-import com.example.namo2.global.common.entity.BaseTimeEntity;
 import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

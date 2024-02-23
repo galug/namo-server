@@ -115,5 +115,4 @@ public class ScheduleResponseConverter {
 				.collect(Collectors.toList()))
 			.build();
 	}
-
 }

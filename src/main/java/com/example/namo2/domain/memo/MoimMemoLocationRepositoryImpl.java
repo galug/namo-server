@@ -1,26 +1,25 @@
 package com.example.namo2.domain.memo;
 
-import com.example.namo2.domain.memo.domain.MoimMemoLocation;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.moim.dto.MoimMemoLocationDto;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
+import static com.example.namo2.domain.memo.domain.QMoimMemoLocation.*;
+import static com.example.namo2.domain.memo.domain.QMoimMemoLocationAndUser.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.domain.memo.domain.QMoimMemoLocation.moimMemoLocation;
-import static com.example.namo2.domain.memo.domain.QMoimMemoLocationAndUser.moimMemoLocationAndUser;
+import com.example.namo2.domain.memo.domain.MoimMemoLocation;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import jakarta.persistence.EntityManager;
 
 public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-    private final EntityManager em;
 
     public MoimMemoLocationRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
-        this.em = em;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositor
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(moimMemoLocationAndUser -> moimMemoLocationAndUser.getMoimMemoLocation().getId()));
-        moimMemoLocationDtos.stream()
+        moimMemoLocationDtos
                 .forEach((moimMemoLocationDto -> moimMemoLocationDto.addLocationParticipants(locationAndUsersMap.get(moimMemoLocationDto.getMoimMemoLocationId()))));
         return moimMemoLocationDtos;
     }

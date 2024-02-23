@@ -5,6 +5,7 @@ import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.category.domain.CategoryStatus;
 import com.example.namo2.domain.category.domain.Palette;
 import com.example.namo2.domain.category.ui.dto.CategoryRequest;
+import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,9 @@ public class CategoryService {
         Category category = getCategory(categoryId);
         category.update(dto.getName(), dto.isShare(), palette);
         return category;
+    }
+
+    public List<Category> getMoimUsersCategories(List<User> users) {
+        return categoryRepository.findMoimCategoriesByUsers(users);
     }
 }

@@ -1,38 +1,35 @@
 package com.example.namo2.domain.schedule.dao.repository;
 
-import com.example.namo2.domain.moim.domain.MoimAndUser;
-import com.example.namo2.domain.moim.domain.MoimSchedule;
-import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.moim.dto.MoimScheduleRes;
-import com.example.namo2.domain.moim.dto.MoimScheduleUserDto;
-import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
-import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
-import com.example.namo2.domain.user.domain.User;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import static com.example.namo2.domain.category.domain.QCategory.*;
+import static com.example.namo2.domain.category.domain.QPalette.*;
+import static com.example.namo2.domain.moim.domain.QMoimAndUser.*;
+import static com.example.namo2.domain.moim.domain.QMoimSchedule.*;
+import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.*;
+import static com.example.namo2.domain.schedule.domain.QImage.*;
+import static com.example.namo2.domain.schedule.domain.QSchedule.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.namo2.domain.category.domain.QCategory.category;
-import static com.example.namo2.domain.category.domain.QPalette.palette;
-import static com.example.namo2.domain.moim.domain.QMoimAndUser.moimAndUser;
-import static com.example.namo2.domain.moim.domain.QMoimSchedule.moimSchedule;
-import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.moimScheduleAndUser;
-import static com.example.namo2.domain.schedule.domain.QImage.image;
-import static com.example.namo2.domain.schedule.domain.QSchedule.schedule;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+
+import com.example.namo2.domain.moim.domain.MoimAndUser;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
+import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
+import com.example.namo2.domain.schedule.domain.Schedule;
+import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
+import com.example.namo2.domain.user.domain.User;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
@@ -85,7 +82,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
                 .select(moimScheduleAndUser).distinct()
                 .from(moimScheduleAndUser)
                 .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
-                .leftJoin(moimSchedule.moimScheduleAlarms).fetchJoin()
+                .leftJoin(moimScheduleAndUser.moimScheduleAlarms).fetchJoin()
                 .leftJoin(moimSchedule.moimMemo).fetchJoin()
                 .where(moimScheduleAndUser.user.eq(user),
                         moimScheduleDateLoe(endDate),
@@ -156,7 +153,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public List<MoimScheduleRes> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<MoimScheduleResponse.MoimScheduleDto> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate) {
         // 모임에 속한 유저들 파악
         List<MoimAndUser> moimAndUsers = queryFactory.select(moimAndUser)
                 .from(moimAndUser)
@@ -166,47 +163,46 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
         List<User> users = moimAndUsers.stream()
                 .map((moimAndUser -> moimAndUser.getUser()))
                 .collect(Collectors.toList());
-        Map<Long, MoimScheduleUserDto> moimAndUserDtoMap = moimAndUsers.stream()
+        Map<Long, MoimScheduleResponse.MoimScheduleUserDto> moimAndUserDtoMap = moimAndUsers.stream()
                 .collect(Collectors.toMap(
                         (moimAndUser -> moimAndUser.getUser().getId()),
-                        (moimAndUser -> new MoimScheduleUserDto(moimAndUser.getUser().getId(), moimAndUser.getUser().getName(), moimAndUser.getColor()))
+                        (moimAndUser -> new MoimScheduleResponse.MoimScheduleUserDto(moimAndUser.getUser().getId(), moimAndUser.getUser().getName(), moimAndUser.getColor()))
                 ));
 
-        List<MoimScheduleRes> results = findIndivisualSchedule(moimId, startDate, endDate, users);
-        Map<MoimSchedule, List<MoimScheduleUserDto>> groupScheduleMap = findMoimScheduleAndScheduleUserMap(startDate, endDate, users, moimAndUserDtoMap);
+        List<MoimScheduleResponse.MoimScheduleDto> results = findIndivisualSchedule(moimId, startDate, endDate, users);
+        Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> groupScheduleMap = findMoimScheduleAndScheduleUserMap(startDate, endDate, users, moimAndUserDtoMap);
 
         for (MoimSchedule moimSchedule : groupScheduleMap.keySet()) {
-            List<MoimScheduleUserDto> moimScheduleUserDtos = groupScheduleMap.get(moimSchedule);
-            MoimScheduleRes moimScheduleRes = new MoimScheduleRes(moimSchedule.getName(), moimSchedule.getPeriod().getStartDate(), moimSchedule.getPeriod().getEndDate(),
+            List<MoimScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtos = groupScheduleMap.get(moimSchedule);
+            MoimScheduleResponse.MoimScheduleDto moimScheduleDto = new MoimScheduleResponse.MoimScheduleDto(moimSchedule.getName(), moimSchedule.getPeriod().getStartDate(), moimSchedule.getPeriod().getEndDate(),
                     moimSchedule.getPeriod().getDayInterval(), moimSchedule.getMoim().getId(), moimSchedule.getId(),
                     moimSchedule.getLocation().getX(), moimSchedule.getLocation().getY(), moimSchedule.getLocation().getLocationName());
-            moimScheduleRes.setUsers(moimScheduleUserDtos, moimSchedule.getMoim().getId() == moimId, moimSchedule.getMoimMemo() != null);
-            results.add(moimScheduleRes);
+            moimScheduleDto.setUsers(moimScheduleUserDtos, moimSchedule.getMoim().getId() == moimId, moimSchedule.getMoimMemo() != null);
+            results.add(moimScheduleDto);
         }
         return results;
     }
 
-    private List<MoimScheduleRes> findIndivisualSchedule(Long moimId, LocalDateTime startDate, LocalDateTime endDate, List<User> users) {
-       return queryFactory.select(
-           Projections.fields(MoimScheduleRes.class,
-               schedule.name,
-               schedule.period.startDate,
-               schedule.period.endDate,
-               schedule.period.dayInterval,
-               moimAndUser.user))
-           .from(schedule, moimAndUser)
-           .join(schedule.user).fetchJoin()
-           .join(schedule.category).fetchJoin()
-           .where(schedule.user.in(users)
-               .and(schedule.period.startDate.loe(endDate))
-               .and(schedule.period.endDate.goe(startDate))
-               .and(schedule.category.share.eq(true))
-               .and(moimAndUser.user.eq(schedule.user))
-               .and(moimAndUser.moim.id.eq(moimId)))
-           .fetch();
+    private List<MoimScheduleResponse.MoimScheduleDto> findIndivisualSchedule(Long moimId, LocalDateTime startDate, LocalDateTime endDate, List<User> users) {
+        return em.createQuery("select new com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse.MoimScheduleDto(" +
+                        "s.name, s.period.startDate, s.period.endDate, s.period.dayInterval, u.id, u.name, mu.color)" +
+                        " from Schedule s, MoimAndUser mu" +
+                        " join s.user u " +
+                        " join s.category c" +
+                        " where s.user in (:users) " +
+                        "and s.period.startDate <= :endDate " +
+                        "and s.period.endDate >= :startDate " +
+                        "and c.share = :share " +
+                        "and mu.user = s.user and mu.moim.id = :moimId", MoimScheduleResponse.MoimScheduleDto.class)
+                .setParameter("users", users)
+                .setParameter("moimId", moimId)
+                .setParameter("endDate", endDate)
+                .setParameter("startDate", startDate)
+                .setParameter("share", true)
+                .getResultList();
     }
 
-    private Map<MoimSchedule, List<MoimScheduleUserDto>> findMoimScheduleAndScheduleUserMap(LocalDateTime startDate, LocalDateTime endDate, List<User> users, Map<Long, MoimScheduleUserDto> moimAndUserDtoMap) {
+    private Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> findMoimScheduleAndScheduleUserMap(LocalDateTime startDate, LocalDateTime endDate, List<User> users, Map<Long, MoimScheduleResponse.MoimScheduleUserDto> moimAndUserDtoMap) {
         List<MoimScheduleAndUser> moimScheduleAndUsers = queryFactory.select(moimScheduleAndUser)
                 .from(moimScheduleAndUser)
                 .join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
