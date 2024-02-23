@@ -1,20 +1,21 @@
 package com.example.namo2.domain.moim.dao.repository;
 
-import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import static com.example.namo2.domain.category.domain.QCategory.*;
+import static com.example.namo2.domain.moim.domain.QMoimSchedule.*;
+import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.namo2.domain.category.domain.QCategory.category;
-import static com.example.namo2.domain.moim.domain.QMoimSchedule.moimSchedule;
-import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.moimScheduleAndUser;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import jakarta.persistence.EntityManager;
 
 public class MoimScheduleRepositoryImpl implements MoimScheduleRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
@@ -24,7 +25,7 @@ public class MoimScheduleRepositoryImpl implements MoimScheduleRepositoryCustom 
 	}
 
 	@Override
-	public SliceDiaryDto<DiaryDto> findMoimScheduleMemoByMonth(Long userId, List<LocalDateTime> dates,
+	public ScheduleResponse.SliceDiaryDto findMoimScheduleMemoByMonth(Long userId, List<LocalDateTime> dates,
 		Pageable pageable) {
 		List<MoimScheduleAndUser> content = queryFactory.select(moimScheduleAndUser)
 			.from(moimScheduleAndUser)
@@ -46,7 +47,7 @@ public class MoimScheduleRepositoryImpl implements MoimScheduleRepositoryCustom 
 			hasNext = true;
 		}
 		SliceImpl<MoimScheduleAndUser> moimSchedulesSlice = new SliceImpl<>(content, pageable, hasNext);
-		Slice<DiaryDto> diarySlices = moimSchedulesSlice.map(DiaryDto::new);
-		return new SliceDiaryDto(diarySlices);
+		Slice<ScheduleResponse.DiaryDto> diarySlices = moimSchedulesSlice.map(ScheduleResponse.DiaryDto::new);
+		return new ScheduleResponse.SliceDiaryDto(diarySlices);
 	}
 }

@@ -1,5 +1,6 @@
-package com.example.namo2.domain.schedule;
+package com.example.namo2.domain.schedule.dao.impl;
 
+import com.example.namo2.domain.schedule.dao.repository.ImageRepositoryCustom;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

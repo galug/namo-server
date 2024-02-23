@@ -107,4 +107,5 @@ public class MoimScheduleResponseConverter {
                 .color(moimAndUser.getColor())
                 .build();
     }
+
 }

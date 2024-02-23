@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.namo2.domain.user.application.UserFacade;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
-import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponse;
 
 import io.swagger.v3.oas.annotations.Operation;

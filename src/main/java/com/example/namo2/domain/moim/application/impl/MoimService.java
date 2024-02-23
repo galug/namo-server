@@ -58,7 +58,7 @@ public class MoimService {
                 .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndLocationsByMoimSchedule(moimSchedule);
 
-//         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
+        //         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
         if (moimMemo != null) {
             moimMemo.getMoimMemoLocations()
                     .stream()
@@ -75,11 +75,25 @@ public class MoimService {
      */
     @Transactional(readOnly = false)
     public void createMoimScheduleText(Long moimScheduleId,
-                                       Long userId,
-                                       MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
+            Long userId,
+            MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
         MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
         moimScheduleAndUser.updateText(moimScheduleText.getText());
+    }
+
+    public MoimSchedule getMoimScheduleById(Long scheduleId) {
+        return moimScheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
+    }
+
+    public MoimScheduleAndUser getMoimScheduleAndUserByMoimScheduleAndUser(MoimSchedule moimSchedule, User user) {
+        return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
+                .orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+    }
+
+    public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+        moimScheduleAndUserRepository.delete(moimScheduleAndUser);
     }
 }

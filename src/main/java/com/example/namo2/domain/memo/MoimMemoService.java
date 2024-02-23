@@ -18,8 +18,9 @@ import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.ui.dto.LocationInfo;
 import com.example.namo2.domain.moim.ui.dto.MoimMemoDto;
 import com.example.namo2.domain.moim.ui.dto.MoimMemoLocationDto;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.DiaryDto;
+import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
+import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
 import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
@@ -135,7 +136,7 @@ public class MoimMemoService {
         moimMemoLocationRepository.delete(moimMemoLocation);
     }
 
-    public SliceDiaryDto<DiaryDto> findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) {
+    public ScheduleResponse.SliceDiaryDto findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) {
         return moimScheduleRepository.findMoimScheduleMemoByMonth(userId, localDateTimes, pageable);
     }
 

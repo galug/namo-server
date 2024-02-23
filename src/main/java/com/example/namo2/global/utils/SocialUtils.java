@@ -1,11 +1,6 @@
 package com.example.namo2.global.utils;
 
-import com.example.namo2.domain.user.ui.dto.UserRequest;
-import com.example.namo2.global.common.exception.BaseException;
-import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +10,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.namo2.global.common.response.BaseResponseStatus.SOCIAL_LOGIN_FAILURE;
+import org.springframework.stereotype.Component;
+
+import com.example.namo2.domain.user.ui.dto.UserRequest;
+import com.example.namo2.global.common.exception.BaseException;
+import com.google.gson.Gson;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

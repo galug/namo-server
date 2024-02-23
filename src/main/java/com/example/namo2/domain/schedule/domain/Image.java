@@ -3,6 +3,7 @@ package com.example.namo2.domain.schedule.domain;
 import com.example.namo2.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -24,7 +24,7 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
-import com.example.namo2.domain.schedule.ScheduleService;
+import com.example.namo2.domain.schedule.application.impl.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.schedule.domain.Schedule;
