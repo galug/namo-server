@@ -20,6 +20,8 @@ spring:
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             scope: profile_nickname, account_email #동의 항목
+          apple:
+            client-id: ${APPLE_CLIENT_ID}
 
 client-name:
   provider:

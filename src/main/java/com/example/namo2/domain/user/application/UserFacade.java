@@ -11,6 +11,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,11 @@ import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 import com.example.namo2.global.utils.apple.AppleResponse;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +60,9 @@ public class UserFacade {
 	private final UserService userService;
 	private final PaletteService paletteService;
 	private final CategoryService categoryService;
+
+	@Value("${spring.security.oauth1.client.registration.apple.client-id}")
+	private String clientId;
 
 	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) {
@@ -97,28 +107,31 @@ public class UserFacade {
 	@Transactional
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req){
 		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
-		// AppleResponse.ApplePublicKey applePublicKey = null;
+		AppleResponse.ApplePublicKeyDto applePublicKey = null;
 
-		try{
+		try {
+
 			JSONParser parser = new JSONParser();
 			String[] decodeArr = req.getIdentityToken().split("\\.");
 			String header = new String(Base64.getDecoder().decode(decodeArr[0]));
-			JSONObject headerJson = (JSONObject) parser.parse(header);
+			JSONObject headerJson = (JSONObject)parser.parse(header);
 
 			Object kid = headerJson.get("kid"); //개발자 계정에서 얻은 10자리 식별자 키
 			Object alg = headerJson.get("alg"); //토큰을 암호화하는데 사용되는 암호화 알고리즘
 
 			//identityToken 검증
-			// applePublicKey =
+			applePublicKey =
 				applePublicKeys.getKeys().stream()
-				.filter(key -> key.getAlg().equals(alg) && key.getKid().equals(kid))
-				.findFirst()
-				.orElseThrow(() -> new BaseException(APPLE_REQUEST_ERROR));
-		}catch (ParseException e){
+					.filter(key -> key.getAlg().equals(alg) && key.getKid().equals(kid))
+					.findFirst()
+					.orElseThrow(() -> new BaseException(APPLE_REQUEST_ERROR));
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		// PublicKey publicKey = getPublicKey(applePublicKey);
+		PublicKey publicKey = getPublicKey(applePublicKey);
+		validateToken(publicKey, req.getIdentityToken());
+
 		// Claims claims = Jwts.parserBuilder()
 		// 	.setSigningKey(publicKey)
 		// 	.build()
@@ -132,7 +145,6 @@ public class UserFacade {
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
-
 	private PublicKey getPublicKey(AppleResponse.ApplePublicKeyDto applePublicKey){
 		String nStr = applePublicKey.getN(); //RSA public key의 모듈러스 값
 		String eStr = applePublicKey.getE(); //RSA public key의 지수 값
@@ -151,6 +163,26 @@ public class UserFacade {
 			throw new BaseException(MAKE_PUBLIC_KEY_FAILURE);
 		}
 
+	}
+
+	private boolean validateToken(PublicKey publicKey, String token) {
+		Claims claims = Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token).getBody();
+
+		String issuer = (String)claims.get("iss");
+		if (!"https://appleid.apple.com".equals(issuer)) {
+			throw new IllegalArgumentException("Invalid issuer");
+		}
+
+		String audience = (String)claims.get("aud");
+		if (!clientId.equals(audience)) {
+			throw new IllegalArgumentException("Invalid audience");
+		}
+
+		long expiration = claims.getExpiration().getTime();
+		if (expiration <= (new Date()).getTime()) {
+			throw new IllegalArgumentException("Token expired");
+		}
+		return true;
 	}
 
 	@Transactional
