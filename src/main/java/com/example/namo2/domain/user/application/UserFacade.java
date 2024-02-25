@@ -3,11 +3,21 @@ package com.example.namo2.domain.user.application;
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +27,7 @@ import com.example.namo2.domain.category.application.converter.CategoryConverter
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.global.utils.apple.AppleAuthClient;
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
@@ -26,6 +37,7 @@ import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
+import com.example.namo2.global.utils.apple.AppleResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserFacade {
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
+	private final AppleAuthClient appleAuthClient;
 	private final RedisTemplate<String, String> redisTemplate;
 	private final UserService userService;
 	private final PaletteService paletteService;
@@ -79,6 +92,65 @@ public class UserFacade {
 		} catch (IOException e) {
 			throw new BaseException(SOCIAL_LOGIN_FAILURE);
 		}
+	}
+
+	@Transactional
+	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req){
+		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
+		// AppleResponse.ApplePublicKey applePublicKey = null;
+
+		try{
+			JSONParser parser = new JSONParser();
+			String[] decodeArr = req.getIdentityToken().split("\\.");
+			String header = new String(Base64.getDecoder().decode(decodeArr[0]));
+			JSONObject headerJson = (JSONObject) parser.parse(header);
+
+			Object kid = headerJson.get("kid"); //개발자 계정에서 얻은 10자리 식별자 키
+			Object alg = headerJson.get("alg"); //토큰을 암호화하는데 사용되는 암호화 알고리즘
+
+			//identityToken 검증
+			// applePublicKey =
+				applePublicKeys.getKeys().stream()
+				.filter(key -> key.getAlg().equals(alg) && key.getKid().equals(kid))
+				.findFirst()
+				.orElseThrow(() -> new BaseException(APPLE_REQUEST_ERROR));
+		}catch (ParseException e){
+			e.printStackTrace();
+		}
+
+		// PublicKey publicKey = getPublicKey(applePublicKey);
+		// Claims claims = Jwts.parserBuilder()
+		// 	.setSigningKey(publicKey)
+		// 	.build()
+		// 	.parseClaimsJws(req.getIdentityToken())
+		// 	.getBody();
+		// String appleOauthId = claims.get("sub", String.class);
+
+		User user = UserConverter.toUser(req.getEmail(), req.getUsername());
+		User savedUser = saveOrNot(user);
+		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
+		return signUpRes;
+	}
+
+	private PublicKey getPublicKey(AppleResponse.ApplePublicKeyDto applePublicKey){
+		String nStr = applePublicKey.getN(); //RSA public key의 모듈러스 값
+		String eStr = applePublicKey.getE(); //RSA public key의 지수 값
+
+		byte[] nBytes = Base64.getUrlDecoder().decode(nStr);
+		byte[] eBytes = Base64.getUrlDecoder().decode(eStr);
+
+		BigInteger n = new BigInteger(1, nBytes);
+		BigInteger e = new BigInteger(1, eBytes);
+
+		try{
+			RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+			KeyFactory keyFactory = KeyFactory.getInstance(applePublicKey.getKty());
+			return keyFactory.generatePublic(publicKeySpec);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+			throw new BaseException(MAKE_PUBLIC_KEY_FAILURE);
+		}
+
 	}
 
 	@Transactional
