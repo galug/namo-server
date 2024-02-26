@@ -4,6 +4,7 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -22,31 +23,20 @@ public class MoimMemoLocationRepositoryImpl implements MoimMemoLocationRepositor
     }
 
     @Override
-    public List<MoimMemoResponse.MoimMemoLocationDto> findMoimMemo(Long moimScheduleId) {
-        List<MoimMemoLocation> moimMemoLocations = queryFactory.select(moimMemoLocation).distinct()
+    public List<MoimMemoLocation> findMoimMemoLocationsWithImgs(MoimSchedule moimSchedule) {
+        return queryFactory.select(moimMemoLocation).distinct()
                 .from(moimMemoLocation)
                 .join(moimMemoLocation.moimMemo).fetchJoin()
                 .leftJoin(moimMemoLocation.moimMemoLocationImgs).fetchJoin()
-                .where(moimMemoLocation.moimMemo.moimSchedule.id.eq(moimScheduleId))
+                .where(moimMemoLocation.moimMemo.moimSchedule.eq(moimSchedule))
                 .fetch();
+    }
 
-        List<MoimMemoResponse.MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocations.stream()
-                .map(moimMemoLocation -> new MoimMemoResponse.MoimMemoLocationDto(moimMemoLocation.getId(),
-                        moimMemoLocation.getName(), moimMemoLocation.getTotalAmount(),
-                        moimMemoLocation.getMoimMemoLocationImgs().stream().map(MoimMemoLocationImg::getUrl).collect(Collectors.toList())))
-                .collect(Collectors.toList());
-        List<Long> moimMemoLocationIds = moimMemoLocationDtos.stream()
-                .map(MoimMemoResponse.MoimMemoLocationDto::getMoimMemoLocationId)
-                .collect(Collectors.toList());
-
-        Map<Long, List<MoimMemoLocationAndUser>> locationAndUsersMap = queryFactory.select(moimMemoLocationAndUser)
+    @Override
+    public List<MoimMemoLocationAndUser> findMoimMemoLocationAndUsers(List<MoimMemoLocation> moimMemoLocations) {
+        return queryFactory.select(moimMemoLocationAndUser)
                 .from(moimMemoLocationAndUser)
-                .where(moimMemoLocationAndUser.moimMemoLocation.id.in(moimMemoLocationIds))
-                .fetch()
-                .stream()
-                .collect(Collectors.groupingBy(moimMemoLocationAndUser -> moimMemoLocationAndUser.getMoimMemoLocation().getId()));
-        moimMemoLocationDtos
-                .forEach((moimMemoLocationDto -> moimMemoLocationDto.addLocationParticipants(locationAndUsersMap.get(moimMemoLocationDto.getMoimMemoLocationId()))));
-        return moimMemoLocationDtos;
+                .where(moimMemoLocationAndUser.moimMemoLocation.in(moimMemoLocations))
+                .fetch();
     }
 }

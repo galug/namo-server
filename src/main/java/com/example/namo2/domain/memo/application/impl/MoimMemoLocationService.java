@@ -7,6 +7,7 @@ import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -65,5 +66,13 @@ public class MoimMemoLocationService {
     public List<MoimMemoLocationImg> getMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
         return moimMemoLocationImgRepository
                 .findMoimMemoLocationImgsByMoimMemoLocations(moimMemoLocations);
+    }
+
+    public List<MoimMemoLocation> getMoimMemoLocations(MoimSchedule moimSchedule) {
+        return moimMemoLocationRepository.findMoimMemoLocationsWithImgs(moimSchedule);
+    }
+
+    public List<MoimMemoLocationAndUser> getMoimMemoLocationAndUsers(List<MoimMemoLocation> moimMemoLocations) {
+        return moimMemoLocationRepository.findMoimMemoLocationAndUsers(moimMemoLocations);
     }
 }

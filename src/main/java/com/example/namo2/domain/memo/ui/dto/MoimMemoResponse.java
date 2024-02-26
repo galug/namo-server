@@ -1,8 +1,10 @@
 package com.example.namo2.domain.memo.ui.dto;
 
 import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +23,8 @@ public class MoimMemoResponse {
         private List<MoimUserDto> users;
         private List<MoimMemoLocationDto> locationDtos;
 
-        public MoimMemoDto(MoimMemo moimMemo) {
+        @Builder
+        public MoimMemoDto(MoimMemo moimMemo, List<MoimMemoLocationDto> moimMemoLocationDtos) {
             this.name = moimMemo.getMoimSchedule().getName();
             this.startDate = moimMemo.getMoimSchedule().getPeriod().getStartDate().atZone(ZoneId.systemDefault())
                     .toInstant()
@@ -30,10 +33,7 @@ public class MoimMemoResponse {
             this.users = moimMemo.getMoimSchedule().getMoimScheduleAndUsers().stream()
                     .map(MoimUserDto::new)
                     .collect(Collectors.toList());
-        }
-
-        public void addMoimMemoLocationDto(List<MoimMemoLocationDto> moimMemoLocationDto) {
-            this.locationDtos = moimMemoLocationDto;
+            this.locationDtos = moimMemoLocationDtos;
         }
     }
 
@@ -59,14 +59,12 @@ public class MoimMemoResponse {
         private List<String> urls;
 
 
-        public MoimMemoLocationDto(Long moimMemoLocationId, String name, Integer money, List<String> urls) {
+        @Builder
+        public MoimMemoLocationDto(Long moimMemoLocationId, String name, Integer money, List<String> urls, List<MoimMemoLocationAndUser> participants) {
             this.moimMemoLocationId = moimMemoLocationId;
             this.name = name;
             this.money = money;
             this.urls = urls;
-        }
-
-        public void addLocationParticipants(List<MoimMemoLocationAndUser> participants) {
             this.participants = participants.stream()
                     .map(moimMemoLocationAndUser -> moimMemoLocationAndUser.getUser().getId())
                     .collect(Collectors.toList());

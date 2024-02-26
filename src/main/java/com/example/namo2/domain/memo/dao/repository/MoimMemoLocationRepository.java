@@ -21,4 +21,9 @@ public interface MoimMemoLocationRepository extends JpaRepository<MoimMemoLocati
             "from MoimMemoLocation ml" +
             " where ml.moimMemo = :moimMemo")
     Optional<List<MoimMemoLocation>> findMoimMemoLocationsByMoimMemo(MoimMemo moimMemo);
+
+    @Query("select mml " +
+            "from MoimMemoLocation mml " +
+            "where mml.moimMemo = :moimMemo")
+    List<MoimMemoLocation> findMoimMemo(@Param("moimMemo") MoimMemo moimMemo);
 }

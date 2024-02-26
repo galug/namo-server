@@ -2,6 +2,7 @@ package com.example.namo2.domain.memo.application;
 
 import com.example.namo2.domain.memo.application.converter.MoimMemoConverter;
 import com.example.namo2.domain.memo.application.converter.MoimMemoLocationConverter;
+import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
 import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.domain.MoimMemo;
@@ -9,6 +10,7 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.user.UserService;
@@ -43,17 +45,17 @@ public class MoimMemoFacade {
         createMoimMemoLocationImgs(imgs, moimMemoLocation);
     }
 
-    private MoimMemoLocation createMoimMemoLocation(MoimMemo moimMemo, MoimMemoRequest.LocationDto locationDto) {
-        MoimMemoLocation moimMemoLocation = MoimMemoLocationConverter.toMoimMemoLocation(moimMemo, locationDto);
-        return moimMemoLocationService.createMoimMemoLocation(moimMemoLocation);
-    }
-
     private MoimMemo getMoimMemo(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
         return moimMemoService.getMoimMemoOrNull(moimSchedule)
                 .orElse(
                         moimMemoService.create(MoimMemoConverter.toMoimMemo(moimSchedule))
                 );
+    }
+
+    private MoimMemoLocation createMoimMemoLocation(MoimMemo moimMemo, MoimMemoRequest.LocationDto locationDto) {
+        MoimMemoLocation moimMemoLocation = MoimMemoLocationConverter.toMoimMemoLocation(moimMemo, locationDto);
+        return moimMemoLocationService.createMoimMemoLocation(moimMemoLocation);
     }
 
     private void createMoimMemoLocationAndUsers(MoimMemoRequest.LocationDto locationDto, MoimMemoLocation moimMemoLocation) {
@@ -110,5 +112,14 @@ public class MoimMemoFacade {
         moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocation);
         removeMoimMemoLocationImgs(moimMemoLocation);
         moimMemoLocationService.removeMoimMemoLocation(moimMemoLocation);
+    }
+
+    @Transactional(readOnly = false)
+    public MoimMemoResponse.MoimMemoDto getMoimMemoWithLocations(Long moimScheduleId) {
+        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
+        MoimMemo moimMemo = moimMemoService.getMoimMemoWithUsers(moimSchedule);
+        List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocations(moimSchedule);
+        List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = moimMemoLocationService.getMoimMemoLocationAndUsers(moimMemoLocations);
+        return MoimMemoResponseConverter.toMoimMemoDto(moimMemo, moimMemoLocations, moimMemoLocationAndUsers);
     }
 }

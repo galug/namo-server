@@ -68,8 +68,8 @@ public class MoimMemoController {
 
     @Operation(summary = "모임 메모 조회", description = "모임 메모 조회 API")
     @GetMapping("/schedule/memo/{moimScheduleId}")
-    public BaseResponse<Object> findMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
-        MoimMemoResponse.MoimMemoDto moimMemoDto = moimMemoService.find(moimScheduleId);
+    public BaseResponse<Object> getMoimMemo(@PathVariable("moimScheduleId") Long moimScheduleId) {
+        MoimMemoResponse.MoimMemoDto moimMemoDto = moimMemoFacade.getMoimMemoWithLocations(moimScheduleId);
         return new BaseResponse(moimMemoDto);
     }
 
