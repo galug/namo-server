@@ -1,20 +1,15 @@
 package com.example.namo2.domain.memo.application.impl;
 
-import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
 import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j

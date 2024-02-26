@@ -1,7 +1,6 @@
 package com.example.namo2.domain.memo.ui.dto;
 
 import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;

@@ -1,10 +1,8 @@
 package com.example.namo2.domain.memo.ui;
 
 import com.example.namo2.domain.memo.application.MoimMemoFacade;
-import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
-import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.utils.Converter;

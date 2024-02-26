@@ -2,15 +2,11 @@ package com.example.namo2.domain.memo.dao.repository;
 
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.example.namo2.domain.memo.domain.QMoimMemoLocation.moimMemoLocation;
 import static com.example.namo2.domain.memo.domain.QMoimMemoLocationAndUser.moimMemoLocationAndUser;
