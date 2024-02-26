@@ -1,7 +1,6 @@
 package com.example.namo2.domain.memo.ui;
 
 import com.example.namo2.domain.memo.application.MoimMemoFacade;
-import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
@@ -36,8 +35,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/moims")
 public class MoimMemoController {
-    private final MoimMemoService moimMemoService;
-    private final MoimService moimService;
     private final MoimMemoFacade moimMemoFacade;
     private final Converter converter;
 
@@ -93,7 +90,9 @@ public class MoimMemoController {
     public BaseResponse<Object> createMoimScheduleText(@PathVariable Long moimScheduleId,
                                                        HttpServletRequest request,
                                                        @RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
-        moimService.createMoimScheduleText(moimScheduleId, (Long) request.getAttribute("userId"), moimScheduleText);
+        moimMemoFacade.createMoimScheduleText(moimScheduleId,
+                (Long) request.getAttribute("userId"),
+                moimScheduleText);
         return BaseResponse.ok();
     }
 }

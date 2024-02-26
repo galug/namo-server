@@ -59,27 +59,14 @@ public class MoimService {
         MoimMemo moimMemo = moimMemoRepository.findMoimMemoAndLocationsByMoimSchedule(moimSchedule);
 
 //         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
-        if (moimMemo != null) {
-            moimMemo.getMoimMemoLocations()
-                    .stream()
-                    .forEach((moimMemoLocation -> moimMemoService.removeMoimMemoLocation(moimMemoLocation.getId())));
-            moimMemoRepository.delete(moimMemo);
-        }
+//        if (moimMemo != null) {
+//            moimMemo.getMoimMemoLocations()
+//                    .stream()
+//                    .forEach((moimMemoLocation -> moimMemoService.removeMoimMemoLocation(moimMemoLocation.getId())));
+//            moimMemoRepository.delete(moimMemo);
+//        }
 
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
         moimScheduleRepository.delete(moimSchedule);
-    }
-
-    /**
-     * 추후 모임 메모 리팩토링 작업에서 제거 예정
-     */
-    @Transactional(readOnly = false)
-    public void createMoimScheduleText(Long moimScheduleId,
-                                       Long userId,
-                                       MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
-        MoimSchedule moimSchedule = moimScheduleRepository.findById(moimScheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
-        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
-        MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user).orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
-        moimScheduleAndUser.updateText(moimScheduleText.getText());
     }
 }

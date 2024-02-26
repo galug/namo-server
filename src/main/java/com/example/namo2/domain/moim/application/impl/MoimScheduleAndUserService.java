@@ -5,6 +5,7 @@ import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepositor
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
@@ -57,4 +58,7 @@ public class MoimScheduleAndUserService {
         return moimScheduleAndUserRepository.findMoimScheduleMemoByMonthPaging(user, dates, page);
     }
 
+    public void modifyText(MoimScheduleAndUser moimScheduleAndUser, String moimScheduleText) {
+        moimScheduleAndUser.updateText(moimScheduleText);
+    }
 }
