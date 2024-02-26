@@ -29,7 +29,7 @@ import com.example.namo2.domain.category.application.converter.CategoryConverter
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.global.utils.apple.AppleAuthClient;
+import com.example.namo2.global.utils.apple.AppleAuthApi;
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
@@ -39,13 +39,11 @@ import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
+import com.example.namo2.global.utils.apple.AppleAuthClient;
 import com.example.namo2.global.utils.apple.AppleResponse;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -132,12 +130,14 @@ public class UserFacade {
 		PublicKey publicKey = getPublicKey(applePublicKey);
 		validateToken(publicKey, req.getIdentityToken());
 
-		// Claims claims = Jwts.parserBuilder()
-		// 	.setSigningKey(publicKey)
-		// 	.build()
-		// 	.parseClaimsJws(req.getIdentityToken())
-		// 	.getBody();
-		// String appleOauthId = claims.get("sub", String.class);
+		Claims claims = Jwts.parserBuilder()
+			.setSigningKey(publicKey)
+			.build()
+			.parseClaimsJws(req.getIdentityToken())
+			.getBody();
+		String appleOauthId = claims.get("sub", String.class);
+		String appleEmail = claims.get("email", String.class);
+		log.debug("email: {}, oauthId : {}", appleEmail, appleOauthId);
 
 		User user = UserConverter.toUser(req.getEmail(), req.getUsername());
 		User savedUser = saveOrNot(user);
@@ -174,11 +174,13 @@ public class UserFacade {
 		}
 
 		String audience = (String)claims.get("aud");
+		log.debug("{}", audience);
 		if (!clientId.equals(audience)) {
 			throw new IllegalArgumentException("Invalid audience");
 		}
 
 		long expiration = claims.getExpiration().getTime();
+		log.debug("expriation : {} < now : {}", expiration,(new Date()).getTime() );
 		if (expiration <= (new Date()).getTime()) {
 			throw new IllegalArgumentException("Token expired");
 		}
