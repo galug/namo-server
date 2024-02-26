@@ -1,11 +1,11 @@
 package com.example.namo2.domain.memo.application.impl;
 
+import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
 import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,6 @@ import java.util.Optional;
 public class MoimMemoService {
     private final MoimMemoRepository moimMemoRepository;
     private final MoimScheduleRepository moimScheduleRepository;
-
-    public SliceDiaryDto<DiaryDto> findMonth(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) {
-        return moimScheduleRepository.findMoimScheduleMemoByMonth(userId, localDateTimes, pageable);
-    }
 
     public Optional<MoimMemo> getMoimMemoOrNull(MoimSchedule moimSchedule) {
         return moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);

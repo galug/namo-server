@@ -1,6 +1,8 @@
 package com.example.namo2.domain.schedule;
 
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
+import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
@@ -9,7 +11,6 @@ import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.application.impl.MoimService;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.category.domain.Category;
 import com.example.namo2.domain.schedule.domain.Image;
 import com.example.namo2.domain.schedule.domain.Schedule;
@@ -19,7 +20,6 @@ import com.example.namo2.domain.schedule.dto.GetScheduleRes;
 import com.example.namo2.domain.schedule.dto.OnlyDiaryDto;
 import com.example.namo2.domain.schedule.dto.PostScheduleReq;
 import com.example.namo2.domain.schedule.dto.ScheduleIdRes;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
 import com.example.namo2.domain.user.UserRepository;
 import com.example.namo2.global.utils.Converter;
 import com.example.namo2.global.utils.FileUtils;
@@ -161,7 +161,7 @@ public class ScheduleService {
         return new ScheduleIdRes(schedule.getId());
     }
 
-    public SliceDiaryDto<DiaryDto> findMonthDiary(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) throws BaseException {
+    public MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> findMonthDiary(Long userId, List<LocalDateTime> localDateTimes, Pageable pageable) throws BaseException {
         User user = userDao.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
         return scheduleRepository.findScheduleDiaryByMonthDto(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
     }

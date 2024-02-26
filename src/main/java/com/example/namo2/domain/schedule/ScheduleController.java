@@ -1,5 +1,7 @@
 package com.example.namo2.domain.schedule;
 
+import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.schedule.dto.*;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponse;
@@ -99,12 +101,12 @@ public class ScheduleController {
 
     @Operation(summary = "스케줄 다이어리 월간 조회", description = "스케줄 다이어리 월간 조회 API")
     @GetMapping("/diary/{month}")
-    public BaseResponse<SliceDiaryDto> findDiaryByMonth(
+    public BaseResponse<MoimMemoResponse.SliceDiaryDto> findDiaryByMonth(
             @PathVariable("month") String month, Pageable pageable,
             HttpServletRequest request) throws BaseException {
         Long userId = (Long) request.getAttribute("userId");
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        SliceDiaryDto diaries = scheduleService.findMonthDiary(userId, localDateTimes, pageable);
+        MoimMemoResponse.SliceDiaryDto diaries = scheduleService.findMonthDiary(userId, localDateTimes, pageable);
         return new BaseResponse<>(diaries);
     }
 

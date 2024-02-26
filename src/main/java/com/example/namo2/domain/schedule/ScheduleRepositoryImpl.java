@@ -1,14 +1,14 @@
 package com.example.namo2.domain.schedule;
 
+import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
+import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
 import com.example.namo2.domain.schedule.dto.GetScheduleRes;
 import com.example.namo2.domain.schedule.dto.OnlyDiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
 import com.example.namo2.domain.user.domain.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -103,7 +103,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
     }
 
     @Override
-    public SliceDiaryDto<DiaryDto> findScheduleDiaryByMonthDto(User user, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+    public MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> findScheduleDiaryByMonthDto(User user, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
         List<Schedule> content = queryFactory
                 .select(schedule)
                 .from(schedule)
@@ -124,8 +124,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
             hasNext = true;
         }
         SliceImpl<Schedule> schedules = new SliceImpl<>(content, pageable, hasNext);
-        Slice<DiaryDto> diarySlices = schedules.map(DiaryDto::new);
-        return new SliceDiaryDto(diarySlices);
+        Slice<MoimMemoResponse.DiaryDto> diarySlices = schedules.map(MoimMemoResponse.DiaryDto::new);
+        return new MoimMemoResponse.SliceDiaryDto(diarySlices);
     }
 
     @Override

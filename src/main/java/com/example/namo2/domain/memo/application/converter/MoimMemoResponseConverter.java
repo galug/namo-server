@@ -5,13 +5,19 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.domain.Image;
+import com.example.namo2.domain.schedule.domain.Schedule;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.example.namo2.domain.memo.domain.QMoimMemoLocation.moimMemoLocation;
-import static com.example.namo2.domain.memo.domain.QMoimMemoLocationAndUser.moimMemoLocationAndUser;
 
 public class MoimMemoResponseConverter {
     private MoimMemoResponseConverter() {
@@ -54,5 +60,18 @@ public class MoimMemoResponseConverter {
                 )
                 .collect(Collectors.toList());
         return moimMemoLocationDtos;
+    }
+
+    public static MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> toSliceDiaryDto(
+            List<MoimScheduleAndUser> moimScheduleAndUsers,
+            Pageable page) {
+        boolean hasNext = false;
+        if (moimScheduleAndUsers.size() > page.getPageSize()) {
+            moimScheduleAndUsers.remove(page.getPageSize());
+            hasNext = true;
+        }
+        SliceImpl<MoimScheduleAndUser> moimSchedulesSlice = new SliceImpl<>(moimScheduleAndUsers, page, hasNext);
+        Slice<MoimMemoResponse.DiaryDto> diarySlices = moimSchedulesSlice.map(MoimMemoResponse.DiaryDto::new);
+        return new MoimMemoResponse.SliceDiaryDto(diarySlices);
     }
 }

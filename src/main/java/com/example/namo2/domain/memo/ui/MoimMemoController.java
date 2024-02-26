@@ -1,13 +1,12 @@
 package com.example.namo2.domain.memo.ui;
 
 import com.example.namo2.domain.memo.application.MoimMemoFacade;
+import com.example.namo2.domain.memo.application.converter.MoimMemoResponseConverter;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
 import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
-import com.example.namo2.domain.schedule.dto.DiaryDto;
-import com.example.namo2.domain.schedule.dto.SliceDiaryDto;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.utils.Converter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,9 +74,10 @@ public class MoimMemoController {
 
     @Operation(summary = "월간 모임 메모 조회", description = "월간 모임 메모 조회 API")
     @GetMapping("/schedule/memo/month/{month}")
-    public BaseResponse<SliceDiaryDto<DiaryDto>> findMonthMoimMemo(@PathVariable("month") String month, Pageable pageable, HttpServletRequest request) {
+    public BaseResponse<MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto>> findMonthMoimMemo(@PathVariable("month") String month, Pageable pageable, HttpServletRequest request) {
         List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-        SliceDiaryDto<DiaryDto> diaryDto = moimMemoService.findMonth((Long) request.getAttribute("userId"), localDateTimes, pageable);
+        MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> diaryDto = moimMemoFacade
+                .getMonthMonthMoimMemo((Long) request.getAttribute("userId"), localDateTimes, pageable);
         return new BaseResponse(diaryDto);
     }
 

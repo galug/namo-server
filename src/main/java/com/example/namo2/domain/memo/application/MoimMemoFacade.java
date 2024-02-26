@@ -11,17 +11,21 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoRequest;
 import com.example.namo2.domain.memo.ui.dto.MoimMemoResponse;
+import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.user.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +34,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MoimMemoFacade {
     private final MoimScheduleService moimScheduleService;
+
+    private final MoimScheduleAndUserService moimScheduleAndUserService;
     private final MoimMemoService moimMemoService;
     private final MoimMemoLocationService moimMemoLocationService;
     private final UserService userService;
@@ -119,7 +125,15 @@ public class MoimMemoFacade {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
         MoimMemo moimMemo = moimMemoService.getMoimMemoWithUsers(moimSchedule);
         List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocations(moimSchedule);
-        List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = moimMemoLocationService.getMoimMemoLocationAndUsers(moimMemoLocations);
+        List<MoimMemoLocationAndUser> moimMemoLocationAndUsers
+                = moimMemoLocationService.getMoimMemoLocationAndUsers(moimMemoLocations);
         return MoimMemoResponseConverter.toMoimMemoDto(moimMemo, moimMemoLocations, moimMemoLocationAndUsers);
+    }
+
+    public MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> getMonthMonthMoimMemo(Long userId, List<LocalDateTime> dates, Pageable page) {
+        User user = userService.getUser(userId);
+        List<MoimScheduleAndUser> moimScheduleAndUsersForMonthMoimMemo
+                = moimScheduleAndUserService.getMoimScheduleAndUsersForMonthMoimMemo(user, dates, page);
+        return MoimMemoResponseConverter.toSliceDiaryDto(moimScheduleAndUsersForMonthMoimMemo, page);
     }
 }
