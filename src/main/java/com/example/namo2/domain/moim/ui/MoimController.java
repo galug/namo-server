@@ -1,12 +1,9 @@
 package com.example.namo2.domain.moim.ui;
 
-import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.moim.application.MoimFacade;
-import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.MoimRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimResponse;
 import com.example.namo2.global.common.response.BaseResponse;
-import com.example.namo2.global.utils.Converter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,9 +29,6 @@ import java.util.List;
 @RequestMapping("/moims")
 public class MoimController {
     private final MoimFacade moimFacade;
-    private final MoimService moimService;
-    private final MoimMemoService moimMemoService;
-    private final Converter converter;
 
     @Operation(summary = "모임 생성", description = "모임 생성 API")
     @PostMapping("")

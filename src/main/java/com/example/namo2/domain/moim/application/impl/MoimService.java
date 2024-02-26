@@ -1,28 +1,21 @@
 package com.example.namo2.domain.moim.application.impl;
 
-import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
+import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.dao.repository.MoimRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
-import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
-import com.example.namo2.domain.user.UserRepository;
-import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_FAILURE;
-import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE;
 import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE;
-import static com.example.namo2.global.common.response.BaseResponseStatus.NOT_FOUND_USER_FAILURE;
 
 @Slf4j
 @Service
@@ -32,7 +25,6 @@ public class MoimService {
     private final MoimScheduleRepository moimScheduleRepository;
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
     private final MoimMemoRepository moimMemoRepository;
-    private final UserRepository userRepository;
 
     /**
      * 추후 MoimMemo Refactoring 작업에서 제거할 예정
