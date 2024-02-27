@@ -55,8 +55,8 @@ public class MoimMemoFacade {
     private MoimMemo getMoimMemo(Long moimScheduleId) {
         MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
         return moimMemoService.getMoimMemoOrNull(moimSchedule)
-                .orElse(
-                        moimMemoService.create(MoimMemoConverter.toMoimMemo(moimSchedule))
+                .orElseGet(
+                        () -> moimMemoService.create(MoimMemoConverter.toMoimMemo(moimSchedule))
                 );
     }
 
