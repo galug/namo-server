@@ -2,7 +2,6 @@ package com.example.namo2.domain.memo.application.impl;
 
 import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
 import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.moim.dao.repository.MoimScheduleRepository;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
@@ -17,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MoimMemoService {
     private final MoimMemoRepository moimMemoRepository;
-    private final MoimScheduleRepository moimScheduleRepository;
 
     public Optional<MoimMemo> getMoimMemoOrNull(MoimSchedule moimSchedule) {
         return moimMemoRepository.findMoimMemoByMoimSchedule(moimSchedule);
