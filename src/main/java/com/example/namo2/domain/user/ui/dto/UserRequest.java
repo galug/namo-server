@@ -35,4 +35,13 @@ public class UserRequest {
 		@NotBlank
 		private String accessToken;
 	}
+
+	@Getter
+	public static class AppleSignUpDto{
+		@NotBlank
+		private String identityToken;
+		private String email;
+		private String username;
+	}
+
 }

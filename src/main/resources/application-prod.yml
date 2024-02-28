@@ -20,3 +20,4 @@ logging:
   level:
     org.hibernate.SQL: info
     org.hibernate.type: trace
+    com.example.namo2: debug

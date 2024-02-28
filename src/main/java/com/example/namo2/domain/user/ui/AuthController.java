@@ -41,6 +41,15 @@ public class AuthController {
         return new BaseResponse<>(signupDto);
     }
 
+    @Operation(summary = "apple 회원가입", description = "apple 소셜 로그인을 통한 회원가입.")
+    @PostMapping(value = "/apple/signup")
+    public BaseResponse<UserResponse.SignUpDto> appleSignup(
+        @Valid @RequestBody UserRequest.AppleSignUpDto dto
+    ){
+        UserResponse.SignUpDto signupDto = userFacade.signupApple(dto);
+        return new BaseResponse<>(signupDto);
+    }
+
     @Operation(summary = "토큰 재발급", description = "토큰 재발급")
     @PostMapping(value = "/reissuance")
     public BaseResponse<UserResponse.SignUpDto> reissueAccessToken(

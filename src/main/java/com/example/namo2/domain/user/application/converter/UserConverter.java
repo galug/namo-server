@@ -18,4 +18,11 @@ public class UserConverter {
 				.build();
 	}
 
+	public static User toUser(String email, String name){
+		return User.builder()
+			.email(email)
+			.name(name)
+			.build();
+	}
+
 }
