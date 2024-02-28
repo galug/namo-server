@@ -41,20 +41,24 @@ public class MoimMemoResponseConverter {
 
         List<MoimMemoResponse.MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocations.stream()
                 .map(
-                        moimMemoLocation -> MoimMemoResponse.MoimMemoLocationDto
-                                .builder()
-                                .moimMemoLocationId(moimMemoLocation.getId())
-                                .name(moimMemoLocation.getName())
-                                .money(moimMemoLocation.getTotalAmount())
-                                .urls(moimMemoLocation.getMoimMemoLocationImgs()
-                                        .stream()
-                                        .map(MoimMemoLocationImg::getUrl)
-                                        .collect(Collectors.toList()))
-                                .participants(moimMemoLocationMappingUsers.get(moimMemoLocation))
-                                .build()
+                        moimMemoLocation -> toMoimMemoLocationDto(moimMemoLocationMappingUsers, moimMemoLocation)
                 )
                 .collect(Collectors.toList());
         return moimMemoLocationDtos;
+    }
+
+    private static MoimMemoResponse.MoimMemoLocationDto toMoimMemoLocationDto(Map<MoimMemoLocation, List<MoimMemoLocationAndUser>> moimMemoLocationMappingUsers, MoimMemoLocation moimMemoLocation) {
+        return MoimMemoResponse.MoimMemoLocationDto
+                .builder()
+                .moimMemoLocationId(moimMemoLocation.getId())
+                .name(moimMemoLocation.getName())
+                .money(moimMemoLocation.getTotalAmount())
+                .urls(moimMemoLocation.getMoimMemoLocationImgs()
+                        .stream()
+                        .map(MoimMemoLocationImg::getUrl)
+                        .collect(Collectors.toList()))
+                .participants(moimMemoLocationMappingUsers.get(moimMemoLocation))
+                .build();
     }
 
     public static MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> toSliceDiaryDto(
