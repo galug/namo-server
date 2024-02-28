@@ -41,6 +41,7 @@ import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 import com.example.namo2.global.utils.apple.AppleAuthClient;
 import com.example.namo2.global.utils.apple.AppleResponse;
+import com.example.namo2.global.utils.apple.AppleResponseConverter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -55,6 +56,7 @@ public class UserFacade {
 	private final JwtUtils jwtUtils;
 	private final AppleAuthClient appleAuthClient;
 	private final RedisTemplate<String, String> redisTemplate;
+
 	private final UserService userService;
 	private final PaletteService paletteService;
 	private final CategoryService categoryService;
@@ -108,7 +110,6 @@ public class UserFacade {
 		AppleResponse.ApplePublicKeyDto applePublicKey = null;
 
 		try {
-
 			JSONParser parser = new JSONParser();
 			String[] decodeArr = req.getIdentityToken().split("\\.");
 			String header = new String(Base64.getDecoder().decode(decodeArr[0]));
@@ -118,11 +119,7 @@ public class UserFacade {
 			Object alg = headerJson.get("alg"); //토큰을 암호화하는데 사용되는 암호화 알고리즘
 
 			//identityToken 검증
-			applePublicKey =
-				applePublicKeys.getKeys().stream()
-					.filter(key -> key.getAlg().equals(alg) && key.getKid().equals(kid))
-					.findFirst()
-					.orElseThrow(() -> new BaseException(APPLE_REQUEST_ERROR));
+			applePublicKey = AppleResponseConverter.toApplePublicKey(applePublicKeys, kid, alg);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
