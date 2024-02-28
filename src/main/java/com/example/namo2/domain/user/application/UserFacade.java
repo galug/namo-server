@@ -29,7 +29,6 @@ import com.example.namo2.domain.category.application.converter.CategoryConverter
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.global.utils.apple.AppleAuthApi;
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
