@@ -1,56 +1,56 @@
 filters:
   - label: ✨ feature
     regexs:
-      - /\[(feat|feature)\]/i
+      - /\[(feat|feature)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 🐛 bug
     regexs:
-      - /\[(fix|bug)\]/i
+      - /\[(fix|bug)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 📝 documentation
     regexs:
-      - /\[(docs|doc|documentation)\]/i
+      - /\[(docs|doc|documentation)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 🎨 style
     regexs:
-      - /\[(style|styling)\]/i
+      - /\[(style|styling)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: ♻️ refactor
     regexs:
-      - /\[(refactor|refactoring)\]/i
+      - /\[(refactor|refactoring)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 🧪 test
     regexs:
-      - /\[(test|testing)\]/i
+      - /\[(test|testing)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 🔧 chore
     regexs:
-      - /\[(chore|etc)\]/i
+      - /\[(chore|etc)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 🔖 release
     regexs:
-      - /\[(release)\]/i
+      - /\[(release)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: ❓ question
     regexs:
-      - /\[(question)\]/i
+      - /\[(question)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 👷 ci/cd
     regexs:
-      - /\[(ci/cd|ci|cd)\]/i
+      - /\[(ci/cd|ci|cd)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
   - label: 🏗️ build
     regexs:
-      - /\[(build)\]/i
+      - /\[(build)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
