@@ -1,56 +1,56 @@
-filter:
+filters:
   - label: ":sparkles: feature"
     regexs:
       - /\[(feat|feature)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":bug: bug"
     regexs:
       - /\[(fix|bug)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":memo: documentation"
     regexs:
       - /\[(docs|doc|documentation)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":art: style"
     regexs:
       - /\[(style|styling)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":recycle: refactor"
     regexs:
       - /\[(refactor|refactoring)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":test_tube: test"
     regexs:
       - /\[(test|testing)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":wrench: chore"
     regexs:
       - /\[(chore|etc)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":bookmark: release"
     regexs:
       - /\[(release)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":question: question"
     regexs:
       - /\[(question)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":construction_worker: ci/cd"
     regexs:
       - /\[(ci/cd|ci|cd)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
   - label: ":building_construction: build"
     regexs:
       - /\[(build)\]/i
     events: [ pull_request, issues ]
-    target: [ title ]
+    targets: [ title ]
