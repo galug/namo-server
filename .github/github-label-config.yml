@@ -1,0 +1,33 @@
+- name: ✨ feature
+  color: 5319E7
+  description: "A new feature"
+- name: 🐛 bug
+  color: D73A4A
+  description: "A bug fix"
+- name: 📝 documentation
+  color: 0075CA
+  description: "Documentation only changes"
+- name: 🎨 style
+  color: CFD3D7
+  description: "Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)"
+- name: ♻️ refactor
+  color: 03BC5E
+  description: "A code change that neither fixes a bug nor adds a feature"
+- name: 🧪 test
+  color: A2EEEF
+  description: "Adding missing tests or correcting existing tests"
+- name: 🔧 chore
+  color: 5fBCA04
+  description: "Changes to the build process or auxiliary tools and libraries such as documentation generation"
+- name: 🔖 release
+  color: E99695
+  description: "Create a release commit"
+- name: ❓ question
+  color: CC317C
+  description: "Further information is requested"
+- name: 👷 ci/cd
+  color: 64B5F6
+  description: "Changes to our CI/CD configuration files and scripts"
+- name: 🏗️ build
+  color: 7057FF
+  description: "Changes that affect the build system or external dependencies (example scopes: gradle, npm, make, etc)"

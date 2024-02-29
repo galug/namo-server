@@ -3,8 +3,14 @@ name: 🏷️ Auto labeler
 on:
   pull_request:
     types: [ opened, edited, reopened, synchronize ]
+    paths:
+      - .github/github-label-config.yml
+      - .github/workflows/auto-labeler.yml
   issues:
     types: [ opened, edited ]
+    paths:
+      - .github/github-label-config.yml
+      - .github/workflows/auto-labeler.yml
 
 jobs:
   main:
@@ -23,3 +29,4 @@ jobs:
         uses: hoho4190/issue-pr-labeler@v2.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          yaml-file: .github/github-label-config.yml
