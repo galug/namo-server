@@ -2,7 +2,7 @@ name: 🏷️ Auto labeler
 
 on:
   pull_request:
-    types: [ opened, edited, reopened ]
+    types: [ opened, edited, reopened, synchronize ]
   issues:
     types: [ opened, edited ]
 
@@ -23,5 +23,3 @@ jobs:
         uses: hoho4190/issue-pr-labeler@v2.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          disable_default: true
-          config-file-name: labeler-config.yml
