@@ -1,55 +1,55 @@
 filters:
-  - label: ✨ feature
+  - label: ':sparkles: feature'
     regexs:
       - /\[(feat|feature)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 🐛 bug
+  - label: ':bug: bug'
     regexs:
       - /\[(fix|bug)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 📝 documentation
+  - label: ':memo: documentation'
     regexs:
       - /\[(docs|doc|documentation)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 🎨 style
+  - label: ':art: style'
     regexs:
       - /\[(style|styling)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: ♻️ refactor
+  - label: ':recycle: refactor'
     regexs:
       - /\[(refactor|refactoring)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 🧪 test
+  - label: ':test_tube: test'
     regexs:
       - /\[(test|testing)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 🔧 chore
+  - label: ':wrench: chore'
     regexs:
       - /\[(chore|etc)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 🔖 release
+  - label: ':bookmark: release'
     regexs:
       - /\[(release)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: ❓ question
+  - label: ':question: question'
     regexs:
       - /\[(question)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 👷 ci/cd
+  - label: ':construction_worker: ci/cd'
     regexs:
       - /\[(ci/cd|ci|cd)(\]|\/)/i
     events: [ pull_request, issues ]
     targets: [ title ]
-  - label: 🏗️ build
+  - label: ':building_construction: build'
     regexs:
       - /\[(build)(\]|\/)/i
     events: [ pull_request, issues ]
