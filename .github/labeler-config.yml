@@ -1,4 +1,4 @@
-filters:
+filter:
   - label: ":sparkles: feature"
     regexs:
       - /\[(feat|feature)\]/i
