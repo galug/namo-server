@@ -2,15 +2,9 @@ name: 🏷️ Auto labeler
 
 on:
   pull_request:
-    types: [ opened, edited, reopened, synchronize ]
-    paths:
-      - .github/github-label-config.yml
-      - .github/workflows/auto-labeler.yml
+    types: [ opened, edited ]
   issues:
     types: [ opened, edited ]
-    paths:
-      - .github/github-label-config.yml
-      - .github/workflows/auto-labeler.yml
 
 jobs:
   main:
