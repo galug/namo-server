@@ -31,6 +31,10 @@ public class MoimScheduleAndUserService {
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
     }
 
+    public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+        moimScheduleAndUserRepository.delete(moimScheduleAndUser);
+    }
+
     public MoimScheduleAndUser getMoimScheduleAndUser(MoimSchedule moimSchedule, User user) {
         return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));

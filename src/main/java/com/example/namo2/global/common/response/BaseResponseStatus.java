@@ -1,5 +1,7 @@
 package com.example.namo2.global.common.response;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.Getter;
 
 @Getter
@@ -11,19 +13,25 @@ public enum BaseResponseStatus {
     SUCCESS(200, "요청 성공"),
 
     /**
+     * 400 : Bad Request
+     */
+    MAKE_PUBLIC_KEY_FAILURE(400, "애플 퍼블릭 키를 생성하는데 실패하였습니다"),
+    //애플 identityToken 오류
+    APPLE_REQUEST_ERROR(400, "애플 identityToken이 잘못되었습니다."),
+
+    /**
      * 401 : 소셜 로그인 오류
      */
-
     SOCIAL_LOGIN_FAILURE(401, "소셜 로그인에 실패하였습니다."),
 
     /**
      * 403 : local Access Token 오류
      */
-
     EMPTY_ACCESS_KEY(403, "AccessToken 이 비어있습니다."),
     LOGOUT_ERROR(403, "로그 아웃된 사용자입니다."),
     EXPIRATION_ACCESS_TOKEN(403, "Access token 이 만료되었습니다."),
     EXPIRATION_REFRESH_TOKEN(403, "RefreshToken 이 만료되었습니다."),
+
 
     /**
      * NOT FOUND 오류

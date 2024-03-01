@@ -1,6 +1,5 @@
 package com.example.namo2.domain.moim.application.impl;
 
-import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.dao.repository.MoimMemoRepository;
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.moim.dao.repository.MoimRepository;
@@ -25,11 +24,6 @@ public class MoimService {
     private final MoimScheduleRepository moimScheduleRepository;
     private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
     private final MoimMemoRepository moimMemoRepository;
-
-    /**
-     * 추후 MoimMemo Refactoring 작업에서 제거할 예정
-     */
-    private final MoimMemoService moimMemoService;
 
     public Moim create(Moim moim) {
         return moimRepository.save(moim);

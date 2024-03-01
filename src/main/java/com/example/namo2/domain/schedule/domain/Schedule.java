@@ -1,10 +1,10 @@
 package com.example.namo2.domain.schedule.domain;
 
+import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.common.entity.BaseTimeEntity;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -87,9 +87,16 @@ public class Schedule extends BaseTimeEntity {
         }
     }
 
+    public void setImgs(List<Image> imgs){
+        this.images = imgs;
+    }
     public void addAlarm(Alarm alarm) {
         alarms.add(alarm);
     }
+    public void addAlarms(List<Alarm> alarmList) {
+        this.alarms.addAll(alarmList);
+    }
+
 
     public List<Integer> findAlarms() {
         return alarms.stream()

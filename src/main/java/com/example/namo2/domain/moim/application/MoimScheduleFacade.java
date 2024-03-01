@@ -21,11 +21,11 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
-import com.example.namo2.domain.schedule.ScheduleService;
+import com.example.namo2.domain.schedule.application.impl.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Location;
 import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.user.UserService;
+import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -101,11 +102,10 @@ public class MoimScheduleFacade {
      */
     @Transactional(readOnly = false)
     public void removeMoimSchedule(Long moimScheduleId) {
-        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
-        MoimMemo moimMemo = moimMemoService.getMoimMemo(moimSchedule);
+        MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(moimScheduleId);
         List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService.getMoimScheduleAndUsers(moimSchedule);
 
-        removeMoimScheduleMemo(moimMemo);
+        removeMoimScheduleMemo(moimSchedule.getMoimMemo());
 
         moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUsers);
         moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);

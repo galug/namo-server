@@ -23,4 +23,18 @@ public class CategoryConverter {
                 .share(dto.isShare())
                 .build();
     }
+
+    public static Category toCategory(
+            String name,
+            Palette palette,
+            Boolean isShare,
+            User user
+    ) {
+        return Category.builder()
+                .name(name)
+                .palette(palette)
+                .share(isShare)
+                .user(user)
+                .build();
+    }
 }

@@ -73,4 +73,5 @@ public class MoimSchedule extends BaseTimeEntity {
     public Boolean isLastScheduleMember() {
         return moimScheduleAndUsers.size() == 1;
     }
+
 }
