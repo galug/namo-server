@@ -4,52 +4,47 @@ filters:
     #######################
   - label: ':sparkles: feature'
     regexs:
-      - /^- \[(x|X)\]/ 새로운 기능 개발\b/m
+      - /^- \[(x|X)\]/ Feature\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':bug: bug'
     regexs:
-      - /^- \[(x|X)\] 버그 수정\b/m
+      - /^- \[(x|X)\] Bug Fix\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':memo: documentation'
     regexs:
-      - /^- \[(x|X)\]/ 문서 작성\b/m
+      - /^- \[(x|X)\]/ Documentation\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':art: style'
     regexs:
-      - /^- \[(x|X)\]/ 코드 스타일 변경\b/m
+      - /^- \[(x|X)\]/ Style\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':recycle: refactor'
     regexs:
-      - /^- \[(x|X)\]/ 코드 리팩토링\b/m
+      - /^- \[(x|X)\]/ Refactor\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':test_tube: test'
     regexs:
-      - /^- \[(x|X)\]/ 테스트 코드 작성\b/m
+      - /^- \[(x|X)\]/ Test\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':wrench: chore'
     regexs:
-      - /^- \[(x|X)\]/ 환경 설정 및 config 파일 변경 등 기타 작업\b/m
+      - /^- \[(x|X)\]/ Chore\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':bookmark: release'
     regexs:
-      - /^- \[(x|X)\]/ 릴리즈 작업\b/m
+      - /^- \[(x|X)\]/ Release\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':construction_worker: ci/cd'
     regexs:
       - /^- \[(x|X)\]/ CI/CD 작업\b/m
-    events: [ pull_request, issues ]
-    targets: [ comment ]
-  - label: ':building_construction: build'
-    regexs:
-      - /^- \[(x|X)\]/ 빌드 시스템 변경\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
 

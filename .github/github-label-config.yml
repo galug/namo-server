@@ -28,6 +28,3 @@
 - name: ':construction_worker: ci/cd'
   color: 64B5F6
   description: 'Changes to our CI/CD configuration files and scripts'
-- name: ':building_construction: build'
-  color: 7057FF
-  description: 'Changes that affect the build system or external dependencies (example scopes: gradle, npm, make, etc)'

@@ -3,8 +3,12 @@ name: 🏷️ Auto labeler
 on:
   pull_request:
     types: [ opened, edited ]
+  pull_request_review_comment:
+    types: [ created, edited ]
   issues:
     types: [ opened, edited ]
+  issue_comment:
+    types: [ created, edited ]
 
 jobs:
   main:
