@@ -2,7 +2,7 @@
 name: "❓Question"
 about: 논의가 필요하거나 궁금한 내용에 대하여 작성해주세요
 title: "[Question]"
-labels: ''
+labels: ':question: question'
 assignees: ''
 
 ---
