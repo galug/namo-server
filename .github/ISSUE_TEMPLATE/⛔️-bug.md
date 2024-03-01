@@ -2,7 +2,7 @@
 name: "⛔️ Bug"
 about: 수정이 필요한 버그/에러에 대하여 작성해주세요
 title: "[Bug]"
-labels: ''
+labels: ':bug: bug'
 assignees: ''
 
 ---
