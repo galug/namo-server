@@ -1,56 +1,63 @@
 filters:
+    #######################
+    # Common Task Labels  #
+    #######################
   - label: ':sparkles: feature'
     regexs:
-      - /\[(feat|feature)(\]|\/)/i
+      - /^- \[(x|X)\]/ 새로운 기능 개발\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':bug: bug'
     regexs:
-      - /\[(fix|bug)(\]|\/)/i
+      - /^- \[(x|X)\] 버그 수정\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':memo: documentation'
     regexs:
-      - /\[(docs|doc|documentation)(\]|\/)/i
+      - /^- \[(x|X)\]/ 문서 작성\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':art: style'
     regexs:
-      - /\[(style|styling)(\]|\/)/i
+      - /^- \[(x|X)\]/ 코드 스타일 변경\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':recycle: refactor'
     regexs:
-      - /\[(refactor|refactoring)(\]|\/)/i
+      - /^- \[(x|X)\]/ 코드 리팩토링\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':test_tube: test'
     regexs:
-      - /\[(test|testing)(\]|\/)/i
+      - /^- \[(x|X)\]/ 테스트 코드 작성\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':wrench: chore'
     regexs:
-      - /\[(chore|etc)(\]|\/)/i
+      - /^- \[(x|X)\]/ 환경 설정 및 config 파일 변경 등 기타 작업\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
   - label: ':bookmark: release'
     regexs:
-      - /\[(release)(\]|\/)/i
+      - /^- \[(x|X)\]/ 릴리즈 작업\b/m
     events: [ pull_request, issues ]
-    targets: [ title ]
+    targets: [ comment ]
+  - label: ':construction_worker: ci/cd'
+    regexs:
+      - /^- \[(x|X)\]/ CI/CD 작업\b/m
+    events: [ pull_request, issues ]
+    targets: [ comment ]
+  - label: ':building_construction: build'
+    regexs:
+      - /^- \[(x|X)\]/ 빌드 시스템 변경\b/m
+    events: [ pull_request, issues ]
+    targets: [ comment ]
+
+    #######################
+    # Issue Labels        #
+    #######################
   - label: ':question: question'
     regexs:
       - /\[(question)(\]|\/)/i
-    events: [ pull_request, issues ]
-    targets: [ title ]
-  - label: ':construction_worker: ci/cd'
-    regexs:
-      - /\[(ci/cd|ci|cd)(\]|\/)/i
-    events: [ pull_request, issues ]
-    targets: [ title ]
-  - label: ':building_construction: build'
-    regexs:
-      - /\[(build)(\]|\/)/i
-    events: [ pull_request, issues ]
+    events: [ issues ]
     targets: [ title ]
