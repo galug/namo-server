@@ -4,7 +4,7 @@ filters:
     #######################
   - label: ':sparkles: feature'
     regexs:
-      - /^- \[(x|X)\]/ Feature\b/m
+      - /^- \[(x|X)\] Feature\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':bug: bug'
@@ -14,37 +14,37 @@ filters:
     targets: [ comment ]
   - label: ':memo: documentation'
     regexs:
-      - /^- \[(x|X)\]/ Documentation\b/m
+      - /^- \[(x|X)\] Documentation\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':art: style'
     regexs:
-      - /^- \[(x|X)\]/ Style\b/m
+      - /^- \[(x|X)\] Style\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':recycle: refactor'
     regexs:
-      - /^- \[(x|X)\]/ Refactor\b/m
+      - /^- \[(x|X)\] Refactor\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':test_tube: test'
     regexs:
-      - /^- \[(x|X)\]/ Test\b/m
+      - /^- \[(x|X)\] Test\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':wrench: chore'
     regexs:
-      - /^- \[(x|X)\]/ Chore\b/m
+      - /^- \[(x|X)\] Chore\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':bookmark: release'
     regexs:
-      - /^- \[(x|X)\]/ Release\b/m
+      - /^- \[(x|X)\] Release\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
   - label: ':construction_worker: ci/cd'
     regexs:
-      - /^- \[(x|X)\]/ CI/CD 작업\b/m
+      - /^- \[(x|X)\] CI/CD 작업\b/m
     events: [ pull_request, issues ]
     targets: [ comment ]
 
