@@ -1,0 +1,10 @@
+# [blankline-between-import-group]
+8=lombok
+7=com.example.namo2.global
+6=com.example.namo2.domain
+5=
+4=com
+3=net
+2=org
+1=javax
+0=java
