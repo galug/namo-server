@@ -2,8 +2,16 @@ package com.example.namo2.domain.schedule.application;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
+import com.example.namo2.domain.memo.application.impl.MoimMemoService;
+import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.memo.domain.MoimMemoLocation;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
+import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +48,10 @@ public class ScheduleFacade {
 	private final ScheduleService scheduleService;
 	private final ImageService imageService;
 	private final CategoryService categoryService;
-	private final MoimService moimService;
+	private final MoimScheduleService moimScheduleService;
+	private final MoimScheduleAndUserService moimScheduleAndUserService;
+	private final MoimMemoService moimMemoService;
+	private final MoimMemoLocationService moimMemoLocationService;
 	private final FileUtils fileUtils;
 
 	@Transactional
@@ -159,14 +170,37 @@ public class ScheduleFacade {
 			return;
 		}
 		User user = userService.getUser(userId);
-		MoimSchedule moimSchedule = moimService.getMoimScheduleById(scheduleId);
-		MoimScheduleAndUser moimScheduleAndUser = moimService.getMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user);
+		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(scheduleId);
+		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
 		// 마지막 사람이면 모임 스케줄 삭제
 		if (moimSchedule.isLastScheduleMember()) {
-			moimService.removeSchedule(scheduleId);
+			moimScheduleAndUserService.removeMoimScheduleAndUser(moimScheduleAndUser);
+			MoimMemo moimMemo = moimSchedule.getMoimMemo();
+			removeMoimScheduleMemo(moimMemo);
+			moimScheduleService.remove(moimSchedule);
 			return;
 		}
-		moimService.removeMoimScheduleAndUser(moimScheduleAndUser);
+		moimScheduleAndUserService.removeMoimScheduleAndUser(moimScheduleAndUser);
+	}
+
+	private void removeMoimScheduleMemo(MoimMemo moimMemo) {
+		if (moimMemo == null) {
+			return;
+		}
+		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocation(moimMemo);
+		moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocations);
+		removeMoimMemoLocationImgs(moimMemoLocations);
+		moimMemoService.removeMoimMemo(moimMemo);
+	}
+
+	private void removeMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
+		List<MoimMemoLocationImg> moimMemoLocationImgs
+				= moimMemoLocationService.getMoimMemoLocationImgs(moimMemoLocations);
+		List<String> urls = moimMemoLocationImgs.stream()
+				.map(MoimMemoLocationImg::getUrl)
+				.collect(Collectors.toList());
+		fileUtils.deleteImages(urls);
+		moimMemoLocationService.removeMoimMemoLocationImgs(moimMemoLocations);
 	}
 }

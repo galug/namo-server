@@ -30,6 +30,11 @@ public class MoimScheduleService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
     }
 
+    public MoimSchedule getMoimScheduleWithMoimMemo(Long id) {
+        return moimScheduleRepository.findMoimScheduleById(id)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
+    }
+
     public void remove(MoimSchedule moimSchedule) {
         moimScheduleRepository.delete(moimSchedule);
     }

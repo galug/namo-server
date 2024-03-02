@@ -47,6 +47,7 @@ public enum BaseResponseStatus {
     NOT_FOUND_MOIM_FAILURE(404, "모임을 찾을 수 없습니다."),
     NOT_FOUND_MOIM_AND_USER_FAILURE(404, "그룹 구성원이 아닙니다."),
     NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE(404, "그룹 스케줄 구성원이 아닙니다."),
+    NOT_FOUND_MOIM_MEMO_LOCATION_FAILURE(404, "모임 장소를 찾을 수 없습니다."),
     DIARY_EXISTS_FAILURE(404, "이미 존재하는 다이어리 입니다."),
     DUPLICATE_PARTICIPATE_FAILURE(404, "이미 가입한 모임입니다."),
     DUPLICATE_MOIM_MEMO_FAILURE(404, "이미 모임 메모가 생성되어 있습니다."),

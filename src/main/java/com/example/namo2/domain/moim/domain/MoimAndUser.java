@@ -2,7 +2,6 @@ package com.example.namo2.domain.moim.domain;
 
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.global.common.entity.BaseTimeEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

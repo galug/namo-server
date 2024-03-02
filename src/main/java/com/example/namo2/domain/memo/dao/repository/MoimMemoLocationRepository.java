@@ -1,4 +1,4 @@
-package com.example.namo2.domain.memo;
+package com.example.namo2.domain.memo.dao.repository;
 
 import com.example.namo2.domain.memo.domain.MoimMemo;
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
@@ -21,4 +21,9 @@ public interface MoimMemoLocationRepository extends JpaRepository<MoimMemoLocati
             "from MoimMemoLocation ml" +
             " where ml.moimMemo = :moimMemo")
     Optional<List<MoimMemoLocation>> findMoimMemoLocationsByMoimMemo(MoimMemo moimMemo);
+
+    @Query("select mml " +
+            "from MoimMemoLocation mml " +
+            "where mml.moimMemo = :moimMemo")
+    List<MoimMemoLocation> findMoimMemo(@Param("moimMemo") MoimMemo moimMemo);
 }

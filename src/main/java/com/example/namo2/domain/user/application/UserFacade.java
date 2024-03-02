@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import com.example.namo2.global.utils.apple.AppleAuthApi;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -38,7 +39,6 @@ import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
-import com.example.namo2.global.utils.apple.AppleAuthClient;
 import com.example.namo2.global.utils.apple.AppleResponse;
 import com.example.namo2.global.utils.apple.AppleResponseConverter;
 
@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserFacade {
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
-	private final AppleAuthClient appleAuthClient;
+	private final AppleAuthApi appleAuthApi;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	private final UserService userService;
@@ -105,7 +105,7 @@ public class UserFacade {
 
 	@Transactional
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req){
-		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
+		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthApi.getApplePublicKeys();
 		AppleResponse.ApplePublicKeyDto applePublicKey = null;
 
 		try {

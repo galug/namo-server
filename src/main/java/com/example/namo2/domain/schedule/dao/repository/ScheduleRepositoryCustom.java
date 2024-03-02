@@ -18,7 +18,5 @@ public interface ScheduleRepositoryCustom {
 
     Schedule findOneScheduleAndImages(Long scheduleId);
 
-    List<MoimScheduleResponse.MoimScheduleDto> findMonthScheduleInMoim(Long moimId, LocalDateTime startDate, LocalDateTime endDate);
-
     List<ScheduleResponse.GetScheduleDto> findMoimSchedulesByUserId(User user, LocalDateTime startDate, LocalDateTime endDate);
 }

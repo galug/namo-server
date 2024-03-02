@@ -1,21 +1,15 @@
 package com.example.namo2.domain.schedule.application.converter;
 
-import static com.amazonaws.services.ec2.model.ResourceType.*;
-
-import java.time.ZoneId;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Slice;
-
-import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.domain.Alarm;
 import com.example.namo2.domain.schedule.domain.Schedule;
-import com.example.namo2.domain.schedule.ui.dto.DiaryDto;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
-import com.example.namo2.domain.schedule.ui.dto.SliceDiaryDto;
+import org.springframework.data.domain.Slice;
+
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ScheduleResponseConverter {
 	public static ScheduleResponse.ScheduleIdDto toScheduleIdRes(Schedule schedule){
@@ -53,7 +47,7 @@ public class ScheduleResponseConverter {
 			.atZone(ZoneId.systemDefault())
 			.toInstant()
 			.getEpochSecond();
-		List<Integer> alarmDates = moimScheduleAndUser.getMoimSchedule().getMoimScheduleAlarms().stream()
+		List<Integer> alarmDates = moimScheduleAndUser.getMoimScheduleAlarms().stream()
 			.map(MoimScheduleAlarm::getAlarmDate).toList();
 
 		return ScheduleResponse.GetScheduleDto.builder()

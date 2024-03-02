@@ -1,15 +1,12 @@
 package com.example.namo2.domain.moim.application;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.memo.MoimMemoService;
+import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
+import com.example.namo2.domain.memo.application.impl.MoimMemoService;
 import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.memo.domain.MoimMemoLocation;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 import com.example.namo2.domain.moim.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.moim.application.converter.MoimScheduleConverter;
 import com.example.namo2.domain.moim.application.converter.MoimScheduleResponseConverter;
@@ -30,9 +27,15 @@ import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
-
+import com.example.namo2.global.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -43,9 +46,11 @@ public class MoimScheduleFacade {
     private final MoimScheduleService moimScheduleService;
     private final MoimScheduleAndUserService moimScheduleAndUserService;
     private final MoimMemoService moimMemoService;
+    private final MoimMemoLocationService moimMemoLocationService;
     private final ScheduleService scheduleService;
     private final CategoryService categoryService;
 
+    private final FileUtils fileUtils;
     /**
      * 버그 발생 우려;
      * categories 수정시 모임과 기본 카테고리에 대해서는 수정이 불가능하게 해야함
@@ -97,19 +102,34 @@ public class MoimScheduleFacade {
      */
     @Transactional(readOnly = false)
     public void removeMoimSchedule(Long moimScheduleId) {
-        MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
-        MoimMemo moimMemo = moimMemoService.getMoimMemo(moimSchedule);
+        MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(moimScheduleId);
         List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService.getMoimScheduleAndUsers(moimSchedule);
 
-//         모임 메모가 있는 경우 모임 메모 장소를 모두 삭제 후 모임 메모 삭제
-        if (moimMemo != null) {
-            moimMemo.getMoimMemoLocations().stream().forEach((moimMemoLocation -> moimMemoService.removeMoimMemoLocation(moimMemoLocation.getId())));
-            moimMemoService.removeMoimMemo(moimMemo);
-        }
+        removeMoimScheduleMemo(moimSchedule.getMoimMemo());
 
         moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUsers);
         moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
         moimScheduleService.remove(moimSchedule);
+    }
+
+    private void removeMoimScheduleMemo(MoimMemo moimMemo) {
+        if (moimMemo == null) {
+            return;
+        }
+        List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocation(moimMemo);
+        moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocations);
+        removeMoimMemoLocationImgs(moimMemoLocations);
+        moimMemoService.removeMoimMemo(moimMemo);
+    }
+
+    private void removeMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
+        List<MoimMemoLocationImg> moimMemoLocationImgs
+                = moimMemoLocationService.getMoimMemoLocationImgs(moimMemoLocations);
+        List<String> urls = moimMemoLocationImgs.stream()
+                .map(MoimMemoLocationImg::getUrl)
+                .collect(Collectors.toList());
+        fileUtils.deleteImages(urls);
+        moimMemoLocationService.removeMoimMemoLocationImgs(moimMemoLocations);
     }
 
     @Transactional(readOnly = false)

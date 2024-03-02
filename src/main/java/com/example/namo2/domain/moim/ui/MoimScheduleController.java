@@ -1,7 +1,6 @@
 package com.example.namo2.domain.moim.ui;
 
 import com.example.namo2.domain.moim.application.MoimScheduleFacade;
-import com.example.namo2.domain.moim.application.impl.MoimService;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 import com.example.namo2.global.common.response.BaseResponse;

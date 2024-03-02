@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -48,9 +47,6 @@ public class MoimSchedule extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
     private List<MoimScheduleAndUser> moimScheduleAndUsers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
-    private List<MoimScheduleAlarm> moimScheduleAlarms = new ArrayList<>();
 
     @OneToOne(mappedBy = "moimSchedule", fetch = FetchType.LAZY)
     private MoimMemo moimMemo;

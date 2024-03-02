@@ -10,8 +10,10 @@ import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,6 +29,10 @@ public class MoimScheduleAndUserService {
 
     public void removeMoimScheduleAndUser(MoimSchedule moimSchedule) {
         moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
+    }
+
+    public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+        moimScheduleAndUserRepository.delete(moimScheduleAndUser);
     }
 
     public MoimScheduleAndUser getMoimScheduleAndUser(MoimSchedule moimSchedule, User user) {
@@ -46,4 +52,15 @@ public class MoimScheduleAndUserService {
         moimScheduleAlarmRepository.save(moimScheduleAlarm);
     }
 
+    /**
+     * 메서드 네이밍에 더 분명한 의미를 담기 위해서 규칙을 좀 더
+     * 자세히 세워보는 것도 괜찮을 것 같아요
+     */
+    public List<MoimScheduleAndUser> getMoimScheduleAndUsersForMonthMoimMemo(User user, List<LocalDateTime> dates, Pageable page) {
+        return moimScheduleAndUserRepository.findMoimScheduleMemoByMonthPaging(user, dates, page);
+    }
+
+    public void modifyText(MoimScheduleAndUser moimScheduleAndUser, String moimScheduleText) {
+        moimScheduleAndUser.updateText(moimScheduleText);
+    }
 }
