@@ -28,6 +28,7 @@ Defferences from the Naver coding convention: detail is in the Notion page.
 
 - [blankline-after-package] : deleted
 - [import-grouping] : modified
+- [list-uppercase-abbr] : modified
 -->
 
 <module name="Checker">
@@ -73,7 +74,7 @@ Defferences from the Naver coding convention: detail is in the Notion page.
             <property name="allowedAbbreviationLength" value="1"/>
             <message key="abbreviation.as.word"
                      value="[list-uppercase-abbr] Abbreviation in name ''{0}'' must contain no more than {1}"/>
-            <property name="allowedAbbreviations" value="DAO,BO"/>
+            <property name="allowedAbbreviations" value="DAO,BO,AWS,API,IO"/>
         </module>
 
         <!-- [package-lowercase] -->
@@ -298,7 +299,7 @@ Defferences from the Naver coding convention: detail is in the Notion page.
                       /com\.(?!example.namo2.global.|example.namo2.domain.)/,
                       /(?!java\.|javax\.|com\.|org\.|net\.)/,
                       com.example.namo2.domain.category.,
-                      com.example.namo2.domaim.memo.,
+                      com.example.namo2.domain.memo.,
                       com.example.namo2.domain.moim.,
                       com.example.namo2.domain.schedule.,
                       com.example.namo2.domain.user.,
