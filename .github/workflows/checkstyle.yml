@@ -28,9 +28,10 @@ jobs:
           cache: "gradle"
 
       - name: Run Checkstyle
-        uses: dbelyaev/action-checkstyle@master
+        uses: nikitasavinov/checkstyle-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
+          reporter: 'github-pr-check'
+          tool_name: 'Checkstyle for Java'
           checkstyle_config: ./lint-config/namo-checkstyle-rules.xml
           level: warning
