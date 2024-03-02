@@ -34,4 +34,5 @@ jobs:
           reporter: 'github-pr-check'
           tool_name: 'Checkstyle for Java'
           checkstyle_config: lint-config/namo-checkstyle-rules.xml
+          properties_file: lint-config/additional.properties
           level: warning
