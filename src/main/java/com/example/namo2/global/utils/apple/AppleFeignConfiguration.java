@@ -6,7 +6,7 @@ import feign.Logger;
 
 public class AppleFeignConfiguration {
 	@Bean
-	Logger.Level feignLoggerLevel(){
+	Logger.Level feignLoggerLevel() {
 		return Logger.Level.FULL;
 	}
 }

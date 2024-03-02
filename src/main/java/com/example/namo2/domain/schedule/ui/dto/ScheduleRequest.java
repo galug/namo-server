@@ -4,6 +4,7 @@ import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ public class ScheduleRequest {
 	private ScheduleRequest() {
 		throw new IllegalStateException("Utility class");
 	}
+
 	@Getter
 	@AllArgsConstructor
 	public static class PostScheduleDto {

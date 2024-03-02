@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    //data
+    // data
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '6.2.0.CR3' // point 저장

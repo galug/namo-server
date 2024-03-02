@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import com.example.namo2.global.utils.apple.AppleAuthApi;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -26,24 +25,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 import com.example.namo2.domain.category.application.converter.CategoryConverter;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
+
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
+
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
+import com.example.namo2.global.utils.apple.AppleAuthApi;
 import com.example.namo2.global.utils.apple.AppleResponse;
 import com.example.namo2.global.utils.apple.AppleResponseConverter;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -104,7 +107,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req){
+	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req) {
 		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthApi.getApplePublicKeys();
 		AppleResponse.ApplePublicKeyDto applePublicKey = null;
 
@@ -141,7 +144,8 @@ public class UserFacade {
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
-	private PublicKey getPublicKey(AppleResponse.ApplePublicKeyDto applePublicKey){
+
+	private PublicKey getPublicKey(AppleResponse.ApplePublicKeyDto applePublicKey) {
 		String nStr = applePublicKey.getN(); //RSA public key의 모듈러스 값
 		String eStr = applePublicKey.getE(); //RSA public key의 지수 값
 
@@ -151,7 +155,7 @@ public class UserFacade {
 		BigInteger n = new BigInteger(1, nBytes);
 		BigInteger e = new BigInteger(1, eBytes);
 
-		try{
+		try {
 			RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
 			KeyFactory keyFactory = KeyFactory.getInstance(applePublicKey.getKty());
 			return keyFactory.generatePublic(publicKeySpec);
@@ -176,7 +180,7 @@ public class UserFacade {
 		}
 
 		long expiration = claims.getExpiration().getTime();
-		log.debug("expriation : {} < now : {}", expiration,(new Date()).getTime() );
+		log.debug("expriation : {} < now : {}", expiration, (new Date()).getTime());
 		if (expiration <= (new Date()).getTime()) {
 			throw new IllegalArgumentException("Token expired");
 		}
@@ -219,16 +223,16 @@ public class UserFacade {
 
 	private void makeBaseCategory(User save) {
 		Category baseCategory = CategoryConverter.toCategory(
-				"기본",
-				paletteService.getReferenceById(1L),
-				Boolean.TRUE,
-				save
+			"기본",
+			paletteService.getReferenceById(1L),
+			Boolean.TRUE,
+			save
 		);
 		Category groupCategory = CategoryConverter.toCategory(
-				"모임",
-				paletteService.getReferenceById(4L),
-				Boolean.TRUE,
-				save
+			"모임",
+			paletteService.getReferenceById(4L),
+			Boolean.TRUE,
+			save
 		);
 
 		categoryService.create(baseCategory);

@@ -2,16 +2,8 @@ package com.example.namo2.domain.schedule.application;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
-import com.example.namo2.domain.memo.application.impl.MoimMemoService;
-import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.memo.domain.MoimMemoLocation;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
-import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +11,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
-import com.example.namo2.domain.moim.application.impl.MoimService;
+
+import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
+import com.example.namo2.domain.memo.application.impl.MoimMemoService;
+import com.example.namo2.domain.memo.domain.MoimMemo;
+import com.example.namo2.domain.memo.domain.MoimMemoLocation;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
+
+import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
+import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+
 import com.example.namo2.domain.schedule.application.converter.AlarmConverter;
 import com.example.namo2.domain.schedule.application.converter.ImageConverter;
 import com.example.namo2.domain.schedule.application.converter.ScheduleConverter;
@@ -34,8 +35,10 @@ import com.example.namo2.domain.schedule.domain.Period;
 import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleRequest;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
+
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
+
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.utils.FileUtils;
 
@@ -83,25 +86,31 @@ public class ScheduleFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUser(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
+	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUser(Long userId,
+		List<LocalDateTime> localDateTimes) throws BaseException {
 		User user = userService.getUser(userId);
 		return scheduleService.getSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
 	}
+
 	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetScheduleDto> getMoimSchedulesByUser(Long userId, List<LocalDateTime> localDateTimes) throws BaseException {
+	public List<ScheduleResponse.GetScheduleDto> getMoimSchedulesByUser(Long userId,
+		List<LocalDateTime> localDateTimes) throws BaseException {
 		User user = userService.getUser(userId);
 		return scheduleService.getMoimSchedulesByUser(user, localDateTimes.get(0), localDateTimes.get(1));
 	}
+
 	@Transactional(readOnly = true)
 	public List<ScheduleResponse.GetScheduleDto> getAllSchedulesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllSchedulesByUser(user);
 	}
+
 	@Transactional(readOnly = true)
 	public List<ScheduleResponse.GetScheduleDto> getAllMoimSchedulesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllMoimSchedulesByUser(user);
 	}
+
 	public ScheduleResponse.SliceDiaryDto getMonthDiary(
 		Long userId,
 		List<LocalDateTime> localDateTimes,
@@ -110,11 +119,13 @@ public class ScheduleFacade {
 		User user = userService.getUser(userId);
 		return scheduleService.getScheduleDiaryByUser(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
 	}
+
 	@Transactional(readOnly = true)
 	public List<ScheduleResponse.GetDiaryByUserDto> getAllDiariesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllDiariesByUser(user);
 	}
+
 	@Transactional(readOnly = true)
 	public ScheduleResponse.GetDiaryByScheduleDto getDiaryBySchedule(Long scheduleId) {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
@@ -125,6 +136,7 @@ public class ScheduleFacade {
 
 		return ScheduleResponseConverter.toGetDiaryByScheduleRes(schedule, imgUrls);
 	}
+
 	@Transactional
 	public ScheduleResponse.ScheduleIdDto modifySchedule(
 		Long scheduleId,
@@ -164,7 +176,7 @@ public class ScheduleFacade {
 	@Transactional
 	public void removeSchedule(Long scheduleId, Integer kind, Long userId
 	) throws BaseException {
-		if (kind == 0) {//개인 스케줄
+		if (kind == 0) { // 개인 스케줄
 			Schedule schedule = scheduleService.getScheduleById(scheduleId);
 			scheduleService.removeSchedule(schedule);
 			return;
@@ -196,10 +208,10 @@ public class ScheduleFacade {
 
 	private void removeMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
 		List<MoimMemoLocationImg> moimMemoLocationImgs
-				= moimMemoLocationService.getMoimMemoLocationImgs(moimMemoLocations);
+			= moimMemoLocationService.getMoimMemoLocationImgs(moimMemoLocations);
 		List<String> urls = moimMemoLocationImgs.stream()
-				.map(MoimMemoLocationImg::getUrl)
-				.collect(Collectors.toList());
+			.map(MoimMemoLocationImg::getUrl)
+			.collect(Collectors.toList());
 		fileUtils.deleteImages(urls);
 		moimMemoLocationService.removeMoimMemoLocationImgs(moimMemoLocations);
 	}

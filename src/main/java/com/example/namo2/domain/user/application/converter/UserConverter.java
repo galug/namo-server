@@ -12,13 +12,13 @@ public class UserConverter {
 
 	public static User toUser(Map<String, String> response) {
 		return User.builder()
-				.email(response.get("email"))
-				.name(response.get("nickname"))
-				.birthday(response.getOrDefault("birthday", null))
-				.build();
+			.email(response.get("email"))
+			.name(response.get("nickname"))
+			.birthday(response.getOrDefault("birthday", null))
+			.build();
 	}
 
-	public static User toUser(String email, String name){
+	public static User toUser(String email, String name) {
 		return User.builder()
 			.email(email)
 			.name(name)
