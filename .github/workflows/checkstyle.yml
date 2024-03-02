@@ -33,5 +33,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: 'github-pr-check'
           tool_name: 'Checkstyle for Java'
-          checkstyle_config: ./lint-config/namo-checkstyle-rules.xml
+          checkstyle_config: lint-config/namo-checkstyle-rules.xml
           level: warning
