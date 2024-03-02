@@ -30,7 +30,7 @@ Defferences from the Naver coding convention: detail is in the Notion page.
 - [import-grouping] : modified
 -->
 
-<module name = "Checker">
+<module name="Checker">
     <property name="severity" value="warning"/>
     <property name="fileExtensions" value="java"/>
 
@@ -178,8 +178,10 @@ Defferences from the Naver coding convention: detail is in the Notion page.
         <!-- [special-escape] -->
         <module name="IllegalTokenText">
             <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
-            <property name="format" value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/>
-            <property name="message" value="[array-square-after-type]  Avoid using corresponding octal or Unicode escape."/>
+            <property name="format"
+                      value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/>
+            <property name="message"
+                      value="[array-square-after-type]  Avoid using corresponding octal or Unicode escape."/>
         </module>
 
         <!-- End of Declarations chapter -->
@@ -211,7 +213,8 @@ Defferences from the Naver coding convention: detail is in the Notion page.
         </module>
         <module name="RightCurly">
             <property name="option" value="alone"/>
-            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
+            <property name="tokens"
+                      value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
             <message key="line.alone"
                      value="[braces-knr-style] ''{0}'' at column {1} should be alone on a line."/>
             <message key="line.break.before"
@@ -223,7 +226,8 @@ Defferences from the Naver coding convention: detail is in the Notion page.
         <!-- [sub-flow-after-brace] -->
         <module name="RightCurly">
             <property name="option" value="same"/>
-            <property name="tokens" value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
+            <property name="tokens"
+                      value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
             <message key="line.same"
                      value="[sub-flow-after-brace] ''{0}'' at column {1} should be on the same line as the next part of a multi-block statement (one that directly contains multiple blocks: if/else-if/else or try/catch/finally)."/>
             <message key="line.break.before"
@@ -272,7 +276,8 @@ Defferences from the Naver coding convention: detail is in the Notion page.
         </module>
         <module name="OperatorWrap">
             <property name="option" value="NL"/>
-            <property name="tokens" value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR "/>
+            <property name="tokens"
+                      value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR "/>
             <message key="line.new"
                      value="[line-wrapping-position] ''{0}'' should be on a new line."/>
         </module>
@@ -283,7 +288,22 @@ Defferences from the Naver coding convention: detail is in the Notion page.
 
         <!-- [import-grouping] -->
         <module name="ImportOrder">
-            <property name="groups" value="java., javax., org., net., /com\.(?!example.namo2.global|example.namo2.domain)/, /(?!java\.|javax\.|com\.|org\.|net\.)/, com.example.namo2.domain, com.example.namo2.global, lombok."/>
+            <property name="groups"
+                      value="
+                      java.,
+                      javax.,
+                      jakarta.,
+                      org.,
+                      net.,
+                      /com\.(?!example.namo2.global.|example.namo2.domain.)/,
+                      /(?!java\.|javax\.|com\.|org\.|net\.)/,
+                      com.example.namo2.domain.category.,
+                      com.example.namo2.domaim.memo.,
+                      com.example.namo2.domain.moim.,
+                      com.example.namo2.domain.schedule.,
+                      com.example.namo2.domain.user.,
+                      com.example.namo2.global.,
+                      lombok."/>
             <property name="ordered" value="true"/>
             <property name="separated" value="true"/>
             <property name="option" value="top"/>
