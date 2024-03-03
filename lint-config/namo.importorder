@@ -1,0 +1,15 @@
+# [blankline-between-import-group]
+13=lombok
+12=com.example.namo2.global
+11=com.example.namo2.domain.user
+10=com.example.namo2.domain.schedule
+9=com.example.namo2.domain.moim
+8=com.example.namo2.domain.memo
+7=com.example.namo2.domain.category
+6=
+5=com
+4=net
+3=org
+2=jakarta
+1=javax
+0=java

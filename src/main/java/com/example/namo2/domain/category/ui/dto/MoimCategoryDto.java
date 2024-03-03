@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MoimCategoryDto {
-    private Long userId;
-    private Long categoryId;
+	private Long userId;
+	private Long categoryId;
 }

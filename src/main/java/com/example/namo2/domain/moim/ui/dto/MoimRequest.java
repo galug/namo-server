@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class MoimRequest {
-    private MoimRequest() {
-        throw new IllegalStateException("Utils Class");
-    }
+	private MoimRequest() {
+		throw new IllegalStateException("Utils Class");
+	}
 
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class PatchMoimNameDto {
-        private Long moimId;
-        private String moimName;
-    }
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class PatchMoimNameDto {
+		private Long moimId;
+		private String moimName;
+	}
 }

@@ -5,15 +5,15 @@ import lombok.Getter;
 
 public class CategoryRequest {
 
-    private CategoryRequest() {
-        throw new IllegalStateException("Utility class");
-    }
+	private CategoryRequest() {
+		throw new IllegalStateException("Utility class");
+	}
 
-    @AllArgsConstructor
-    @Getter
-    public static class PostCategoryDto {
-        private String name;
-        private Long paletteId;
-        private boolean isShare;
-    }
+	@AllArgsConstructor
+	@Getter
+	public static class PostCategoryDto {
+		private String name;
+		private Long paletteId;
+		private boolean isShare;
+	}
 }

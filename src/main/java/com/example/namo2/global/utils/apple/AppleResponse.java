@@ -2,15 +2,14 @@ package com.example.namo2.global.utils.apple;
 
 import java.util.List;
 
-import com.example.namo2.global.common.exception.BaseException;
-
 import lombok.Getter;
 import lombok.Setter;
 
 public class AppleResponse {
-	public AppleResponse(){
+	private AppleResponse() {
 		throw new IllegalStateException("Utility class");
 	}
+
 	@Getter
 	@Setter
 	public static class ApplePublicKeyDto {

@@ -1,6 +1,7 @@
 package com.example.namo2.domain.user.ui.dto;
 
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,7 @@ public class UserRequest {
 	}
 
 	@Getter
-	public static class AppleSignUpDto{
+	public static class AppleSignUpDto {
 		@NotBlank
 		private String identityToken;
 		private String email;
