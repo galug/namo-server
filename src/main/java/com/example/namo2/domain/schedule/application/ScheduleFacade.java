@@ -182,7 +182,7 @@ public class ScheduleFacade {
 			return;
 		}
 		User user = userService.getUser(userId);
-		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(scheduleId);
+		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleId);
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
 		// 마지막 사람이면 모임 스케줄 삭제
