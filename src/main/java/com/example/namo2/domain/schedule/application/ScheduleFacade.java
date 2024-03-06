@@ -185,34 +185,7 @@ public class ScheduleFacade {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleId);
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
-		// 마지막 사람이면 모임 스케줄 삭제
-		if (moimSchedule.isLastScheduleMember()) {
-			moimScheduleAndUserService.removeMoimScheduleAndUser(moimScheduleAndUser);
-			MoimMemo moimMemo = moimSchedule.getMoimMemo();
-			removeMoimScheduleMemo(moimMemo);
-			moimScheduleService.remove(moimSchedule);
-			return;
-		}
 		moimScheduleAndUserService.removeMoimScheduleAndUser(moimScheduleAndUser);
 	}
 
-	private void removeMoimScheduleMemo(MoimMemo moimMemo) {
-		if (moimMemo == null) {
-			return;
-		}
-		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocation(moimMemo);
-		moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocations);
-		removeMoimMemoLocationImgs(moimMemoLocations);
-		moimMemoService.removeMoimMemo(moimMemo);
-	}
-
-	private void removeMoimMemoLocationImgs(List<MoimMemoLocation> moimMemoLocations) {
-		List<MoimMemoLocationImg> moimMemoLocationImgs
-			= moimMemoLocationService.getMoimMemoLocationImgs(moimMemoLocations);
-		List<String> urls = moimMemoLocationImgs.stream()
-			.map(MoimMemoLocationImg::getUrl)
-			.collect(Collectors.toList());
-		fileUtils.deleteImages(urls);
-		moimMemoLocationService.removeMoimMemoLocationImgs(moimMemoLocations);
-	}
 }
