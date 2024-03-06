@@ -1,4 +1,4 @@
-package com.example.namo2.global.utils.apple;
+package com.example.namo2.global.feignClient.apple;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

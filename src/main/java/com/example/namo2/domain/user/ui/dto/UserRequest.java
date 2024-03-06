@@ -60,4 +60,11 @@ public class UserRequest {
             return isCheckPersonalInformationCollection;
         }
     }
+
+	@Getter
+	public static class DeleteUserDto{
+		@NotBlank
+		private String accessToken;
+	}
+
 }

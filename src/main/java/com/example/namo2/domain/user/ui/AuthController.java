@@ -1,5 +1,6 @@
 package com.example.namo2.domain.user.ui;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,5 +69,15 @@ public class AuthController {
 	) {
 		userFacade.logout(logoutDto);
 		return BaseResponse.ok();
+	}
+
+	@Operation(summary = "kakao 회원 탈퇴", description = "kakao 회원 탈퇴")
+	@PostMapping("/kakao/delete")
+	public BaseResponse<?> removeKakaoUser(
+		HttpServletRequest request,
+		@Valid @RequestBody UserRequest.DeleteUserDto deleteUserDto
+	){
+		userFacade.removeKakaoUser(request, deleteUserDto.getAccessToken());
+		return null;
 	}
 }

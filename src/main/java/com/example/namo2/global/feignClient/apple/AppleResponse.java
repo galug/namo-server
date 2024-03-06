@@ -1,4 +1,4 @@
-package com.example.namo2.global.utils.apple;
+package com.example.namo2.global.feignClient.apple;
 
 import java.util.List;
 

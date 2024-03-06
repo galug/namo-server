@@ -26,9 +26,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-
 import com.example.namo2.domain.category.application.converter.CategoryConverter;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
@@ -41,15 +38,18 @@ import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
-
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
+import com.example.namo2.global.feignClient.apple.AppleAuthClient;
+import com.example.namo2.global.feignClient.apple.AppleResponse;
+import com.example.namo2.global.feignClient.apple.AppleResponseConverter;
+import com.example.namo2.global.feignClient.kakao.KakaoAuthClient;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
-import com.example.namo2.global.utils.apple.AppleAuthApi;
-import com.example.namo2.global.utils.apple.AppleResponse;
-import com.example.namo2.global.utils.apple.AppleResponseConverter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,12 +59,14 @@ import lombok.extern.slf4j.Slf4j;
 public class UserFacade {
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
-	private final AppleAuthApi appleAuthApi;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	private final UserService userService;
 	private final PaletteService paletteService;
 	private final CategoryService categoryService;
+
+	private final KakaoAuthClient kakaoAuthClient;
+	private final AppleAuthClient appleAuthClient;
 
 	@Value("${spring.security.oauth1.client.registration.apple.client-id}")
 	private String clientId;
@@ -111,7 +113,7 @@ public class UserFacade {
 
 	@Transactional
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req) {
-		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthApi.getApplePublicKeys();
+		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
 		AppleResponse.ApplePublicKeyDto applePublicKey = null;
 
 		try {
@@ -249,10 +251,32 @@ public class UserFacade {
 		}
 	}
 
+
 	@Transactional(readOnly = false)
 	public void createTerm(UserRequest.TermDto termDto, Long userId) {
 		User user = userService.getUser(userId);
 		List<Term> terms = TermConverter.toTerms(termDto, user);
 		userService.createTerm(terms);
+	}
+
+	@Transactional
+	public void removeKakaoUser(HttpServletRequest request, String kakaoAccessToken){
+		kakaoAuthClient.unlinkKakao(kakaoAccessToken);
+
+		removeUserFromDB(request);
+	}
+
+	private void removeUserFromDB(HttpServletRequest request){
+		String accessToken = request.getHeader("Authorization");
+		//유저 토큰 만료시 예외 처리
+		if (!jwtUtils.validateToken(accessToken)) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+		Long expiration = jwtUtils.getExpiration(accessToken);
+		redisTemplate.opsForValue().set(accessToken, "delete", expiration, TimeUnit.MILLISECONDS);
+
+		//db에서 삭제
+		User user = userService.getUser(jwtUtils.resolveRequest(request));
+		userService.removeUser(user);
 	}
 }
