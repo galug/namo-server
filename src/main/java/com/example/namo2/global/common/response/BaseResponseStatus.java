@@ -22,6 +22,7 @@ public enum BaseResponseStatus {
 	 */
 	SOCIAL_LOGIN_FAILURE(401, "소셜 로그인에 실패하였습니다."),
 	KAKAO_UNAUTHORIZED(401, "카카오 accessToken이 잘못되었습니다"),
+	NAVER_UNAUTHORIZED(401, "네이버 accessToken이 잘못되었습니다"),
 
 	/**
 	 * 403 : local Access Token 오류
@@ -30,7 +31,9 @@ public enum BaseResponseStatus {
 	LOGOUT_ERROR(403, "로그 아웃된 사용자입니다."),
 	EXPIRATION_ACCESS_TOKEN(403, "Access token 이 만료되었습니다."),
 	EXPIRATION_REFRESH_TOKEN(403, "RefreshToken 이 만료되었습니다."),
+
 	KAKAO_FORBIDDEN(403, "카카오 권한 오류"),
+	NAVER_FORBIDDEN(403, "네이버 권한 오류"),
 
 	/**
 	 * NOT FOUND 오류
@@ -66,6 +69,8 @@ public enum BaseResponseStatus {
 	 */
 	FILE_NAME_EXCEPTION(404, "파일 확장자가 잘못되었습니다."),
 	S3_FAILURE(404, "파일 업로드 과정에서 오류가 발생하였습니다."),
+
+	NAVER_NOT_FOUND(404, "[네이버] 검색 결과가 없습니다"),
 
 	/**
 	 * 404: IllegalArgumentException

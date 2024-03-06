@@ -44,6 +44,7 @@ import com.example.namo2.global.feignClient.apple.AppleAuthClient;
 import com.example.namo2.global.feignClient.apple.AppleResponse;
 import com.example.namo2.global.feignClient.apple.AppleResponseConverter;
 import com.example.namo2.global.feignClient.kakao.KakaoAuthClient;
+import com.example.namo2.global.feignClient.naver.NaverAuthClient;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
@@ -66,7 +67,9 @@ public class UserFacade {
 	private final CategoryService categoryService;
 
 	private final KakaoAuthClient kakaoAuthClient;
+	private final NaverAuthClient naverAuthClient;
 	private final AppleAuthClient appleAuthClient;
+
 
 	@Value("${spring.security.oauth1.client.registration.apple.client-id}")
 	private String clientId;
@@ -82,7 +85,7 @@ public class UserFacade {
 			log.debug("result = " + result);
 
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
-			User user = UserConverter.toUser(response);
+			User user = UserConverter.toUserForKakao(response);
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -101,7 +104,7 @@ public class UserFacade {
 			String result = socialUtils.findSocialLoginUsersInfo(con);
 
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
-			User user = UserConverter.toUser(response);
+			User user = UserConverter.toUserForNaver(response);
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -262,6 +265,14 @@ public class UserFacade {
 	@Transactional
 	public void removeKakaoUser(HttpServletRequest request, String kakaoAccessToken){
 		kakaoAuthClient.unlinkKakao(kakaoAccessToken);
+
+		removeUserFromDB(request);
+	}
+
+	@Transactional
+	public void removeNaverUser(HttpServletRequest request, String naverAccessToken){
+		naverAuthClient.tokenAvailability(naverAccessToken);
+		naverAuthClient.unlinkNaver(naverAccessToken);
 
 		removeUserFromDB(request);
 	}

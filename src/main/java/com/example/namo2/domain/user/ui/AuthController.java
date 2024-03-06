@@ -80,4 +80,14 @@ public class AuthController {
 		userFacade.removeKakaoUser(request, deleteUserDto.getAccessToken());
 		return null;
 	}
+
+	@Operation(summary = "네이버 회원 탈퇴", description = "네이버 회원 탈퇴")
+	@PostMapping("/naver/delete")
+	public BaseResponse<?> removeNaverUser(
+		HttpServletRequest request,
+		@Valid @RequestBody UserRequest.DeleteUserDto deleteUserDto
+	){
+		userFacade.removeNaverUser(request, deleteUserDto.getAccessToken());
+		return null;
+	}
 }
