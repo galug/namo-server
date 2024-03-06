@@ -16,11 +16,11 @@ import lombok.Getter;
 @MappedSuperclass
 @Getter
 public class BaseTimeEntity {
-	@CreatedDate
-	@Column(updatable = false, name = "created_date")
-	private LocalDateTime createdDate;
+    @CreatedDate
+    @Column(updatable = false, name = "created_date")
+    private LocalDateTime createdDate;
 
-	@LastModifiedDate
-	@Column(name = "last_modified_date")
-	private LocalDateTime lastModifiedDate;
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    protected LocalDateTime lastModifiedDate;
 }
