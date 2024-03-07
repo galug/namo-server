@@ -12,6 +12,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -33,8 +34,10 @@ import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
 
+import com.example.namo2.domain.user.application.converter.TermConverter;
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
+import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
@@ -244,5 +247,12 @@ public class UserFacade {
 		if (StringUtils.hasText(blackToken)) {
 			throw new BaseException(BaseResponseStatus.LOGOUT_ERROR);
 		}
+	}
+
+	@Transactional(readOnly = false)
+	public void createTerm(UserRequest.TermDto termDto, Long userId) {
+		User user = userService.getUser(userId);
+		List<Term> terms = TermConverter.toTerms(termDto, user);
+		userService.createTerm(terms);
 	}
 }

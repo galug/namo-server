@@ -7,18 +7,23 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.namo2.domain.user.dao.repository.TermRepository;
 import com.example.namo2.domain.user.dao.repository.UserRepository;
+import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
 
 import com.example.namo2.global.common.exception.BaseException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final TermRepository termRepository;
 
 	public User createUser(User user) {
 		return userRepository.save(user);
@@ -45,5 +50,18 @@ public class UserService {
 	public void updateRefreshToken(Long userId, String refreshToken) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 		user.updateRefreshToken(refreshToken);
+	}
+
+	public void createTerm(List<Term> terms) {
+		for (Term term : terms) {
+			if (!term.getIsCheck()) {
+				throw new BaseException(NOT_CHECK_TERM_ERROR);
+			}
+			termRepository.findTermByContentAndUser(term.getContent(), term.getUser())
+				.ifPresentOrElse(
+					savedTerm -> savedTerm.update(),
+					() -> termRepository.save(term)
+				);
+		}
 	}
 }
