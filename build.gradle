@@ -67,6 +67,11 @@ dependencies {
     //json
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    //PEM 파일 파싱
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.77'
+    implementation 'org.bouncycastle:bcutil-jdk18on:1.77'
+
 
 }
 

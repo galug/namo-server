@@ -90,4 +90,14 @@ public class AuthController {
 		userFacade.removeNaverUser(request, deleteUserDto.getAccessToken());
 		return null;
 	}
+
+	@Operation(summary = "애플 회원 탈퇴", description = "애플 회원 탈퇴")
+	@PostMapping("/apple/delete")
+	public BaseResponse<String> removeAppleUser(
+		HttpServletRequest request,
+		@Valid @RequestBody UserRequest.DeleteAppleUserDto deleteAppleUserDto
+	){
+		userFacade.removeAppleUser(request, deleteAppleUserDto.getAuthorizationCode());
+		return null;
+	}
 }

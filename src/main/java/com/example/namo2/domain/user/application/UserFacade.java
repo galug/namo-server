@@ -3,13 +3,20 @@ package com.example.namo2.domain.user.application;
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -17,10 +24,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,15 +54,18 @@ import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.feignClient.apple.AppleAuthClient;
+import com.example.namo2.global.feignClient.apple.AppleProperties;
 import com.example.namo2.global.feignClient.apple.AppleResponse;
 import com.example.namo2.global.feignClient.apple.AppleResponseConverter;
 import com.example.namo2.global.feignClient.kakao.KakaoAuthClient;
+import com.example.namo2.global.feignClient.kakao.KakaoResponse;
 import com.example.namo2.global.feignClient.naver.NaverAuthClient;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +74,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class UserFacade {
+	private final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
 	private final RedisTemplate<String, String> redisTemplate;
@@ -69,10 +86,8 @@ public class UserFacade {
 	private final KakaoAuthClient kakaoAuthClient;
 	private final NaverAuthClient naverAuthClient;
 	private final AppleAuthClient appleAuthClient;
+	private final AppleProperties appleProperties;
 
-
-	@Value("${spring.security.oauth1.client.registration.apple.client-id}")
-	private String clientId;
 
 	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) {
@@ -129,7 +144,7 @@ public class UserFacade {
 			Object alg = headerJson.get("alg"); //토큰을 암호화하는데 사용되는 암호화 알고리즘
 
 			//identityToken 검증
-			applePublicKey = AppleResponseConverter.toApplePublicKey(applePublicKeys, kid, alg);
+			applePublicKey = AppleResponseConverter.toApplePublicKey(applePublicKeys, alg, kid);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -183,7 +198,7 @@ public class UserFacade {
 
 		String audience = (String)claims.get("aud");
 		log.debug("{}", audience);
-		if (!clientId.equals(audience)) {
+		if (!appleProperties.getClientId().equals(audience)) {
 			throw new IllegalArgumentException("Invalid audience");
 		}
 
@@ -275,6 +290,47 @@ public class UserFacade {
 		naverAuthClient.unlinkNaver(naverAccessToken);
 
 		removeUserFromDB(request);
+	}
+
+	@Transactional
+	public void removeAppleUser(HttpServletRequest request, String authorizationCode){
+		String clientSecret = "";
+		try {
+			clientSecret = createClientSecret();
+		}catch (IOException  e){
+			e.printStackTrace();
+		}
+		String appleToken = appleAuthClient.getAppleToken(clientSecret,authorizationCode);
+		logger.debug("appleToken {}", appleToken);
+		appleAuthClient.revoke(clientSecret, appleToken);
+
+		removeUserFromDB(request);
+	}
+
+	public String createClientSecret() throws IOException{
+		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
+
+		return Jwts.builder()
+			.setHeaderParam("kid", appleProperties.getKeyId())
+			.setHeaderParam("alg", "ES256")
+			.setIssuer(appleProperties.getTeamId())
+			.setIssuedAt(new Date(System.currentTimeMillis()))
+			.setExpiration(expirationDate)
+			.setAudience("https://appleid.apple.com")
+			.setSubject(appleProperties.getClientId())
+			.signWith(SignatureAlgorithm.ES256, getPrivateKey())
+			.compact();
+	}
+
+	public PrivateKey getPrivateKey() throws IOException{
+			ClassPathResource resource = new ClassPathResource(appleProperties.getPrivateKeyPath());
+			String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+			Reader pemReader = new StringReader(privateKey);
+
+			PEMParser pemParser = new PEMParser(pemReader);
+			JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+			PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
+			return converter.getPrivateKey(object);
 	}
 
 	private void removeUserFromDB(HttpServletRequest request){

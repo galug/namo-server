@@ -2,6 +2,8 @@ package com.example.namo2.global.feignClient.apple;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
 	name = "apple-public-key-client",
@@ -11,4 +13,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface AppleAuthApi {
 	@GetMapping(value = "/keys", consumes = "application/x-www-form-urlencoded")
 	AppleResponse.ApplePublicKeyListDto getApplePublicKeys();
+
+	@PostMapping(value = "/token", consumes = "application/x-www-form-urlencoded")
+	AppleResponse.GetAccessToken getAppleToken(
+		@RequestParam(name = "client_id") String clientId,
+		@RequestParam(name = "client_secret") String clientSecret,
+		@RequestParam(name = "code") String code,
+		@RequestParam(name = "grant_type") String grant_type,
+		@RequestParam(name = "redirect_uri") String redirectUri
+	);
+
+	@PostMapping(value = "/revoke", consumes = "application/x-www-form-urlencoded")
+	void revoke(
+		@RequestParam(name = "client_id") String clientId,
+		@RequestParam(name = "client_secret") String clientSecret,
+		@RequestParam(name = "token") String token,
+		@RequestParam(name = "token_type_hint") String tokenType
+		);
+
 }
