@@ -300,9 +300,10 @@ public class UserFacade {
 		}catch (IOException  e){
 			e.printStackTrace();
 		}
-		String appleToken = appleAuthClient.getAppleToken(clientSecret,authorizationCode);
-		logger.debug("appleToken {}", appleToken);
-		appleAuthClient.revoke(clientSecret, appleToken);
+		// String appleToken = appleAuthClient.getAppleToken(clientSecret,authorizationCode);
+		// logger.debug("appleToken {}", appleToken);
+		// appleAuthClient.revoke(clientSecret, appleToken);
+		appleAuthClient.revoke(clientSecret, authorizationCode);
 
 		removeUserFromDB(request);
 	}

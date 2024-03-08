@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 public class AppleResponse {
@@ -32,16 +33,18 @@ public class AppleResponse {
 
 	@Getter
 	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class GetAccessToken{
 		@JsonProperty("access_token")
 		private String accessToken;
-		@JsonProperty("access_token")
+		@JsonProperty("expires_in")
 		private Long expiresIn;
-		@JsonProperty("access_token")
+		@JsonProperty("id_token")
 		private String idToken;
-		@JsonProperty("access_token")
+		@JsonProperty("refresh_token")
 		private String refreshToken;
-		@JsonProperty("access_token")
+		@JsonProperty("token_type")
 		private String tokenType;
 	}
 }
