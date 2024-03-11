@@ -39,4 +39,13 @@ public class MoimResponse {
 		private String userName;
 		private Integer color;
 	}
+
+	@Getter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class MoimParticipantDto {
+		private Long moimId;
+		private String code;
+	}
 }

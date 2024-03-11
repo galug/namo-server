@@ -68,7 +68,7 @@ public class MoimFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public Long createMoimAndUser(Long userId, String code) {
+	public MoimResponse.MoimParticipantDto createMoimAndUser(Long userId, String code) {
 		User user = userService.getUser(userId);
 		Moim moim = moimService.getMoim(code);
 
@@ -79,7 +79,7 @@ public class MoimFacade {
 			.toMoimAndUser(moim.getName(), MOIM_USERS_COLOR[numberOfMoimMembers], user, moim);
 
 		moimAndUserService.create(moimAndUser);
-		return moim.getId();
+		return MoimResponseConverter.toMoimParticipantDto(moim);
 	}
 
 	/**

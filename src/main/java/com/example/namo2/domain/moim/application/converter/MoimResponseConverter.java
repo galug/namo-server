@@ -54,4 +54,11 @@ public class MoimResponseConverter {
 			.color(moimAndUser.getColor())
 			.build();
 	}
+
+	public static MoimResponse.MoimParticipantDto toMoimParticipantDto(Moim moim) {
+		return MoimResponse.MoimParticipantDto.builder()
+			.moimId(moim.getId())
+			.code(moim.getCode())
+			.build();
+	}
 }
