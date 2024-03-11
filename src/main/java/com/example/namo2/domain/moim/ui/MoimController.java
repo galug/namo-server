@@ -35,6 +35,10 @@ import lombok.extern.slf4j.Slf4j;
 public class MoimController {
 	private final MoimFacade moimFacade;
 
+	/**
+	 * TODO
+	 * MultipartFile img 가 null 일 때 기본 이미지가 들어가게 수정한다.
+	 */
 	@Operation(summary = "모임 생성", description = "모임 생성 API")
 	@PostMapping("")
 	public BaseResponse<MoimResponse.MoimIdDto> createMoim(@RequestPart MultipartFile img,
@@ -61,9 +65,12 @@ public class MoimController {
 
 	@Operation(summary = "모임 참여", description = "모임 참여 API")
 	@PatchMapping("/participate/{code}")
-	public BaseResponse<Long> createMoimAndUser(@PathVariable("code") String code, HttpServletRequest request) {
-		Long moimId = moimFacade.createMoimAndUser((Long)request.getAttribute("userId"), code);
-		return new BaseResponse(moimId);
+	public BaseResponse<MoimResponse.MoimParticipantDto> createMoimAndUser(@PathVariable("code") String code,
+		HttpServletRequest request) {
+		MoimResponse.MoimParticipantDto moimParticipantDto = moimFacade.createMoimAndUser(
+			(Long)request.getAttribute("userId"),
+			code);
+		return new BaseResponse(moimParticipantDto);
 	}
 
 	@Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")
