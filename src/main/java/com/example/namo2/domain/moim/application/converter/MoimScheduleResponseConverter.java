@@ -32,18 +32,34 @@ public class MoimScheduleResponseConverter {
 		return result;
 	}
 
-	private static void addMoimSchedulesToResult(List<MoimAndUser> moimAndUsers,
-		List<MoimScheduleResponse.MoimScheduleDto> result,
-		Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap) {
-		for (MoimSchedule moimSchedule : moimScheduleMappingUserDtoMap.keySet()) {
-			MoimScheduleResponse.MoimScheduleDto moimScheduleDto = toMoimScheduleDto(moimSchedule);
-			moimScheduleDto.setUsers(
-				moimScheduleMappingUserDtoMap.get(moimSchedule),
-				moimSchedule.getMoim() == moimAndUsers.get(0).getMoim(),
-				moimSchedule.getMoimMemo() != null
-			);
-			result.add(moimScheduleDto);
-		}
+	private static List<MoimScheduleResponse.MoimScheduleDto> getMoimScheduleDtos(List<Schedule> indivisualsSchedules,
+		List<MoimAndUser> moimAndUsers) {
+		Map<User, Integer> usersColor = moimAndUsers.stream().collect(
+			Collectors.toMap(
+				MoimAndUser::getUser, MoimAndUser::getColor
+			));
+		List<MoimScheduleResponse.MoimScheduleDto> result = indivisualsSchedules.stream()
+			.map((schedule -> toMoimScheduleDto(schedule, usersColor.get(schedule.getUser()))))
+			.collect(Collectors.toList());
+		return result;
+	}
+
+	private static Map<User, MoimScheduleResponse.MoimScheduleUserDto> getMoimScheduleUserDtoMap(
+		List<MoimAndUser> moimAndUsers) {
+		return moimAndUsers.stream()
+			.collect(Collectors.toMap(
+				MoimAndUser::getUser,
+				(moimAndUser -> toMoimScheduleUserDto(moimAndUser))
+			));
+	}
+
+	private static MoimScheduleResponse.MoimScheduleUserDto toMoimScheduleUserDto(MoimAndUser moimAndUser) {
+		return MoimScheduleResponse.MoimScheduleUserDto
+			.builder()
+			.userId(moimAndUser.getUser().getId())
+			.userName(moimAndUser.getUser().getName())
+			.color(moimAndUser.getColor())
+			.build();
 	}
 
 	private static Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> getMoimScheduleMappingUserDtoMap(
@@ -60,25 +76,18 @@ public class MoimScheduleResponseConverter {
 		);
 	}
 
-	private static Map<User, MoimScheduleResponse.MoimScheduleUserDto> getMoimScheduleUserDtoMap(
-		List<MoimAndUser> moimAndUsers) {
-		return moimAndUsers.stream()
-			.collect(Collectors.toMap(
-				MoimAndUser::getUser,
-				(moimAndUser -> toMoimScheduleUserDto(moimAndUser))
-			));
-	}
-
-	private static List<MoimScheduleResponse.MoimScheduleDto> getMoimScheduleDtos(List<Schedule> indivisualsSchedules,
-		List<MoimAndUser> moimAndUsers) {
-		Map<User, Integer> usersColor = moimAndUsers.stream().collect(
-			Collectors.toMap(
-				MoimAndUser::getUser, MoimAndUser::getColor
-			));
-		List<MoimScheduleResponse.MoimScheduleDto> result = indivisualsSchedules.stream()
-			.map((schedule -> toMoimScheduleDto(schedule, usersColor.get(schedule.getUser()))))
-			.collect(Collectors.toList());
-		return result;
+	private static void addMoimSchedulesToResult(List<MoimAndUser> moimAndUsers,
+		List<MoimScheduleResponse.MoimScheduleDto> result,
+		Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap) {
+		for (MoimSchedule moimSchedule : moimScheduleMappingUserDtoMap.keySet()) {
+			MoimScheduleResponse.MoimScheduleDto moimScheduleDto = toMoimScheduleDto(moimSchedule);
+			moimScheduleDto.setUsers(
+				moimScheduleMappingUserDtoMap.get(moimSchedule),
+				moimSchedule.getMoim() == moimAndUsers.get(0).getMoim(),
+				moimSchedule.getMoimMemo() != null
+			);
+			result.add(moimScheduleDto);
+		}
 	}
 
 	public static MoimScheduleResponse.MoimScheduleDto toMoimScheduleDto(Schedule schedule, Integer color) {
@@ -105,15 +114,6 @@ public class MoimScheduleResponseConverter {
 			moimSchedule.getLocation().getY(),
 			moimSchedule.getLocation().getLocationName()
 		);
-	}
-
-	private static MoimScheduleResponse.MoimScheduleUserDto toMoimScheduleUserDto(MoimAndUser moimAndUser) {
-		return MoimScheduleResponse.MoimScheduleUserDto
-			.builder()
-			.userId(moimAndUser.getId())
-			.userName(moimAndUser.getUser().getName())
-			.color(moimAndUser.getColor())
-			.build();
 	}
 
 }

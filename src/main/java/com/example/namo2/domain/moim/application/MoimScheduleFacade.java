@@ -170,7 +170,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MoimScheduleResponse.MoimScheduleDto> getMoimSchedules(Long moimId,
+	public List<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(Long moimId,
 		List<LocalDateTime> localDateTimes) {
 		Moim moim = moimService.getMoim(moimId);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
@@ -178,7 +178,20 @@ public class MoimScheduleFacade {
 
 		List<Schedule> indivisualsSchedules = scheduleService.getSchedules(users);
 		List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService
-			.getMoimSchedules(localDateTimes, users);
+			.getMonthMoimSchedules(localDateTimes, users);
+		return MoimScheduleResponseConverter
+			.toMoimScheduleDtos(indivisualsSchedules, moimScheduleAndUsers, moimAndUsersInMoim);
+	}
+
+	@Transactional(readOnly = true)
+	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId) {
+		Moim moim = moimService.getMoim(moimId);
+		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
+		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
+
+		List<Schedule> indivisualsSchedules = scheduleService.getSchedules(users);
+		List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService
+			.getAllMoimSchedules(users);
 		return MoimScheduleResponseConverter
 			.toMoimScheduleDtos(indivisualsSchedules, moimScheduleAndUsers, moimAndUsersInMoim);
 	}
