@@ -27,6 +27,11 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class MoimFacade {
+	/**
+	 * TODO
+	 * ISSUE 설명: Moim_USER_COLOR 에 대한 부여를 현재 총 모임원의 index를 통해서 부여함
+	 * 이 경우 모임원이 탈퇴하고 다시금 들어올 경우 동일한 color를 부여받는 모임원이 생김
+	 */
 	private static final int[] MOIM_USERS_COLOR = new int[] {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 	private final MoimService moimService;
 	private final UserService userService;

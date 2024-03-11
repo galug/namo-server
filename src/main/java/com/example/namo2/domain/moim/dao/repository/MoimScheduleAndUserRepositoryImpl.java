@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManager;
 
 import org.springframework.data.domain.Pageable;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
@@ -32,17 +33,26 @@ public class MoimScheduleAndUserRepositoryImpl implements MoimScheduleAndUserRep
 			.join(moimScheduleAndUser.moimSchedule, moimSchedule).fetchJoin()
 			.join(moimScheduleAndUser.category, category).fetchJoin()
 			.leftJoin(moimSchedule.moimMemo).fetchJoin()
-			.where(moimScheduleAndUser.user.in(users)
-				.and(moimScheduleAndUser.moimSchedule.period.startDate.loe(endDate))
-				.and(moimScheduleAndUser.moimSchedule.period.endDate.goe(startDate))
-				.and(moimScheduleAndUser.category.share.isTrue()))
+			.where(moimScheduleAndUser.user.in(users),
+				moimScheduleDateGoe(startDate),
+				moimScheduleDateLoe(endDate),
+				moimScheduleAndUser.category.share.isTrue()
+			)
 			.fetch();
 	}
 
+	private BooleanExpression moimScheduleDateGoe(LocalDateTime startDate) {
+		return startDate != null ? moimSchedule.period.endDate.after(startDate) : null;
+	}
+
+	private BooleanExpression moimScheduleDateLoe(LocalDateTime endDate) {
+		return endDate != null ? moimSchedule.period.startDate.before(endDate) : null;
+	}
+
 	/**
-	 * @param 김현재 이 부분에 대해서는 MoimScheduleAndUser를 반환해서
-	 *            우선 MoimScheduleAndUserRepository로
-	 *            넘기기는 했는데 MoimMemo에 가까운 로직이라 이곳으로 들어오는게 맞나 싶네요?
+	 * 이 부분에 대해서는 MoimScheduleAndUser를 반환해서
+	 * 우선 MoimScheduleAndUserRepository로
+	 * 넘기기는 했는데 MoimMemo에 가까운 로직이라 이곳으로 들어오는게 맞나 싶네요?
 	 */
 	@Override
 	public List<MoimScheduleAndUser> findMoimScheduleMemoByMonthPaging(User user, List<LocalDateTime> dates,

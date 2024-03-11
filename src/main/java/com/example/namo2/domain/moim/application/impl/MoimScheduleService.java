@@ -25,6 +25,11 @@ public class MoimScheduleService {
 	private final MoimScheduleRepository moimScheduleRepository;
 	private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
 
+	/**
+	 * TODO: MoimSchedule 생성시 밸리데이션 처리
+	 * 자신이 모임에 소속된 사람이 아닐 시 모임에 대한 스케줄을 생성할 수 없게
+	 * 검증 처리가 있으면 좋을 듯합니다.
+	 */
 	public MoimSchedule create(MoimSchedule moimSchedule) {
 		return moimScheduleRepository.save(moimSchedule);
 	}
@@ -43,11 +48,18 @@ public class MoimScheduleService {
 		moimScheduleRepository.delete(moimSchedule);
 	}
 
-	public List<MoimScheduleAndUser> getMoimSchedules(
+	public List<MoimScheduleAndUser> getMonthMoimSchedules(
 		List<LocalDateTime> localDateTimes, List<User> users) {
 		return moimScheduleAndUserRepository
 			.findMoimScheduleAndUserWithMoimScheduleByUsersAndDates(
 				localDateTimes.get(0), localDateTimes.get(1), users
+			);
+	}
+
+	public List<MoimScheduleAndUser> getAllMoimSchedules(List<User> users) {
+		return moimScheduleAndUserRepository
+			.findMoimScheduleAndUserWithMoimScheduleByUsersAndDates(
+				null, null, users
 			);
 	}
 
