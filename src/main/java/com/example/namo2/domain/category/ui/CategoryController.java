@@ -3,6 +3,7 @@ package com.example.namo2.domain.category.ui;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,7 @@ public class CategoryController {
 	@Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
 	@PostMapping("")
 	public BaseResponse<CategoryResponse.CategoryIdDto> createCategory(
-		@RequestBody CategoryRequest.PostCategoryDto postcategoryDto,
+		@Valid @RequestBody CategoryRequest.PostCategoryDto postcategoryDto,
 		HttpServletRequest request) {
 		Long userId = (Long)request.getAttribute("userId");
 		CategoryResponse.CategoryIdDto categoryIdDto = categoryFacade.create(userId, postcategoryDto);
@@ -52,7 +53,7 @@ public class CategoryController {
 	@Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
 	@PatchMapping("/{categoryId}")
 	public BaseResponse<CategoryResponse.CategoryIdDto> updateCategory(@PathVariable("categoryId") Long categoryId,
-		@RequestBody CategoryRequest.PostCategoryDto postcategoryDto) {
+		@Valid @RequestBody CategoryRequest.PostCategoryDto postcategoryDto) {
 		CategoryResponse.CategoryIdDto categoryIdDto = categoryFacade.modifyCategory(categoryId, postcategoryDto);
 		return new BaseResponse<>(categoryIdDto);
 	}
