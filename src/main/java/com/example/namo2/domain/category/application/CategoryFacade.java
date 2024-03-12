@@ -3,6 +3,7 @@ package com.example.namo2.domain.category.application;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.namo2.domain.category.application.converter.CategoryConverter;
 import com.example.namo2.domain.category.application.converter.CategoryResponseConverter;
@@ -25,6 +26,7 @@ public class CategoryFacade {
 	private final PaletteService paletteService;
 	private final UserService userService;
 
+	@Transactional(readOnly = false)
 	public CategoryResponse.CategoryIdDto create(Long userId, CategoryRequest.PostCategoryDto dto) {
 		User user = userService.getUser(userId);
 		Palette palette = paletteService.getPalette(dto.getPaletteId());
@@ -34,12 +36,14 @@ public class CategoryFacade {
 		return CategoryResponseConverter.toCategoryIdDto(savedCategory);
 	}
 
+	@Transactional(readOnly = true)
 	public List<CategoryResponse.CategoryDto> getCategories(Long userId) {
 		List<Category> categories = categoryService.getCategories(userId);
 
 		return CategoryResponseConverter.toCategoryDtoList(categories);
 	}
 
+	@Transactional(readOnly = false)
 	public CategoryResponse.CategoryIdDto modifyCategory(Long categoryId, CategoryRequest.PostCategoryDto dto) {
 		Palette palette = paletteService.getPalette(dto.getPaletteId());
 		Category modifiedCategory = categoryService.modifyCategory(categoryId, dto, palette);
@@ -47,6 +51,7 @@ public class CategoryFacade {
 		return CategoryResponseConverter.toCategoryIdDto(modifiedCategory);
 	}
 
+	@Transactional(readOnly = false)
 	public void deleteCategory(Long categoryId) {
 		categoryService.delete(categoryId);
 	}
