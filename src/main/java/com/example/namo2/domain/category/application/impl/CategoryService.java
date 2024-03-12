@@ -33,6 +33,7 @@ public class CategoryService {
 
 	public void delete(Long categoryId) {
 		Category category = getCategory(categoryId);
+		validateBaseCategory(category);
 		category.delete();
 	}
 
@@ -43,8 +44,15 @@ public class CategoryService {
 
 	public Category modifyCategory(Long categoryId, CategoryRequest.PostCategoryDto dto, Palette palette) {
 		Category category = getCategory(categoryId);
+		validateBaseCategory(category);
 		category.update(dto.getName(), dto.isShare(), palette);
 		return category;
+	}
+
+	private static void validateBaseCategory(Category category) {
+		if (category.getName().equals("일정") || category.getName().equals("모임")) {
+			throw new BaseException(NOT_DELETE_BASE_CATEGORY_FAILURE);
+		}
 	}
 
 	public List<Category> getMoimUsersCategories(List<User> users) {
