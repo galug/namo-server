@@ -226,7 +226,7 @@ public class UserFacade {
 
 	private void makeBaseCategory(User save) {
 		Category baseCategory = CategoryConverter.toCategory(
-			"기본",
+			"일정",
 			paletteService.getReferenceById(1L),
 			Boolean.TRUE,
 			save
