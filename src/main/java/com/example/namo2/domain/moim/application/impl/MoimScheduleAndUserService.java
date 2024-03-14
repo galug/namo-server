@@ -35,7 +35,10 @@ public class MoimScheduleAndUserService {
 		moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
 	}
 
-	public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+	public void removeMoimScheduleAndUser(MoimSchedule moimSchedule, MoimScheduleAndUser moimScheduleAndUser) {
+		if (moimSchedule.isLastScheduleMember()) {
+			moimSchedule.deleteMoimSchedule();
+		}
 		moimScheduleAndUserRepository.delete(moimScheduleAndUser);
 	}
 

@@ -17,7 +17,7 @@ public interface MoimMemoLocationRepository
 		+ " from MoimMemoLocation ml"
 		+ " left join fetch ml.moimMemoLocationImgs"
 		+ " where ml.id = :locationId")
-	Optional<MoimMemoLocation> findMoimMemoLocationById(@Param("locationId") Long locationId);
+	Optional<MoimMemoLocation> findMoimMemoLocationWithImgsById(@Param("locationId") Long locationId);
 
 	@Query("select ml "
 		+ "from MoimMemoLocation ml"

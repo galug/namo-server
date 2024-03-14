@@ -39,8 +39,8 @@ public class MoimMemoLocationService {
 		return moimMemoLocationImgRepository.save(moimMemoLocationImg);
 	}
 
-	public MoimMemoLocation getMoimMemoLocation(Long memoLocationId) {
-		return moimMemoLocationRepository.findMoimMemoLocationById(memoLocationId)
+	public MoimMemoLocation getMoimMemoLocationWithImgs(Long memoLocationId) {
+		return moimMemoLocationRepository.findMoimMemoLocationWithImgsById(memoLocationId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_MEMO_LOCATION_FAILURE));
 	}
 
@@ -64,7 +64,7 @@ public class MoimMemoLocationService {
 		moimMemoLocationRepository.delete(moimMemoLocation);
 	}
 
-	public List<MoimMemoLocation> getMoimMemoLocation(MoimMemo moimMemo) {
+	public List<MoimMemoLocation> getMoimMemoLocationWithImgs(MoimMemo moimMemo) {
 		return moimMemoLocationRepository.findMoimMemo(moimMemo);
 	}
 
