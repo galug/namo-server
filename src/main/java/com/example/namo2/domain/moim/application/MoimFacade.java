@@ -33,6 +33,7 @@ public class MoimFacade {
 	 * 이 경우 모임원이 탈퇴하고 다시금 들어올 경우 동일한 color를 부여받는 모임원이 생김
 	 */
 	private static final int[] MOIM_USERS_COLOR = new int[] {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+	private static final String BASE_URL = "BASE_URL을 넣어주세요";
 	private final MoimService moimService;
 	private final UserService userService;
 	private final MoimAndUserService moimAndUserService;
@@ -41,7 +42,10 @@ public class MoimFacade {
 	@Transactional(readOnly = false)
 	public MoimResponse.MoimIdDto createMoim(Long userId, String groupName, MultipartFile img) {
 		User user = userService.getUser(userId);
-		String url = fileUtils.uploadImage(img);
+		String url = BASE_URL;
+		if (!img.isEmpty()) {
+			url = fileUtils.uploadImage(img);
+		}
 		Moim moim = MoimConverter.toMoim(groupName, url);
 		moimService.create(moim);
 

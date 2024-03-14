@@ -41,8 +41,8 @@ public class MoimController {
 	 */
 	@Operation(summary = "모임 생성", description = "모임 생성 API")
 	@PostMapping("")
-	public BaseResponse<MoimResponse.MoimIdDto> createMoim(@RequestPart MultipartFile img,
-		@RequestPart String groupName,
+	public BaseResponse<MoimResponse.MoimIdDto> createMoim(@RequestPart(required = false) MultipartFile img,
+		@RequestPart(required = true) String groupName,
 		HttpServletRequest request) {
 		MoimResponse.MoimIdDto moimIdDto = moimFacade.createMoim((Long)request.getAttribute("userId"), groupName, img);
 		return new BaseResponse(moimIdDto);
