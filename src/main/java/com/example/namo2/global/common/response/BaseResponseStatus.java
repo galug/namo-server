@@ -32,7 +32,7 @@ public enum BaseResponseStatus {
 
 	/**
 	 * NOT FOUND 오류
-	 * 404 번오류
+	 * 404
 	 */
 	NOT_FOUND_USER_FAILURE(404, "유저를 찾을 수 없습니다."),
 	NOT_FOUND_SCHEDULE_FAILURE(404, "스케줄을 찾을 수 없습니다."),
@@ -58,6 +58,11 @@ public enum BaseResponseStatus {
 	DIARY_EXISTS_FAILURE(404, "이미 존재하는 다이어리 입니다."),
 	DUPLICATE_PARTICIPATE_FAILURE(404, "이미 가입한 모임입니다."),
 	DUPLICATE_MOIM_MEMO_FAILURE(404, "이미 모임 메모가 생성되어 있습니다."),
+
+	/**
+	 * 404 오용 오류
+	 */
+	NOT_USERS_CATEGORY(404, "잘못된 접근 요청입니다.."),
 
 	/**
 	 * 404: 인프라 에러
