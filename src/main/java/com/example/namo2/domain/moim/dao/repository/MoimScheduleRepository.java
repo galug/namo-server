@@ -13,4 +13,10 @@ public interface MoimScheduleRepository extends JpaRepository<MoimSchedule, Long
 		+ " join fetch ms.moimMemo"
 		+ " where ms.id = :id")
 	Optional<MoimSchedule> findMoimScheduleById(Long id);
+
+	@Query("select ms"
+		+ " from MoimSchedule ms"
+		+ " join fetch ms.moimScheduleAndUsers"
+		+ " where ms.id= :id")
+	Optional<MoimSchedule> findMoimSheduleAndMoimScheduleAndUsersById(Long id);
 }

@@ -124,7 +124,7 @@ public class MoimScheduleFacade {
 		if (moimMemo == null) {
 			return;
 		}
-		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocation(moimMemo);
+		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocationWithImgs(moimMemo);
 		moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocations);
 		removeMoimMemoLocationImgs(moimMemoLocations);
 		moimMemoService.removeMoimMemo(moimMemo);
