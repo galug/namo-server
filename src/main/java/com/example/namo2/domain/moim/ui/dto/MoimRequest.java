@@ -1,5 +1,8 @@
 package com.example.namo2.domain.moim.ui.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +16,9 @@ public class MoimRequest {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class PatchMoimNameDto {
+		@NotNull
 		private Long moimId;
+		@NotBlank
 		private String moimName;
 	}
 }
