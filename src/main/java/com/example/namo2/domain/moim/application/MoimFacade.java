@@ -87,17 +87,6 @@ public class MoimFacade {
 		return MoimResponseConverter.toMoimParticipantDto(moim);
 	}
 
-	/**
-	 * 마지막 사람이 지워질 시
-	 * 모임에 대한 삭제 로직이 필요할 듯 합니다.
-	 * 고민점
-	 * 1. 모임이라는 로직에 엮여 있는 테이블이 많다보니 연쇄적으로 많은 테이블에 있는 많은
-	 * row 들이 지워지는데 성능상 문제가 없을지 고민해볼 필요가 있을 것 같습니다.
-	 * 2. S3에서 지금까지는 모임 관련 메모들을 지우면 사진을 모두 지우는 중인데
-	 * S3에서 이미지 파일을 지우면서 얻는 메모리적 이점이 클지
-	 * 아니면 S3에서 이미지 파일을 냅두면서 얻을 수 있는 시간적 이점이 클지 고민해볼 필요가 있을 듯합니다.
-	 * 그런데 사실 개인 정보 관련 부분이라 지우는게 맞는듯하긴할것같아요.
-	 */
 	@Transactional(readOnly = false)
 	public void removeMoimAndUser(Long userId, Long moimId) {
 		User user = userService.getUser(userId);
