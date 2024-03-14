@@ -14,9 +14,6 @@ import com.example.namo2.domain.category.domain.Category;
 
 import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
-import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.memo.domain.MoimMemoLocation;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 
 import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
@@ -182,10 +179,10 @@ public class ScheduleFacade {
 			return;
 		}
 		User user = userService.getUser(userId);
-		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleId);
+		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimScheduleAndUsers(scheduleId);
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
-		moimScheduleAndUserService.removeMoimScheduleAndUser(moimScheduleAndUser);
+		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule, moimScheduleAndUser);
 	}
 
 }

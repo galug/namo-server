@@ -40,7 +40,12 @@ public class MoimScheduleService {
 	}
 
 	public MoimSchedule getMoimScheduleWithMoimMemo(Long id) {
-		return moimScheduleRepository.findMoimScheduleById(id)
+		return moimScheduleRepository.findMoimScheduleWithMoimMemoById(id)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
+	}
+
+	public MoimSchedule getMoimScheduleWithMoimScheduleAndUsers(Long id) {
+		return moimScheduleRepository.findMoimSheduleAndMoimScheduleAndUsersById(id)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_SCHEDULE_FAILURE));
 	}
 
