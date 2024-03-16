@@ -7,12 +7,14 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+
 import com.example.namo2.domain.user.dao.repository.TermRepository;
 import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
 
 import com.example.namo2.global.common.exception.BaseException;
+import com.fasterxml.jackson.databind.ser.Serializers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,11 @@ public class UserService {
 
 	public User createUser(User user) {
 		return userRepository.save(user);
+	}
+
+	public void checkEmailAndName(String email, String name){
+		if(email.isBlank() || name.isBlank())
+			throw new BaseException(USER_POST_ERROR);
 	}
 
 	public User getUser(Long userId) {

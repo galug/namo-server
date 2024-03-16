@@ -133,6 +133,7 @@ public class UserFacade {
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req) {
 		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
 		AppleResponse.ApplePublicKeyDto applePublicKey = null;
+		String email = "";
 
 		try {
 			JSONParser parser = new JSONParser();
@@ -152,6 +153,7 @@ public class UserFacade {
 		PublicKey publicKey = getPublicKey(applePublicKey);
 		validateToken(publicKey, req.getIdentityToken());
 
+		//identity에서 email뽑기
 		Claims claims = Jwts.parserBuilder()
 			.setSigningKey(publicKey)
 			.build()
@@ -161,8 +163,21 @@ public class UserFacade {
 		String appleEmail = claims.get("email", String.class);
 		log.debug("email: {}, oauthId : {}", appleEmail, appleOauthId);
 
-		User user = UserConverter.toUser(req.getEmail(), req.getUsername());
-		User savedUser = saveOrNot(user);
+		if(!req.getEmail().isBlank())//첫 로그인
+			email = req.getEmail();
+		else//재로그인
+			email = appleEmail;
+		
+		//로그인 분기처리
+		User savedUser;
+		Optional<User> userByEmail = userService.getUserByEmail(email);
+		if (userByEmail.isEmpty()) {//첫로그인
+			userService.checkEmailAndName(req.getEmail(), req.getUsername());
+			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
+			makeBaseCategory(savedUser);
+		}else//재로그인
+			savedUser = userByEmail.get();
+
 		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;

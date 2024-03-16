@@ -16,6 +16,7 @@ public enum BaseResponseStatus {
 	MAKE_PUBLIC_KEY_FAILURE(400, "애플 퍼블릭 키를 생성하는데 실패하였습니다"),
 	//애플 identityToken 오류
 	APPLE_REQUEST_ERROR(400, "애플 identityToken이 잘못되었습니다."),
+	USER_POST_ERROR(400, "email나 name이 비어있어 유저를 생성할 수 없습니다."),
 
 	/**
 	 * 401 : 소셜 로그인 오류
