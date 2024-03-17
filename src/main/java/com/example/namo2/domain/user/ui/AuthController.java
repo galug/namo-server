@@ -78,7 +78,7 @@ public class AuthController {
 		@Valid @RequestBody UserRequest.DeleteUserDto deleteUserDto
 	){
 		userFacade.removeKakaoUser(request, deleteUserDto.getAccessToken());
-		return null;
+		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "네이버 회원 탈퇴", description = "네이버 회원 탈퇴")
@@ -88,16 +88,16 @@ public class AuthController {
 		@Valid @RequestBody UserRequest.DeleteUserDto deleteUserDto
 	){
 		userFacade.removeNaverUser(request, deleteUserDto.getAccessToken());
-		return null;
+		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "애플 회원 탈퇴", description = "애플 회원 탈퇴")
 	@PostMapping("/apple/delete")
-	public BaseResponse<String> removeAppleUser(
+	public BaseResponse<?> removeAppleUser(
 		HttpServletRequest request,
 		@Valid @RequestBody UserRequest.DeleteAppleUserDto deleteAppleUserDto
 	){
 		userFacade.removeAppleUser(request, deleteAppleUserDto.getAuthorizationCode());
-		return null;
+		return BaseResponse.ok();
 	}
 }
