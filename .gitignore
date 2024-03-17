@@ -62,3 +62,6 @@ hs_err_pid*
 
 # Querydsl
 /src/main/generated/
+
+# Environment
+/src/main/resources/*.p8
