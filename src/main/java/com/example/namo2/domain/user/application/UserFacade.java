@@ -193,8 +193,10 @@ public class UserFacade {
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
 			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
 			makeBaseCategory(savedUser);
-		}else//재로그인
+		}else{//재로그인
 			savedUser = userByEmail.get();
+			savedUser.setStatus(UserStatus.ACTIVE);
+		}
 
 		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -274,7 +276,9 @@ public class UserFacade {
 			makeBaseCategory(save);
 			return save;
 		}
-		return userByEmail.get();
+		User eixtingUser = userByEmail.get();
+		eixtingUser.setStatus(UserStatus.ACTIVE);
+		return eixtingUser;
 	}
 
 	private void makeBaseCategory(User save) {
