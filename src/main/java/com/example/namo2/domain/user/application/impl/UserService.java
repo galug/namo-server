@@ -2,6 +2,7 @@ package com.example.namo2.domain.user.application.impl;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
 
+import com.example.namo2.domain.user.domain.UserStatus;
 import com.example.namo2.global.common.exception.BaseException;
 import com.fasterxml.jackson.databind.ser.Serializers;
 
@@ -54,6 +56,9 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 	}
 
+	public List<User> getInactiveUser(){
+		return userRepository.findUsersByStatusAndDate(UserStatus.INACTIVE, LocalDateTime.now().minusDays(3));
+	}
 	public void updateRefreshToken(Long userId, String refreshToken) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 		user.updateRefreshToken(refreshToken);

@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -59,6 +60,7 @@ import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.domain.UserStatus;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
 import com.example.namo2.global.common.exception.BaseException;
@@ -318,7 +320,7 @@ public class UserFacade {
 
 		kakaoAuthClient.unlinkKakao(kakaoAccessToken);
 
-		removeUserFromDB(request);
+		setUserInactive(request);
 	}
 
 	@Transactional
@@ -332,7 +334,7 @@ public class UserFacade {
 		naverAuthClient.tokenAvailability(naverAccessToken);
 		naverAuthClient.unlinkNaver(naverAccessToken);
 
-		removeUserFromDB(request);
+		setUserInactive(request);
 	}
 
 	@Transactional
@@ -354,7 +356,7 @@ public class UserFacade {
 		appleAuthClient.revoke(clientSecret, appleToken);
 		// appleAuthClient.revoke(clientSecret, authorizationCode);
 
-		removeUserFromDB(request);
+		setUserInactive(request);
 	}
 
 	public String createClientSecret() throws IOException{
@@ -383,6 +385,16 @@ public class UserFacade {
 			return converter.getPrivateKey(object);
 	}
 
+	private void setUserInactive(HttpServletRequest request){
+		User user = userService.getUser(jwtUtils.resolveRequest(request));
+		user.setStatus(UserStatus.INACTIVE);
+
+		//token 만료처리
+		String accessToken = request.getHeader("Authorization");
+		Long expiration = jwtUtils.getExpiration(accessToken);
+		redisTemplate.opsForValue().set(accessToken, "delete", expiration, TimeUnit.MILLISECONDS);
+	}
+
 	/**
 	 * [유저삭제]
 	 * 카테고리 삭제
@@ -394,28 +406,32 @@ public class UserFacade {
 	 * - moimScheduleAlarm 삭제
 	 * moimMemoLocationAndUser 삭제
 	 */
-	private void removeUserFromDB(HttpServletRequest request){
-		//db에서 삭제
-		User user = userService.getUser(jwtUtils.resolveRequest(request));
-		categoryService.removeCategoriesByUser(user);
+	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
+	@Transactional
+	public void removeUserFromDB(){
+		List<User> users = userService.getInactiveUser();
+		users.forEach(
+			user -> { //db에서 삭제
+				logger.debug("[Delete] user name : "+user.getName());
 
-		List<Schedule> schedules = scheduleService.getSchedulesByUser(user);
-		alarmService.removeAlarmsBySchedules(schedules);
-		imageService.removeImgsBySchedules(schedules);
-		scheduleService.removeSchedules(schedules);
+				categoryService.removeCategoriesByUser(user);
 
-		moimAndUserService.removeMoimAndUsersByUser(user);
+				List<Schedule> schedules = scheduleService.getSchedulesByUser(user);
+				alarmService.removeAlarmsBySchedules(schedules);
+				imageService.removeImgsBySchedules(schedules);
+				scheduleService.removeSchedules(schedules);
 
-		List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleAndUserService.getAllByUser(user);
-		moimScheduleAndUserService.removeMoimScheduleAlarms(moimScheduleAndUsers);
-		moimScheduleAndUserService.removeMoimScheduleAndUsers(moimScheduleAndUsers);
+				moimAndUserService.removeMoimAndUsersByUser(user);
 
-		moimMemoLocationService.removeMoimMemoLocationAndUsersByUser(user);
-		userService.removeUser(user);
+				List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleAndUserService.getAllByUser(user);
+				moimScheduleAndUserService.removeMoimScheduleAlarms(moimScheduleAndUsers);
+				moimScheduleAndUserService.removeMoimScheduleAndUsers(moimScheduleAndUsers);
 
-		//token 만료처리
-		String accessToken = request.getHeader("Authorization");
-		Long expiration = jwtUtils.getExpiration(accessToken);
-		redisTemplate.opsForValue().set(accessToken, "delete", expiration, TimeUnit.MILLISECONDS);
+				moimMemoLocationService.removeMoimMemoLocationAndUsersByUser(user);
+				userService.removeUser(user);
+			}
+		);
+
+
 	}
 }
