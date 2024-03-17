@@ -167,7 +167,7 @@ public class UserFacade {
 			email = req.getEmail();
 		else//재로그인
 			email = appleEmail;
-		
+
 		//로그인 분기처리
 		User savedUser;
 		Optional<User> userByEmail = userService.getUserByEmail(email);
@@ -315,10 +315,10 @@ public class UserFacade {
 		}catch (IOException  e){
 			e.printStackTrace();
 		}
-		// String appleToken = appleAuthClient.getAppleToken(clientSecret,authorizationCode);
-		// logger.debug("appleToken {}", appleToken);
-		// appleAuthClient.revoke(clientSecret, appleToken);
-		appleAuthClient.revoke(clientSecret, authorizationCode);
+		String appleToken = appleAuthClient.getAppleToken(clientSecret,authorizationCode);
+		logger.debug("appleToken {}", appleToken);
+		appleAuthClient.revoke(clientSecret, appleToken);
+		// appleAuthClient.revoke(clientSecret, authorizationCode);
 
 		removeUserFromDB(request);
 	}
@@ -349,6 +349,12 @@ public class UserFacade {
 			return converter.getPrivateKey(object);
 	}
 
+	/*
+	* 카테고리 삭제
+	* 스케줄 삭제
+	* - 스케줄 알람 삭제
+	* - 스케줄 이미지 삭제
+	 */
 	private void removeUserFromDB(HttpServletRequest request){
 		String accessToken = request.getHeader("Authorization");
 		//유저 토큰 만료시 예외 처리
