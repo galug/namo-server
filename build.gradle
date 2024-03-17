@@ -79,3 +79,6 @@ clean {
     delete file('src/main/generated')
 }
 
+jar {
+    enabled = false
+}
