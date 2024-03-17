@@ -2,6 +2,7 @@ package com.example.namo2.global.common.response;
 
 import lombok.Getter;
 
+@SuppressWarnings("checkstyle:NoWhitespaceBefore")
 @Getter
 public enum BaseResponseStatus {
 
@@ -83,16 +84,12 @@ public enum BaseResponseStatus {
 	 */
 	INTERNET_SERVER_ERROR(500, "서버 오류"),
 
-
 	JPA_FAILURE(500, "jpa, sql 상에서 오류가 발생했습니다."),
-
 
 	KAKAO_INTERNAL_SERVER_ERROR(500, "카카오 서버 오류"),
 	KAKAO_BAD_GATEWAY(500, "카카오 시스템 오류"),
 	KAKAO_SERVICE_UNAVAILABLE(500, "카카오 서비스 점검 중"),
-	FEIGN_SERVER_ERROR(500, "feign 서버 에러")
-	;
-
+	FEIGN_SERVER_ERROR(500, "feign 서버 에러");
 
 	private final int code;
 	private final String message;

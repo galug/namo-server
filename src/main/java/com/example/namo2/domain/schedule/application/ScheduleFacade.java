@@ -12,9 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
 
-import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
-import com.example.namo2.domain.memo.application.impl.MoimMemoService;
-
 import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.domain.MoimSchedule;

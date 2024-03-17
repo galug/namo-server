@@ -22,10 +22,10 @@ spring:
             scope: profile_nickname, account_email #동의 항목
           apple:
             client-id: ${APPLE_CLIENT_ID}
-            team-id : ${APPLE_TEAM_ID}
-            redirect-uri : ${APPLE_REDIRECT_URI}
-            key-id : ${APPLE_KEY_ID}
-            private-key-path : ${APPLE_PRIVATE_KEY_PATH}
+            team-id: ${APPLE_TEAM_ID}
+            redirect-uri: ${APPLE_REDIRECT_URI}
+            key-id: ${APPLE_KEY_ID}
+            private-key-path: ${APPLE_PRIVATE_KEY_PATH}
 
 
 client-name:

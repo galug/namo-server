@@ -13,13 +13,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AlarmService {
 	private final AlarmRepository alarmRepository;
-	public void removeAlarmsBySchedule(Schedule schedule){
+
+	public void removeAlarmsBySchedule(Schedule schedule) {
 		alarmRepository.deleteAllBySchedule(schedule);
 	}
 
-	public void removeAlarmsBySchedules(List<Schedule> schedules){
+	public void removeAlarmsBySchedules(List<Schedule> schedules) {
 		schedules.forEach(schedule ->
-				alarmRepository.deleteAll(schedule.getAlarms())
+			alarmRepository.deleteAll(schedule.getAlarms())
 		);
 	}
 }

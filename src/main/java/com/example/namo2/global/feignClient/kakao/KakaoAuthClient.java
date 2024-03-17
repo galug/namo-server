@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class KakaoAuthClient {
 	private final KakaoAuthApi kakaoAuthApi;
 
-	public KakaoResponse.UnlinkDto unlinkKakao(String accessToken){
-		return kakaoAuthApi.unlinkKakao("Bearer "+accessToken);
+	public KakaoResponse.UnlinkDto unlinkKakao(String accessToken) {
+		return kakaoAuthApi.unlinkKakao("Bearer " + accessToken);
 	}
 }

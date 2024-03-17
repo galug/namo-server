@@ -31,10 +31,9 @@ public class ScheduleService {
 		return scheduleRepository.findById(scheduleId).orElseThrow(() -> new BaseException(NOT_FOUND_SCHEDULE_FAILURE));
 	}
 
-	public List<Schedule> getSchedulesByUser(User user){
+	public List<Schedule> getSchedulesByUser(User user) {
 		return scheduleRepository.findAllByUser(user);
 	}
-
 
 	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUserId(User user, LocalDateTime startDate,
 		LocalDateTime endDate
@@ -73,7 +72,7 @@ public class ScheduleService {
 		scheduleRepository.delete(schedule);
 	}
 
-	public void removeSchedules(List<Schedule> schedules){
+	public void removeSchedules(List<Schedule> schedules) {
 		scheduleRepository.deleteAll(schedules);
 	}
 

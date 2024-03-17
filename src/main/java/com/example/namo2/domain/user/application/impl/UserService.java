@@ -8,15 +8,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-
 import com.example.namo2.domain.user.dao.repository.TermRepository;
 import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
-
 import com.example.namo2.domain.user.domain.UserStatus;
+
 import com.example.namo2.global.common.exception.BaseException;
-import com.fasterxml.jackson.databind.ser.Serializers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +31,8 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public void checkEmailAndName(String email, String name){
-		if(email.isBlank() || name.isBlank())
+	public void checkEmailAndName(String email, String name) {
+		if (email.isBlank() || name.isBlank())
 			throw new BaseException(USER_POST_ERROR);
 	}
 
@@ -56,14 +54,14 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 	}
 
-	public List<User> getInactiveUser(){
+	public List<User> getInactiveUser() {
 		return userRepository.findUsersByStatusAndDate(UserStatus.INACTIVE, LocalDateTime.now().minusDays(3));
 	}
+
 	public void updateRefreshToken(Long userId, String refreshToken) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 		user.updateRefreshToken(refreshToken);
 	}
-
 
 	public void createTerm(List<Term> terms) {
 		for (Term term : terms) {
@@ -91,7 +89,7 @@ public class UserService {
 	 * - 모임 메모 로케이션 & 유저 삭제
 	 * - 모임 & 유저에서 삭제
 	 */
-	public void removeUser(User user){
+	public void removeUser(User user) {
 		userRepository.delete(user);
 	}
 }

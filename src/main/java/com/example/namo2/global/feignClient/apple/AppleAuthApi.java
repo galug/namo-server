@@ -29,6 +29,6 @@ public interface AppleAuthApi {
 		@RequestParam(name = "client_secret") String clientSecret,
 		@RequestParam(name = "token") String token,
 		@RequestParam(name = "token_type_hint") String tokenType
-		);
+	);
 
 }

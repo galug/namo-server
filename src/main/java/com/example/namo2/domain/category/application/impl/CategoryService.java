@@ -37,7 +37,7 @@ public class CategoryService {
 		category.delete();
 	}
 
-	public void removeCategoriesByUser(User user){
+	public void removeCategoriesByUser(User user) {
 		categoryRepository.deleteAllByUser(user);
 	}
 

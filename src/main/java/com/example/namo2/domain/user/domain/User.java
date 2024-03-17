@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import com.example.namo2.domain.moim.domain.MoimScheduleStatus;
 import com.example.namo2.global.common.entity.BaseTimeEntity;
 
 import lombok.AccessLevel;
@@ -55,7 +54,7 @@ public class User extends BaseTimeEntity {
 		this.refreshToken = refreshToken;
 	}
 
-	public void setStatus(UserStatus status){
+	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.namo2.domain.memo.domain.MoimMemoLocation;
 import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
+
 import com.example.namo2.domain.user.domain.User;
 
 public interface MoimMemoLocationAndUserRepository extends JpaRepository<MoimMemoLocationAndUser, Long> {

@@ -13,11 +13,11 @@ public class AppleAuthClient {
 	private final AppleAuthApi appleAuthApi;
 	private final AppleProperties appleProperties;
 
-	public AppleResponse.ApplePublicKeyListDto getApplePublicKeys(){
+	public AppleResponse.ApplePublicKeyListDto getApplePublicKeys() {
 		return appleAuthApi.getApplePublicKeys();
 	}
 
-	public String getAppleToken(String clientSecret, String code){
+	public String getAppleToken(String clientSecret, String code) {
 		logger.debug("{}", appleProperties.getClientId());
 		AppleResponse.GetAccessToken getAccessToken = appleAuthApi.getAppleToken(
 			appleProperties.getClientId(),
@@ -31,7 +31,7 @@ public class AppleAuthClient {
 		return getAccessToken.getAccessToken();
 	}
 
-	public void revoke(String clientSecret, String token){
+	public void revoke(String clientSecret, String token) {
 		logger.debug("[client] token {}", token);
 		appleAuthApi.revoke(
 			appleProperties.getClientId(),

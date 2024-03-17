@@ -7,11 +7,12 @@ import feign.codec.ErrorDecoder;
 
 public class NaverFeignConfiguration {
 	@Bean
-	ErrorDecoder errorDecoder (){
+	ErrorDecoder errorDecoder() {
 		return new NaverFeignException();
 	}
+
 	@Bean
-	Logger.Level feignLoggerLevel(){
+	Logger.Level feignLoggerLevel() {
 		return Logger.Level.FULL;
 	}
 }

@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
@@ -32,7 +34,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,21 +41,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import com.example.namo2.domain.category.application.converter.CategoryConverter;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
 
 import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
+
 import com.example.namo2.domain.moim.application.impl.MoimAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+
 import com.example.namo2.domain.schedule.application.impl.AlarmService;
 import com.example.namo2.domain.schedule.application.impl.ImageService;
 import com.example.namo2.domain.schedule.application.impl.ScheduleService;
-import com.example.namo2.domain.schedule.domain.Image;
 import com.example.namo2.domain.schedule.domain.Schedule;
+
 import com.example.namo2.domain.user.application.converter.TermConverter;
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
@@ -63,6 +69,7 @@ import com.example.namo2.domain.user.domain.User;
 import com.example.namo2.domain.user.domain.UserStatus;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
+
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.feignClient.apple.AppleAuthClient;
@@ -70,15 +77,10 @@ import com.example.namo2.global.feignClient.apple.AppleProperties;
 import com.example.namo2.global.feignClient.apple.AppleResponse;
 import com.example.namo2.global.feignClient.apple.AppleResponseConverter;
 import com.example.namo2.global.feignClient.kakao.KakaoAuthClient;
-import com.example.namo2.global.feignClient.kakao.KakaoResponse;
 import com.example.namo2.global.feignClient.naver.NaverAuthClient;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -105,7 +107,6 @@ public class UserFacade {
 	private final NaverAuthClient naverAuthClient;
 	private final AppleAuthClient appleAuthClient;
 	private final AppleProperties appleProperties;
-
 
 	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) {
@@ -147,6 +148,7 @@ public class UserFacade {
 		}
 	}
 
+	@SuppressWarnings("checkstyle:NeedBraces")
 	@Transactional
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req) {
 		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
@@ -181,7 +183,7 @@ public class UserFacade {
 		String appleEmail = claims.get("email", String.class);
 		log.debug("email: {}, oauthId : {}", appleEmail, appleOauthId);
 
-		if(!req.getEmail().isBlank())//첫 로그인
+		if (!req.getEmail().isBlank())//첫 로그인
 			email = req.getEmail();
 		else//재로그인
 			email = appleEmail;
@@ -193,7 +195,7 @@ public class UserFacade {
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
 			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
 			makeBaseCategory(savedUser);
-		}else{//재로그인
+		} else {//재로그인
 			savedUser = userByEmail.get();
 			savedUser.setStatus(UserStatus.ACTIVE);
 		}
@@ -306,7 +308,6 @@ public class UserFacade {
 		}
 	}
 
-
 	@Transactional(readOnly = false)
 	public void createTerm(UserRequest.TermDto termDto, Long userId) {
 		User user = userService.getUser(userId);
@@ -315,7 +316,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public void removeKakaoUser(HttpServletRequest request, String kakaoAccessToken){
+	public void removeKakaoUser(HttpServletRequest request, String kakaoAccessToken) {
 		//유저 토큰 만료시 예외 처리
 		String accessToken = request.getHeader("Authorization");
 		if (!jwtUtils.validateToken(accessToken)) {
@@ -328,7 +329,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public void removeNaverUser(HttpServletRequest request, String naverAccessToken){
+	public void removeNaverUser(HttpServletRequest request, String naverAccessToken) {
 		//유저 토큰 만료시 예외 처리
 		String accessToken = request.getHeader("Authorization");
 		if (!jwtUtils.validateToken(accessToken)) {
@@ -342,7 +343,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public void removeAppleUser(HttpServletRequest request, String authorizationCode){
+	public void removeAppleUser(HttpServletRequest request, String authorizationCode) {
 		//유저 토큰 만료시 예외 처리
 		String accessToken = request.getHeader("Authorization");
 		if (!jwtUtils.validateToken(accessToken)) {
@@ -352,10 +353,10 @@ public class UserFacade {
 		String clientSecret = "";
 		try {
 			clientSecret = createClientSecret();
-		}catch (IOException  e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String appleToken = appleAuthClient.getAppleToken(clientSecret,authorizationCode);
+		String appleToken = appleAuthClient.getAppleToken(clientSecret, authorizationCode);
 		logger.debug("appleToken {}", appleToken);
 		appleAuthClient.revoke(clientSecret, appleToken);
 		// appleAuthClient.revoke(clientSecret, authorizationCode);
@@ -363,7 +364,7 @@ public class UserFacade {
 		setUserInactive(request);
 	}
 
-	public String createClientSecret() throws IOException{
+	public String createClientSecret() throws IOException {
 		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
 
 		return Jwts.builder()
@@ -378,18 +379,18 @@ public class UserFacade {
 			.compact();
 	}
 
-	public PrivateKey getPrivateKey() throws IOException{
-			ClassPathResource resource = new ClassPathResource(appleProperties.getPrivateKeyPath());
-			String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
-			Reader pemReader = new StringReader(privateKey);
+	public PrivateKey getPrivateKey() throws IOException {
+		ClassPathResource resource = new ClassPathResource(appleProperties.getPrivateKeyPath());
+		String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+		Reader pemReader = new StringReader(privateKey);
 
-			PEMParser pemParser = new PEMParser(pemReader);
-			JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-			PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
-			return converter.getPrivateKey(object);
+		PEMParser pemParser = new PEMParser(pemReader);
+		JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+		PrivateKeyInfo object = (PrivateKeyInfo)pemParser.readObject();
+		return converter.getPrivateKey(object);
 	}
 
-	private void setUserInactive(HttpServletRequest request){
+	private void setUserInactive(HttpServletRequest request) {
 		User user = userService.getUser(jwtUtils.resolveRequest(request));
 		user.setStatus(UserStatus.INACTIVE);
 
@@ -412,11 +413,11 @@ public class UserFacade {
 	 */
 	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
 	@Transactional
-	public void removeUserFromDB(){
+	public void removeUserFromDB() {
 		List<User> users = userService.getInactiveUser();
 		users.forEach(
 			user -> { //db에서 삭제
-				logger.debug("[Delete] user name : "+user.getName());
+				logger.debug("[Delete] user name : " + user.getName());
 
 				categoryService.removeCategoriesByUser(user);
 
@@ -435,7 +436,6 @@ public class UserFacade {
 				userService.removeUser(user);
 			}
 		);
-
 
 	}
 }

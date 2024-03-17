@@ -3,11 +3,11 @@ package com.example.namo2.global.feignClient.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
-
 import feign.Response;
 import feign.codec.ErrorDecoder;
+
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 
 public class KakaoFeignClientExceptionDecoder implements ErrorDecoder {
 	Logger logger = LoggerFactory.getLogger(KakaoFeignClientExceptionDecoder.class);

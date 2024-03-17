@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
-import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
@@ -43,17 +42,16 @@ public class MoimScheduleAndUserService {
 		moimScheduleAndUserRepository.delete(moimScheduleAndUser);
 	}
 
-	public void removeMoimScheduleAndUsers(List<MoimScheduleAndUser> moimScheduleAndUsers){
+	public void removeMoimScheduleAndUsers(List<MoimScheduleAndUser> moimScheduleAndUsers) {
 		moimScheduleAndUserRepository.deleteAll(moimScheduleAndUsers);
 	}
-
 
 	public MoimScheduleAndUser getMoimScheduleAndUser(MoimSchedule moimSchedule, User user) {
 		return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
 	}
 
-	public List<MoimScheduleAndUser> getAllByUser(User user){
+	public List<MoimScheduleAndUser> getAllByUser(User user) {
 		return moimScheduleAndUserRepository.findAllByUser(user);
 	}
 
@@ -65,7 +63,7 @@ public class MoimScheduleAndUserService {
 		moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimScheduleAndUser(moimScheduleAndUser);
 	}
 
-	public void removeMoimScheduleAlarms(List<MoimScheduleAndUser> moimScheduleAndUsers){
+	public void removeMoimScheduleAlarms(List<MoimScheduleAndUser> moimScheduleAndUsers) {
 		moimScheduleAndUsers.forEach(moimScheduleAndUser ->
 			moimScheduleAlarmRepository.deleteAll(moimScheduleAndUser.getMoimScheduleAlarms()));
 	}

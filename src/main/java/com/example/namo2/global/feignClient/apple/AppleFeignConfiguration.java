@@ -7,9 +7,10 @@ import feign.codec.ErrorDecoder;
 
 public class AppleFeignConfiguration {
 	@Bean
-	ErrorDecoder errorDecoder(){
+	ErrorDecoder errorDecoder() {
 		return new AppleFeignException();
 	}
+
 	@Bean
 	Logger.Level feignLoggerLevel() {
 		return Logger.Level.FULL;
