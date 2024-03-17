@@ -1,6 +1,7 @@
 package com.example.namo2.domain.schedule.dao.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,6 @@ import com.example.namo2.domain.user.domain.User;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long>, ScheduleRepositoryCustom {
 	@Query("select s from Schedule s join fetch s.user where s.user in :users and s.category.share = true ")
 	List<Schedule> findSchedulesByUsers(@Param("users") List<User> users);
+
+	List<Schedule> findAllByUser(User user);
 }

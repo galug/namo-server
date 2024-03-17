@@ -27,4 +27,6 @@ public interface MoimAndUserRepository extends JpaRepository<MoimAndUser, Long> 
 	Integer countMoimAndUserByMoim(Moim moim);
 
 	boolean existsMoimAndUserByMoimAndUser(Moim moim, User user);
+
+	void deleteAllByUser(User user);
 }

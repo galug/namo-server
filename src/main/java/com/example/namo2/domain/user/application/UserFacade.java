@@ -44,6 +44,16 @@ import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
 
+import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
+import com.example.namo2.domain.memo.domain.MoimMemoLocationAndUser;
+import com.example.namo2.domain.moim.application.impl.MoimAndUserService;
+import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
+import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.schedule.application.impl.AlarmService;
+import com.example.namo2.domain.schedule.application.impl.ImageService;
+import com.example.namo2.domain.schedule.application.impl.ScheduleService;
+import com.example.namo2.domain.schedule.domain.Image;
+import com.example.namo2.domain.schedule.domain.Schedule;
 import com.example.namo2.domain.user.application.converter.TermConverter;
 import com.example.namo2.domain.user.application.converter.UserConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
@@ -82,6 +92,12 @@ public class UserFacade {
 	private final UserService userService;
 	private final PaletteService paletteService;
 	private final CategoryService categoryService;
+	private final ScheduleService scheduleService;
+	private final AlarmService alarmService;
+	private final ImageService imageService;
+	private final MoimAndUserService moimAndUserService;
+	private final MoimScheduleAndUserService moimScheduleAndUserService;
+	private final MoimMemoLocationService moimMemoLocationService;
 
 	private final KakaoAuthClient kakaoAuthClient;
 	private final NaverAuthClient naverAuthClient;
@@ -294,6 +310,12 @@ public class UserFacade {
 
 	@Transactional
 	public void removeKakaoUser(HttpServletRequest request, String kakaoAccessToken){
+		//유저 토큰 만료시 예외 처리
+		String accessToken = request.getHeader("Authorization");
+		if (!jwtUtils.validateToken(accessToken)) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+
 		kakaoAuthClient.unlinkKakao(kakaoAccessToken);
 
 		removeUserFromDB(request);
@@ -301,6 +323,12 @@ public class UserFacade {
 
 	@Transactional
 	public void removeNaverUser(HttpServletRequest request, String naverAccessToken){
+		//유저 토큰 만료시 예외 처리
+		String accessToken = request.getHeader("Authorization");
+		if (!jwtUtils.validateToken(accessToken)) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+
 		naverAuthClient.tokenAvailability(naverAccessToken);
 		naverAuthClient.unlinkNaver(naverAccessToken);
 
@@ -309,6 +337,12 @@ public class UserFacade {
 
 	@Transactional
 	public void removeAppleUser(HttpServletRequest request, String authorizationCode){
+		//유저 토큰 만료시 예외 처리
+		String accessToken = request.getHeader("Authorization");
+		if (!jwtUtils.validateToken(accessToken)) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+
 		String clientSecret = "";
 		try {
 			clientSecret = createClientSecret();
@@ -349,23 +383,39 @@ public class UserFacade {
 			return converter.getPrivateKey(object);
 	}
 
-	/*
-	* 카테고리 삭제
-	* 스케줄 삭제
-	* - 스케줄 알람 삭제
-	* - 스케줄 이미지 삭제
+	/**
+	 * [유저삭제]
+	 * 카테고리 삭제
+	 * 스케줄 삭제
+	 * - 스케줄 알람 삭제
+	 * - 스케줄 이미지 삭제
+	 * moimAndUser삭제
+	 * moimScheduleAndUser 삭제
+	 * - moimScheduleAlarm 삭제
+	 * moimMemoLocationAndUser 삭제
 	 */
 	private void removeUserFromDB(HttpServletRequest request){
-		String accessToken = request.getHeader("Authorization");
-		//유저 토큰 만료시 예외 처리
-		if (!jwtUtils.validateToken(accessToken)) {
-			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-		}
-		Long expiration = jwtUtils.getExpiration(accessToken);
-		redisTemplate.opsForValue().set(accessToken, "delete", expiration, TimeUnit.MILLISECONDS);
-
 		//db에서 삭제
 		User user = userService.getUser(jwtUtils.resolveRequest(request));
+		categoryService.removeCategoriesByUser(user);
+
+		List<Schedule> schedules = scheduleService.getSchedulesByUser(user);
+		alarmService.removeAlarmsBySchedules(schedules);
+		imageService.removeImgsBySchedules(schedules);
+		scheduleService.removeSchedules(schedules);
+
+		moimAndUserService.removeMoimAndUsersByUser(user);
+
+		List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleAndUserService.getAllByUser(user);
+		moimScheduleAndUserService.removeMoimScheduleAlarms(moimScheduleAndUsers);
+		moimScheduleAndUserService.removeMoimScheduleAndUsers(moimScheduleAndUsers);
+
+		moimMemoLocationService.removeMoimMemoLocationAndUsersByUser(user);
 		userService.removeUser(user);
+
+		//token 만료처리
+		String accessToken = request.getHeader("Authorization");
+		Long expiration = jwtUtils.getExpiration(accessToken);
+		redisTemplate.opsForValue().set(accessToken, "delete", expiration, TimeUnit.MILLISECONDS);
 	}
 }

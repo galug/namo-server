@@ -56,4 +56,8 @@ public class MoimAndUserService {
 	public void removeMoimAndUser(MoimAndUser moimAndUser) {
 		moimAndUserRepository.delete(moimAndUser);
 	}
+
+	public void removeMoimAndUsersByUser(User user){
+		moimAndUserRepository.deleteAllByUser(user);
+	}
 }

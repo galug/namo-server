@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.user.domain.User;
 
 public interface MoimScheduleAlarmRepository extends JpaRepository<MoimScheduleAlarm, Long> {
 	@Modifying
