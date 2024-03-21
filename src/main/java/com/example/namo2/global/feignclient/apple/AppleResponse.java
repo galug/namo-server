@@ -21,8 +21,10 @@ public class AppleResponse {
 		private String kid;
 		private String use;
 		private String alg;
-		private String n;
-		private String e;
+		@JsonProperty("n")
+		private String modulus;
+		@JsonProperty("e")
+		private String exponent;
 	}
 
 	@Getter

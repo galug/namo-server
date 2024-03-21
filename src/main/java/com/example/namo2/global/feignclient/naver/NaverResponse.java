@@ -1,6 +1,9 @@
 package com.example.namo2.global.feignclient.naver;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
+import lombok.Setter;
 
 public class NaverResponse {
 	public NaverResponse() {
@@ -8,8 +11,10 @@ public class NaverResponse {
 	}
 
 	@Getter
+	@Setter
 	public static class UnlinkDto {
-		private String access_token;
+		@JsonProperty("access_token")
+		private String accessToken;
 		private String result;
 	}
 

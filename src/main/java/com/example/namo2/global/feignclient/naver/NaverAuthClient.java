@@ -34,7 +34,7 @@ public class NaverAuthClient {
 			"NAVER"
 		);
 
-		logger.debug("네이버 탈퇴 res : {}, {}", dto.getAccess_token(), dto.getResult());
+		logger.debug("네이버 탈퇴 res : {}, {}", dto.getAccessToken(), dto.getResult());
 	}
 
 	public void tokenAvailability(String accessToken) {

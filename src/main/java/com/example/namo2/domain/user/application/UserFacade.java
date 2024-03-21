@@ -206,8 +206,8 @@ public class UserFacade {
 	}
 
 	private PublicKey getPublicKey(AppleResponse.ApplePublicKeyDto applePublicKey) {
-		String nStr = applePublicKey.getN(); //RSA public key의 모듈러스 값
-		String eStr = applePublicKey.getE(); //RSA public key의 지수 값
+		String nStr = applePublicKey.getModulus(); //RSA public key의 모듈러스 값
+		String eStr = applePublicKey.getExponent(); //RSA public key의 지수 값
 
 		byte[] nBytes = Base64.getUrlDecoder().decode(nStr);
 		byte[] eBytes = Base64.getUrlDecoder().decode(eStr);
