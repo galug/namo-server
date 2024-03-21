@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.naver;
+package com.example.namo2.global.feignclient.naver;
 
 import lombok.Getter;
 

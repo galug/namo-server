@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.naver;
+package com.example.namo2.global.feignclient.naver;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -18,7 +18,7 @@ public class NaverAuthClient {
 	private final NaverProperties naverProperties;
 
 	public void unlinkNaver(String accessToken) {
-		try {//URL인코딩
+		try { //URL인코딩
 			accessToken = URLEncoder.encode(accessToken, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

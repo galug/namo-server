@@ -32,8 +32,9 @@ public class UserService {
 	}
 
 	public void checkEmailAndName(String email, String name) {
-		if (email.isBlank() || name.isBlank())
+		if (email.isBlank() || name.isBlank()) {
 			throw new BaseException(USER_POST_ERROR);
+		}
 	}
 
 	public User getUser(Long userId) {

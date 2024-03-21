@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.kakao;
+package com.example.namo2.global.feignclient.kakao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

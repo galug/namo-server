@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.apple;
+package com.example.namo2.global.feignclient.apple;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public interface AppleAuthApi {
 		@RequestParam(name = "client_id") String clientId,
 		@RequestParam(name = "client_secret") String clientSecret,
 		@RequestParam(name = "code") String code,
-		@RequestParam(name = "grant_type") String grant_type,
+		@RequestParam(name = "grant_type") String grantType,
 		@RequestParam(name = "redirect_uri") String redirectUri
 	);
 

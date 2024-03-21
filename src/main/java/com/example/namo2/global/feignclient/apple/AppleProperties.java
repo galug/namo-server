@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.apple;
+package com.example.namo2.global.feignclient.apple;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

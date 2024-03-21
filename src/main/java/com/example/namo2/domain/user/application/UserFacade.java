@@ -72,12 +72,12 @@ import com.example.namo2.domain.user.ui.dto.UserResponse;
 
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
-import com.example.namo2.global.feignClient.apple.AppleAuthClient;
-import com.example.namo2.global.feignClient.apple.AppleProperties;
-import com.example.namo2.global.feignClient.apple.AppleResponse;
-import com.example.namo2.global.feignClient.apple.AppleResponseConverter;
-import com.example.namo2.global.feignClient.kakao.KakaoAuthClient;
-import com.example.namo2.global.feignClient.naver.NaverAuthClient;
+import com.example.namo2.global.feignclient.apple.AppleAuthClient;
+import com.example.namo2.global.feignclient.apple.AppleProperties;
+import com.example.namo2.global.feignclient.apple.AppleResponse;
+import com.example.namo2.global.feignclient.apple.AppleResponseConverter;
+import com.example.namo2.global.feignclient.kakao.KakaoAuthClient;
+import com.example.namo2.global.feignclient.naver.NaverAuthClient;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
@@ -148,7 +148,6 @@ public class UserFacade {
 		}
 	}
 
-	@SuppressWarnings("checkstyle:NeedBraces")
 	@Transactional
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req) {
 		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
@@ -183,19 +182,20 @@ public class UserFacade {
 		String appleEmail = claims.get("email", String.class);
 		log.debug("email: {}, oauthId : {}", appleEmail, appleOauthId);
 
-		if (!req.getEmail().isBlank())//첫 로그인
+		if (!req.getEmail().isBlank()) { //첫 로그인
 			email = req.getEmail();
-		else//재로그인
+		} else { //재로그인
 			email = appleEmail;
+		}
 
 		//로그인 분기처리
 		User savedUser;
 		Optional<User> userByEmail = userService.getUserByEmail(email);
-		if (userByEmail.isEmpty()) {//첫로그인
+		if (userByEmail.isEmpty()) { //첫로그인
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
 			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
 			makeBaseCategory(savedUser);
-		} else {//재로그인
+		} else { //재로그인
 			savedUser = userByEmail.get();
 			savedUser.setStatus(UserStatus.ACTIVE);
 		}

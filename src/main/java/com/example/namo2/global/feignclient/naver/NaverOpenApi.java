@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.naver;
+package com.example.namo2.global.feignclient.naver;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

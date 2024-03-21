@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.kakao;
+package com.example.namo2.global.feignclient.kakao;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

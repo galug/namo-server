@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.apple;
+package com.example.namo2.global.feignclient.apple;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

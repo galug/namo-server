@@ -1,4 +1,4 @@
-package com.example.namo2.global.feignClient.naver;
+package com.example.namo2.global.feignclient.naver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
