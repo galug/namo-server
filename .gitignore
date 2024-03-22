@@ -62,3 +62,7 @@ hs_err_pid*
 
 # Querydsl
 /src/main/generated/
+
+# private key
+/src/main/resources/*.p8
+
