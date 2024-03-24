@@ -14,7 +14,6 @@ import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 
 import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +31,25 @@ public class MoimService {
 		return moimRepository.save(moim);
 	}
 
-	public Moim getMoim(Long moimId) {
+	public Moim getMoimWithMoimAndUsersByMoimId(Long moimId) {
 		return moimRepository.findById(moimId)
 			.orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_FAILURE));
 	}
 
-	public Moim getMoim(String code) {
-		return moimRepository.findMoimByCode(code)
-			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_FAILURE));
+	public Moim getMoimHavingLockById(Long moimId) {
+		Moim moim = moimRepository.findHavingLockById(moimId);
+		if (moim == null) {
+			throw new BaseException(NOT_FOUND_MOIM_FAILURE);
+		}
+		return moim;
+	}
+
+	public Moim getMoimWithMoimAndUsersByCode(String code) {
+		Moim moim = moimRepository.findMoimHavingLockWithMoimAndUsersByCode(code);
+		if (moim == null) {
+			throw new BaseException(NOT_FOUND_MOIM_FAILURE);
+		}
+		return moim;
 	}
 
 	public void removeSchedule(Long moimScheduleId) {
@@ -57,7 +67,7 @@ public class MoimService {
 		            moimMemoRepository.delete(moimMemo);
 		        }
 		*/
-		
+
 		moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
 		moimScheduleRepository.delete(moimSchedule);
 	}

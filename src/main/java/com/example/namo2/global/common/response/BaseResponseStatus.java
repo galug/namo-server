@@ -44,6 +44,7 @@ public enum BaseResponseStatus {
 	NOT_FOUND_MOIM_AND_USER_FAILURE(404, "그룹 구성원이 아닙니다."),
 	NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE(404, "그룹 스케줄 구성원이 아닙니다."),
 	NOT_FOUND_MOIM_MEMO_LOCATION_FAILURE(404, "모임 장소를 찾을 수 없습니다."),
+	NOT_FOUND_COLOR(404, "색깔을 찾을 수 없습니다."),
 
 	/**
 	 * 404 : 예외 상황 에러
@@ -51,6 +52,7 @@ public enum BaseResponseStatus {
 	NOT_DELETE_BASE_CATEGORY_FAILURE(404, "일정 및 모임 카테고리는 삭제 될 수 없습니다."),
 	NOT_CHANGE_SPECIFIED_NAME_FAILURE(404, "일정 및 모임은 기본 카테고리로 지정된 이름입니다."),
 	NOT_CHECK_TERM_ERROR(404, "약관에 무조건 동의 해야합니다."),
+	MOIM_IS_FULL_ERROR(404, "일정 및 모임 카테고리는 삭제 될 수 없습니다."),
 
 	/**
 	 * 404: 중복 에러

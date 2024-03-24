@@ -1,13 +1,19 @@
 package com.example.namo2.domain.moim.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import com.example.namo2.domain.user.domain.User;
 
 import com.example.namo2.global.common.entity.BaseTimeEntity;
 
@@ -33,15 +39,47 @@ public class Moim extends BaseTimeEntity {
 
 	private String code;
 
+	@Column(name = "member_count")
+	private Integer memberCount;
+
+	@OneToMany(mappedBy = "moim", fetch = FetchType.LAZY)
+	private List<MoimAndUser> moimAndUsers = new ArrayList<>();
+
 	@Builder
 	public Moim(Long id, String name, String imgUrl) {
 		this.id = id;
 		this.name = name;
 		this.imgUrl = imgUrl;
 		this.code = createCode();
+		this.memberCount = 1;
 	}
 
 	private String createCode() {
 		return UUID.randomUUID().toString();
+	}
+
+	public boolean containUser(User user) {
+		for (MoimAndUser moimAndUser : moimAndUsers) {
+			if (moimAndUser.getUser().getId() == user.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isFull() {
+		if (memberCount == 10) {
+			return true;
+		}
+		return false;
+	}
+
+	public void addMember(MoimAndUser savedMoimAndUser) {
+		moimAndUsers.add(savedMoimAndUser);
+		this.memberCount += 1;
+	}
+
+	public void removeMember() {
+		this.memberCount += 1;
 	}
 }

@@ -22,8 +22,24 @@ import lombok.extern.slf4j.Slf4j;
 public class MoimAndUserService {
 	private final MoimAndUserRepository moimAndUserRepository;
 
-	public MoimAndUser create(MoimAndUser moimAndUser) {
-		return moimAndUserRepository.save(moimAndUser);
+	public MoimAndUser create(MoimAndUser moimAndUser, Moim moim) {
+		validateExistsMoimAndUser(moim, moimAndUser);
+		validateMoimIsFull(moim);
+		MoimAndUser savedMoimAndUser = moimAndUserRepository.save(moimAndUser);
+		moim.addMember(savedMoimAndUser);
+		return savedMoimAndUser;
+	}
+
+	private void validateExistsMoimAndUser(Moim moim, MoimAndUser moimAndUser) {
+		if (moim.containUser(moimAndUser.getUser())) {
+			throw new BaseException(BaseResponseStatus.DUPLICATE_PARTICIPATE_FAILURE);
+		}
+	}
+
+	private void validateMoimIsFull(Moim moim) {
+		if (moim.isFull()) {
+			throw new BaseException(BaseResponseStatus.MOIM_IS_FULL_ERROR);
+		}
 	}
 
 	public List<MoimAndUser> getMoimAndUsers(User user) {
@@ -43,17 +59,8 @@ public class MoimAndUserService {
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_AND_USER_FAILURE));
 	}
 
-	public Integer getMoimMemberSize(Moim moim) {
-		return moimAndUserRepository.countMoimAndUserByMoim(moim);
-	}
-
-	public void validateExistsMoimAndUser(Moim moim, User user) {
-		if (moimAndUserRepository.existsMoimAndUserByMoimAndUser(moim, user)) {
-			throw new BaseException(BaseResponseStatus.DUPLICATE_PARTICIPATE_FAILURE);
-		}
-	}
-
-	public void removeMoimAndUser(MoimAndUser moimAndUser) {
+	public void removeMoimAndUser(MoimAndUser moimAndUser, Moim moim) {
+		moim.removeMember();
 		moimAndUserRepository.delete(moimAndUser);
 	}
 }
