@@ -2,6 +2,7 @@ package com.example.namo2.domain.user.application.impl;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import com.example.namo2.domain.user.dao.repository.TermRepository;
 import com.example.namo2.domain.user.dao.repository.UserRepository;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.domain.UserStatus;
 
 import com.example.namo2.global.common.exception.BaseException;
 
@@ -27,6 +29,12 @@ public class UserService {
 
 	public User createUser(User user) {
 		return userRepository.save(user);
+	}
+
+	public void checkEmailAndName(String email, String name) {
+		if (email.isBlank() || name.isBlank()) {
+			throw new BaseException(USER_POST_ERROR);
+		}
 	}
 
 	public User getUser(Long userId) {
@@ -47,6 +55,10 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 	}
 
+	public List<User> getInactiveUser() {
+		return userRepository.findUsersByStatusAndDate(UserStatus.INACTIVE, LocalDateTime.now().minusDays(3));
+	}
+
 	public void updateRefreshToken(Long userId, String refreshToken) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(NOT_FOUND_USER_FAILURE));
 		user.updateRefreshToken(refreshToken);
@@ -63,5 +75,22 @@ public class UserService {
 					() -> termRepository.save(term)
 				);
 		}
+	}
+
+	/*
+	 * User status 도입?
+	 * 삭제 한다면..
+	 * - 개인 스케줄 삭제
+	 *  - 개인 스케줄 알람 삭제
+	 *  - 개인 스케줄 이미지 삭제
+	 * - 모임 스케줄 & 유저에서 삭제
+	 * - 모임 스케줄 알람 삭제
+	 * - 카테고리 삭제
+	 * - 모임 메모 삭제
+	 * - 모임 메모 로케이션 & 유저 삭제
+	 * - 모임 & 유저에서 삭제
+	 */
+	public void removeUser(User user) {
+		userRepository.delete(user);
 	}
 }

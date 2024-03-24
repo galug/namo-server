@@ -22,4 +22,10 @@ public class ImageService {
 	public void removeImgsBySchedule(Schedule schedule) {
 		imageRepository.deleteDiaryImages(schedule);
 	}
+
+	public void removeImgsBySchedules(List<Schedule> schedules) {
+		schedules.forEach(schedule ->
+			imageRepository.deleteAll(schedule.getImages())
+		);
+	}
 }

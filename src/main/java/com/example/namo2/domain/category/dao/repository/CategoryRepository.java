@@ -19,4 +19,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 		+ " join fetch c.user"
 		+ " where c.user in :users and c.name = '모임'")
 	List<Category> findMoimCategoriesByUsers(@Param("users") List<User> users);
+
+	void deleteAllByUser(User user);
 }

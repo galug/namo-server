@@ -14,6 +14,8 @@ import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
 
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 
+import com.example.namo2.domain.user.domain.User;
+
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 
@@ -52,6 +54,10 @@ public class MoimMemoLocationService {
 		moimMemoLocationAndUserRepository.deleteMoimMemoLocationAndUserByMoimMemoLocation(moimMemoLocation);
 	}
 
+	public void removeMoimMemoLocationAndUsersByUser(User user) {
+		moimMemoLocationAndUserRepository.deleteAllByUser(user);
+	}
+
 	public void removeMoimMemoLocationImgs(MoimMemoLocation moimMemoLocation) {
 		moimMemoLocationImgRepository.deleteMoimMemoLocationImgByMoimMemoLocation(moimMemoLocation);
 	}
@@ -80,4 +86,5 @@ public class MoimMemoLocationService {
 	public List<MoimMemoLocationAndUser> getMoimMemoLocationAndUsers(List<MoimMemoLocation> moimMemoLocations) {
 		return moimMemoLocationRepository.findMoimMemoLocationAndUsers(moimMemoLocations);
 	}
+
 }

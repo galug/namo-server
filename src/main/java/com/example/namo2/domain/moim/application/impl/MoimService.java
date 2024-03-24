@@ -57,7 +57,7 @@ public class MoimService {
 		            moimMemoRepository.delete(moimMemo);
 		        }
 		*/
-		
+
 		moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
 		moimScheduleRepository.delete(moimSchedule);
 	}

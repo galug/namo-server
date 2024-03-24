@@ -138,17 +138,16 @@ public class ScheduleController {
 	@Operation(summary = "스케줄 다이어리 개별 조회", description = "스케줄 다이어리 개별 조회 API")
 	@GetMapping("/diary/day/{scheduleId}")
 	public BaseResponse<ScheduleResponse.GetDiaryByScheduleDto> findDiaryById(
-		@PathVariable("scheduleId") Long scheduleId,
-		HttpServletRequest request
+		@PathVariable("scheduleId") Long scheduleId
 	) throws BaseException {
 		ScheduleResponse.GetDiaryByScheduleDto diary = scheduleFacade.getDiaryBySchedule(scheduleId);
 		return new BaseResponse<>(diary);
 	}
 
 	@Operation(summary = "스케줄 수정", description = "스케줄 수정 API")
-	@PatchMapping("/{schedule}")
+	@PatchMapping("/{scheduleId}")
 	public BaseResponse<ScheduleResponse.ScheduleIdDto> modifyUserSchedule(
-		@PathVariable("schedule") Long scheduleId,
+		@PathVariable("scheduleId") Long scheduleId,
 		@RequestBody ScheduleRequest.PostScheduleDto req) throws BaseException {
 		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.modifySchedule(scheduleId, req);
 		return new BaseResponse<>(dto);
@@ -171,9 +170,9 @@ public class ScheduleController {
 	 * kind 1 은 모임 스케줄
 	 */
 	@Operation(summary = "스케줄 삭제", description = "스케줄 삭제 API")
-	@DeleteMapping("/{schedule}/{kind}")
+	@DeleteMapping("/{scheduleId}/{kind}")
 	public BaseResponse<String> deleteUserSchedule(
-		@PathVariable("schedule") Long scheduleId,
+		@PathVariable("scheduleId") Long scheduleId,
 		@PathVariable("kind") Integer kind,
 		HttpServletRequest request
 	) throws BaseException {
