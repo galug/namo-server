@@ -23,8 +23,4 @@ public interface MoimAndUserRepository extends JpaRepository<MoimAndUser, Long> 
 	List<MoimAndUser> findMoimAndUserByMoim(List<Moim> moims);
 
 	Optional<MoimAndUser> findMoimAndUserByUserAndMoim(User user, Moim moim);
-
-	Integer countMoimAndUserByMoim(Moim moim);
-
-	boolean existsMoimAndUserByMoimAndUser(Moim moim, User user);
 }

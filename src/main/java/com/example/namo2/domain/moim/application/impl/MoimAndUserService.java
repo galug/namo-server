@@ -60,7 +60,17 @@ public class MoimAndUserService {
 	}
 
 	public void removeMoimAndUser(MoimAndUser moimAndUser, Moim moim) {
+		validateNotExistsMoimAndUser(moim, moimAndUser);
+		if (moim.isLastMember()) {
+			moim.removeMoim();
+		}
 		moim.removeMember();
 		moimAndUserRepository.delete(moimAndUser);
+	}
+
+	private void validateNotExistsMoimAndUser(Moim moim, MoimAndUser moimAndUser) {
+		if (!moim.containUser(moimAndUser.getUser())) {
+			throw new BaseException(BaseResponseStatus.NOT_INCLUDE_MOIM_USER);
+		}
 	}
 }
