@@ -50,12 +50,13 @@ public class Category extends BaseTimeEntity {
 	private CategoryKind kind;
 
 	@Builder
-	public Category(Palette palette, User user, String name, Boolean share) {
+	public Category(Palette palette, User user, String name, Boolean share, CategoryKind kind) {
 		this.palette = palette;
 		this.user = user;
 		this.name = name;
 		this.share = share;
 		this.status = CategoryStatus.ACTIVE;
+		this.kind = kind;
 	}
 
 	public void update(String name, Boolean share, Palette palette) {
