@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.namo2.domain.category.dao.repository.CategoryRepository;
 import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.category.domain.CategoryKind;
 import com.example.namo2.domain.category.domain.CategoryStatus;
 import com.example.namo2.domain.category.domain.Palette;
 import com.example.namo2.domain.category.ui.dto.CategoryRequest;
@@ -64,6 +65,6 @@ public class CategoryService {
 	}
 
 	public List<Category> getMoimUsersCategories(List<User> users) {
-		return categoryRepository.findMoimCategoriesByUsers(users);
+		return categoryRepository.findMoimCategoriesByUsers(users, CategoryKind.MOIM);
 	}
 }
