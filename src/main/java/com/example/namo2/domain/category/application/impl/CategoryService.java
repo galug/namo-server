@@ -34,8 +34,8 @@ public class CategoryService {
 
 	public void delete(Long categoryId, Long userId) {
 		Category category = getCategory(categoryId);
-		validateBaseCategory(category);
 		validateUsersCategory(userId, category);
+		validateBaseCategory(category);
 		category.delete();
 	}
 
@@ -46,7 +46,6 @@ public class CategoryService {
 
 	public Category modifyCategory(Long categoryId, CategoryRequest.PostCategoryDto dto, Palette palette, Long userId) {
 		Category category = getCategory(categoryId);
-		validateBaseCategory(category);
 		validateUsersCategory(userId, category);
 		category.update(dto.getName(), dto.isShare(), palette);
 		return category;
@@ -59,7 +58,7 @@ public class CategoryService {
 	}
 
 	private void validateBaseCategory(Category category) {
-		if (category.getName().equals("일정") || category.getName().equals("모임")) {
+		if (category.isBaseCategory()) {
 			throw new BaseException(NOT_DELETE_BASE_CATEGORY_FAILURE);
 		}
 	}

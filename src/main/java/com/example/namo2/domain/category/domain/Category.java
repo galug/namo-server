@@ -46,6 +46,9 @@ public class Category extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private CategoryStatus status;
 
+	@Enumerated(EnumType.STRING)
+	private CategoryKind kind;
+
 	@Builder
 	public Category(Palette palette, User user, String name, Boolean share) {
 		this.palette = palette;
@@ -66,6 +69,13 @@ public class Category extends BaseTimeEntity {
 	}
 
 	public boolean isNotCreatedByUser(Long userId) {
-		return this.user.getId() == userId;
+		return this.user.getId() != userId;
+	}
+
+	public boolean isBaseCategory() {
+		if (kind == CategoryKind.SCHEDULE || kind == CategoryKind.MOIM) {
+			return true;
+		}
+		return false;
 	}
 }
