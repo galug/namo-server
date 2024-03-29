@@ -1,10 +1,11 @@
 package com.example.namo2.domain.moim.application;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,17 +40,19 @@ public class MoimFacade {
 	 * BaseURL을 직접 넣어주세요.
 	 */
 	private static final int[] MOIM_USERS_COLOR = new int[] {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-	private static final String BASE_URL = "BASE_URL을 넣어주세요";
 	private final MoimService moimService;
 	private final UserService userService;
 	private final MoimAndUserService moimAndUserService;
 	private final FileUtils fileUtils;
 
+	@Value("${moim.base-url-image}")
+	private String BASE_URL;
+
 	@Transactional(readOnly = false)
 	public MoimResponse.MoimIdDto createMoim(Long userId, String groupName, MultipartFile img) {
 		User user = userService.getUser(userId);
 		String url = BASE_URL;
-		if (!img.isEmpty()) {
+		if (img != null && !img.isEmpty()) {
 			url = fileUtils.uploadImage(img);
 		}
 		Moim moim = MoimConverter.toMoim(groupName, url);
@@ -84,17 +87,13 @@ public class MoimFacade {
 
 	@Transactional(readOnly = false)
 	public MoimResponse.MoimParticipantDto createMoimAndUser(Long userId, String code) {
-		try {
-			User user = userService.getUser(userId);
-			Moim moim = moimService.getMoimWithMoimAndUsersByCode(code);
+		User user = userService.getUser(userId);
+		Moim moim = moimService.getMoimWithMoimAndUsersByCode(code);
 
-			MoimAndUser moimAndUser = MoimAndUserConverter
-				.toMoimAndUser(moim.getName(), selectColor(moim), user, moim);
-			moimAndUserService.create(moimAndUser, moim);
-			return MoimResponseConverter.toMoimParticipantDto(moim);
-		} catch (ObjectOptimisticLockingFailureException e) {
-			throw new BaseException(BaseResponseStatus.MOIM_IS_FULL_ERROR);
-		}
+		MoimAndUser moimAndUser = MoimAndUserConverter
+			.toMoimAndUser(moim.getName(), selectColor(moim), user, moim);
+		moimAndUserService.create(moimAndUser, moim);
+		return MoimResponseConverter.toMoimParticipantDto(moim);
 	}
 
 	private int selectColor(Moim moim) {
@@ -102,12 +101,10 @@ public class MoimFacade {
 			.stream()
 			.map(MoimAndUser::getColor)
 			.collect(Collectors.toSet());
-		for (int color : MOIM_USERS_COLOR) {
-			if (!colors.contains(color)) {
-				return color;
-			}
-		}
-		throw new BaseException(BaseResponseStatus.NOT_FOUND_COLOR);
+		return Arrays.stream(MOIM_USERS_COLOR)
+			.filter((color) -> !colors.contains(color))
+			.findFirst()
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_COLOR));
 	}
 
 	@Transactional(readOnly = false)

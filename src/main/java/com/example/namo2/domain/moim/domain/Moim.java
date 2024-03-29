@@ -57,7 +57,7 @@ public class Moim extends BaseTimeEntity {
 		this.name = name;
 		this.imgUrl = imgUrl;
 		this.code = createCode();
-		this.memberCount = 1;
+		this.memberCount = 0;
 		this.status = MoimStatus.ACTIVE;
 	}
 
