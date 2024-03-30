@@ -6,6 +6,8 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,6 +47,9 @@ public class MoimSchedule extends BaseTimeEntity {
 	@Embedded
 	private Location location;
 
+	@Enumerated(EnumType.STRING)
+	private MoimScheduleStatus status;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "moim_id")
 	private Moim moim;
@@ -62,6 +67,7 @@ public class MoimSchedule extends BaseTimeEntity {
 		this.period = period;
 		this.location = location;
 		this.moim = moim;
+		status = MoimScheduleStatus.ACTIVE;
 	}
 
 	public void registerMemo(MoimMemo moimMemo) {
@@ -76,6 +82,10 @@ public class MoimSchedule extends BaseTimeEntity {
 
 	public Boolean isLastScheduleMember() {
 		return moimScheduleAndUsers.size() == 1;
+	}
+
+	public void deleteMoimSchedule() {
+		this.status = MoimScheduleStatus.DELETED;
 	}
 
 }

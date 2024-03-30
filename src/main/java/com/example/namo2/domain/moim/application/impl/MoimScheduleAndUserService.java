@@ -35,13 +35,24 @@ public class MoimScheduleAndUserService {
 		moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
 	}
 
-	public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+	public void removeMoimScheduleAndUser(MoimSchedule moimSchedule, MoimScheduleAndUser moimScheduleAndUser) {
+		if (moimSchedule.isLastScheduleMember()) {
+			moimSchedule.deleteMoimSchedule();
+		}
 		moimScheduleAndUserRepository.delete(moimScheduleAndUser);
+	}
+
+	public void removeMoimScheduleAndUsers(List<MoimScheduleAndUser> moimScheduleAndUsers) {
+		moimScheduleAndUserRepository.deleteAll(moimScheduleAndUsers);
 	}
 
 	public MoimScheduleAndUser getMoimScheduleAndUser(MoimSchedule moimSchedule, User user) {
 		return moimScheduleAndUserRepository.findMoimScheduleAndUserByMoimScheduleAndUser(moimSchedule, user)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE));
+	}
+
+	public List<MoimScheduleAndUser> getAllByUser(User user) {
+		return moimScheduleAndUserRepository.findAllByUser(user);
 	}
 
 	public void removeMoimScheduleAlarm(MoimScheduleAndUser moimScheduleAndUser) {
@@ -50,6 +61,11 @@ public class MoimScheduleAndUserService {
 
 	public void removeMoimScheduleAlarm(List<MoimScheduleAndUser> moimScheduleAndUser) {
 		moimScheduleAlarmRepository.deleteMoimScheduleAlarmByMoimScheduleAndUser(moimScheduleAndUser);
+	}
+
+	public void removeMoimScheduleAlarms(List<MoimScheduleAndUser> moimScheduleAndUsers) {
+		moimScheduleAndUsers.forEach(moimScheduleAndUser ->
+			moimScheduleAlarmRepository.deleteAll(moimScheduleAndUser.getMoimScheduleAlarms()));
 	}
 
 	public void createMoimScheduleAlarm(MoimScheduleAlarm moimScheduleAlarm) {

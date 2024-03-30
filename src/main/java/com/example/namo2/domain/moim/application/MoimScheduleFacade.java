@@ -105,9 +105,6 @@ public class MoimScheduleFacade {
 		moimScheduleAndUser.updateCategory(category);
 	}
 
-	/**
-	 * 모임 스케줄 삭제는 모임 메모와 연관된 요소 있으므로 나중에
-	 */
 	@Transactional(readOnly = false)
 	public void removeMoimSchedule(Long moimScheduleId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(moimScheduleId);
@@ -124,7 +121,7 @@ public class MoimScheduleFacade {
 		if (moimMemo == null) {
 			return;
 		}
-		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocation(moimMemo);
+		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocationWithImgs(moimMemo);
 		moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocations);
 		removeMoimMemoLocationImgs(moimMemoLocations);
 		moimMemoService.removeMoimMemo(moimMemo);

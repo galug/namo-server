@@ -73,4 +73,8 @@ public class MoimAndUserService {
 			throw new BaseException(BaseResponseStatus.NOT_INCLUDE_MOIM_USER);
 		}
 	}
+
+	public void removeMoimAndUsersByUser(User user) {
+		moimAndUserRepository.deleteAllByUser(user);
+	}
 }

@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+.DS_Store
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -62,3 +63,6 @@ hs_err_pid*
 
 # Querydsl
 /src/main/generated/
+
+# Environment
+/src/main/resources/*.p8

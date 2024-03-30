@@ -2,6 +2,8 @@ package com.example.namo2.domain.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,16 +36,25 @@ public class User extends BaseTimeEntity {
 	@Column(name = "refresh_token")
 	private String refreshToken;
 
+	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition = "VARCHAR(15) DEFAULT 'ACTIVE'")
+	private UserStatus status;
+
 	@Builder
-	public User(Long id, String name, String email, String birthday, String refreshToken) {
+	public User(Long id, String name, String email, String birthday, String refreshToken, UserStatus status) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.birthday = birthday;
 		this.refreshToken = refreshToken;
+		this.status = status;
 	}
 
 	public void updateRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
+	}
+
+	public void setStatus(UserStatus status) {
+		this.status = status;
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.namo2.domain.user.ui;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,37 @@ public class AuthController {
 		@Valid @RequestBody UserRequest.LogoutDto logoutDto
 	) {
 		userFacade.logout(logoutDto);
+		return BaseResponse.ok();
+	}
+
+	@Operation(summary = "kakao 회원 탈퇴", description = "kakao 회원 탈퇴")
+	@PostMapping("/kakao/delete")
+	public BaseResponse<?> removeKakaoUser(
+		HttpServletRequest request,
+		@Valid @RequestBody UserRequest.DeleteUserDto deleteUserDto
+	) {
+		userFacade.removeKakaoUser(request, deleteUserDto.getAccessToken());
+		return BaseResponse.ok();
+	}
+
+	@Operation(summary = "네이버 회원 탈퇴", description = "네이버 회원 탈퇴")
+	@PostMapping("/naver/delete")
+	public BaseResponse<?> removeNaverUser(
+		HttpServletRequest request,
+		@Valid @RequestBody UserRequest.DeleteUserDto deleteUserDto
+	) {
+		userFacade.removeNaverUser(request, deleteUserDto.getAccessToken());
+		return BaseResponse.ok();
+	}
+
+	@SuppressWarnings({"checkstyle:WhitespaceAround", "checkstyle:RegexpMultiline"})
+	@Operation(summary = "애플 회원 탈퇴", description = "애플 회원 탈퇴")
+	@PostMapping("/apple/delete")
+	public BaseResponse<?> removeAppleUser(
+		HttpServletRequest request,
+		@Valid @RequestBody UserRequest.DeleteAppleUserDto deleteAppleUserDto
+	) {
+		userFacade.removeAppleUser(request, deleteAppleUserDto.getAuthorizationCode());
 		return BaseResponse.ok();
 	}
 }

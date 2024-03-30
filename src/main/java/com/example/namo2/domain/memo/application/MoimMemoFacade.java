@@ -100,7 +100,7 @@ public class MoimMemoFacade {
 	@Transactional(readOnly = false)
 	public void modifyMoimMemoLocation(Long memoLocationId, MoimMemoRequest.LocationDto locationDto,
 		List<MultipartFile> imgs) {
-		MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocation(memoLocationId);
+		MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocationWithImgs(memoLocationId);
 		moimMemoLocation.update(locationDto.getName(), locationDto.getMoney());
 
 		moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocation);
@@ -121,7 +121,7 @@ public class MoimMemoFacade {
 
 	@Transactional(readOnly = false)
 	public void removeMoimMemoLocation(Long memoLocationId) {
-		MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocation(memoLocationId);
+		MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocationWithImgs(memoLocationId);
 
 		moimMemoLocationService.removeMoimMemoLocationAndUsers(moimMemoLocation);
 		removeMoimMemoLocationImgs(moimMemoLocation);
