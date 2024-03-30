@@ -2,6 +2,7 @@ package com.example.namo2.global.common.response;
 
 import lombok.Getter;
 
+@SuppressWarnings("checkstyle:NoWhitespaceBefore")
 @Getter
 public enum BaseResponseStatus {
 
@@ -16,12 +17,15 @@ public enum BaseResponseStatus {
 	MAKE_PUBLIC_KEY_FAILURE(400, "애플 퍼블릭 키를 생성하는데 실패하였습니다"),
 	//애플 identityToken 오류
 	APPLE_REQUEST_ERROR(400, "애플 identityToken이 잘못되었습니다."),
+	USER_POST_ERROR(400, "email나 name이 비어있어 유저를 생성할 수 없습니다."),
 
 	/**
 	 * 401 : 소셜 로그인 오류
 	 */
 	SOCIAL_LOGIN_FAILURE(401, "소셜 로그인에 실패하였습니다."),
-
+	KAKAO_UNAUTHORIZED(401, "카카오 accessToken이 잘못되었습니다"),
+	NAVER_UNAUTHORIZED(401, "네이버 accessToken이 잘못되었습니다"),
+	APPLE_UNAUTHORIZED(401, "애플 authorization code가 잘못되었습니다."),
 	/**
 	 * 403 : local Access Token 오류
 	 */
@@ -29,6 +33,9 @@ public enum BaseResponseStatus {
 	LOGOUT_ERROR(403, "로그 아웃된 사용자입니다."),
 	EXPIRATION_ACCESS_TOKEN(403, "Access token 이 만료되었습니다."),
 	EXPIRATION_REFRESH_TOKEN(403, "RefreshToken 이 만료되었습니다."),
+
+	KAKAO_FORBIDDEN(403, "카카오 권한 오류"),
+	NAVER_FORBIDDEN(403, "네이버 권한 오류"),
 
 	/**
 	 * NOT FOUND 오류
@@ -70,6 +77,8 @@ public enum BaseResponseStatus {
 	FILE_NAME_EXCEPTION(404, "파일 확장자가 잘못되었습니다."),
 	S3_FAILURE(404, "파일 업로드 과정에서 오류가 발생하였습니다."),
 
+	NAVER_NOT_FOUND(404, "[네이버] 검색 결과가 없습니다"),
+
 	/**
 	 * 404: IllegalArgumentException
 	 */
@@ -80,7 +89,12 @@ public enum BaseResponseStatus {
 	 */
 	INTERNET_SERVER_ERROR(500, "서버 오류"),
 
-	JPA_FAILURE(500, "jpa, sql 상에서 오류가 발생했습니다.");
+	JPA_FAILURE(500, "jpa, sql 상에서 오류가 발생했습니다."),
+
+	KAKAO_INTERNAL_SERVER_ERROR(500, "카카오 서버 오류"),
+	KAKAO_BAD_GATEWAY(500, "카카오 시스템 오류"),
+	KAKAO_SERVICE_UNAVAILABLE(500, "카카오 서비스 점검 중"),
+	FEIGN_SERVER_ERROR(500, "feign 서버 에러");
 
 	private final int code;
 	private final String message;

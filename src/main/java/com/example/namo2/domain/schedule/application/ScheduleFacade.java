@@ -12,12 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.domain.Category;
 
-import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
-import com.example.namo2.domain.memo.application.impl.MoimMemoService;
-import com.example.namo2.domain.memo.domain.MoimMemo;
-import com.example.namo2.domain.memo.domain.MoimMemoLocation;
-import com.example.namo2.domain.memo.domain.MoimMemoLocationImg;
-
 import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
@@ -27,6 +21,7 @@ import com.example.namo2.domain.schedule.application.converter.AlarmConverter;
 import com.example.namo2.domain.schedule.application.converter.ImageConverter;
 import com.example.namo2.domain.schedule.application.converter.ScheduleConverter;
 import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
+import com.example.namo2.domain.schedule.application.impl.AlarmService;
 import com.example.namo2.domain.schedule.application.impl.ImageService;
 import com.example.namo2.domain.schedule.application.impl.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Alarm;
@@ -49,12 +44,11 @@ import lombok.RequiredArgsConstructor;
 public class ScheduleFacade {
 	private final UserService userService;
 	private final ScheduleService scheduleService;
+	private final AlarmService alarmService;
 	private final ImageService imageService;
 	private final CategoryService categoryService;
 	private final MoimScheduleService moimScheduleService;
 	private final MoimScheduleAndUserService moimScheduleAndUserService;
-	private final MoimMemoService moimMemoService;
-	private final MoimMemoLocationService moimMemoLocationService;
 	private final FileUtils fileUtils;
 
 	@Transactional
@@ -176,16 +170,19 @@ public class ScheduleFacade {
 	@Transactional
 	public void removeSchedule(Long scheduleId, Integer kind, Long userId
 	) throws BaseException {
-		if (kind == 0) { // 개인 스케줄
+		if (kind == 0) { // 개인 스케줄 :스케줄 알람, 이미지 함께 삭제
 			Schedule schedule = scheduleService.getScheduleById(scheduleId);
+			alarmService.removeAlarmsBySchedule(schedule);
+			imageService.removeImgsBySchedule(schedule);
 			scheduleService.removeSchedule(schedule);
 			return;
 		}
 		User user = userService.getUser(userId);
-		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleId);
+		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimScheduleAndUsers(scheduleId);
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
-		moimScheduleAndUserService.removeMoimScheduleAndUser(moimScheduleAndUser);
+		moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUser);
+		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule, moimScheduleAndUser);
 	}
 
 }

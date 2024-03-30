@@ -40,6 +40,10 @@ public class CategoryService {
 		category.delete();
 	}
 
+	public void removeCategoriesByUser(User user) {
+		categoryRepository.deleteAllByUser(user);
+	}
+
 	public Category getCategory(Long categoryId) {
 		return categoryRepository.findById(categoryId)
 			.orElseThrow(() -> new BaseException(NOT_FOUND_CATEGORY_FAILURE));

@@ -24,4 +24,6 @@ public interface MoimScheduleAndUserRepository
 
 	@Query("select msu from MoimScheduleAndUser msu where msu.moimSchedule = :moimSchedule")
 	List<MoimScheduleAndUser> findMoimScheduleAndUserByMoimSchedule(@Param("moimSchedule") MoimSchedule moimSchedule);
+
+	List<MoimScheduleAndUser> findAllByUser(User user);
 }

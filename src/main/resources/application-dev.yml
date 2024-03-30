@@ -21,3 +21,4 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
     com.example.namo2: debug
+    root: debug
