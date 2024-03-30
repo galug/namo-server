@@ -14,7 +14,7 @@ public class UserResponse {
 	public static class SignUpDto {
 		private String accessToken;
 		private String refreshToken;
-		private boolean isNewUser;
+		private boolean newUser;
 	}
 
 	@Getter

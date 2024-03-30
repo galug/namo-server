@@ -11,7 +11,7 @@ public class UserResponseConverter {
 		return UserResponse.SignUpDto.builder()
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
-			.isNewUser(isNewUser)
+			.newUser(isNewUser)
 			.build();
 	}
 
