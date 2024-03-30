@@ -1,8 +1,7 @@
 package com.example.namo2.domain.category.ui.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import com.example.namo2.domain.category.validation.annotation.CategoryName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +15,7 @@ public class CategoryRequest {
 	@AllArgsConstructor
 	@Getter
 	public static class PostCategoryDto {
-		@CategoryName
+		@NotBlank
 		private String name;
 		@NotNull
 		private Long paletteId;

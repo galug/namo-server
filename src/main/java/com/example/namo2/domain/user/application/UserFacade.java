@@ -49,6 +49,7 @@ import com.example.namo2.domain.category.application.converter.CategoryConverter
 import com.example.namo2.domain.category.application.impl.CategoryService;
 import com.example.namo2.domain.category.application.impl.PaletteService;
 import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.category.domain.CategoryKind;
 
 import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
 
@@ -285,16 +286,18 @@ public class UserFacade {
 
 	private void makeBaseCategory(User save) {
 		Category baseCategory = CategoryConverter.toCategory(
-			"일정",
+			CategoryKind.SCHEDULE.getCategoryName(),
 			paletteService.getReferenceById(1L),
 			Boolean.TRUE,
-			save
+			save,
+			CategoryKind.SCHEDULE
 		);
 		Category groupCategory = CategoryConverter.toCategory(
-			"모임",
+			CategoryKind.MOIM.getCategoryName(),
 			paletteService.getReferenceById(4L),
 			Boolean.TRUE,
-			save
+			save,
+			CategoryKind.MOIM
 		);
 
 		categoryService.create(baseCategory);

@@ -1,6 +1,7 @@
 package com.example.namo2.domain.category.application.converter;
 
 import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.category.domain.CategoryKind;
 import com.example.namo2.domain.category.domain.Palette;
 import com.example.namo2.domain.category.ui.dto.CategoryRequest;
 
@@ -22,6 +23,7 @@ public class CategoryConverter {
 			.user(user)
 			.palette(palette)
 			.share(dto.isShare())
+			.kind(CategoryKind.CUSTOM)
 			.build();
 	}
 
@@ -29,13 +31,15 @@ public class CategoryConverter {
 		String name,
 		Palette palette,
 		Boolean isShare,
-		User user
+		User user,
+		CategoryKind kind
 	) {
 		return Category.builder()
 			.name(name)
 			.palette(palette)
 			.share(isShare)
 			.user(user)
+			.kind(kind)
 			.build();
 	}
 }

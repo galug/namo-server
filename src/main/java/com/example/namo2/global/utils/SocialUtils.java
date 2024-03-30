@@ -68,7 +68,13 @@ public class SocialUtils {
 		if (!jsonMap.get("resultcode").equals("00")) {
 			throw new BaseException(SOCIAL_LOGIN_FAILURE);
 		}
-		return (Map<String, String>)jsonMap.get("response");
+		/**
+		 * 네이버 로그인 시에는 nickname이 null 값으로 받아집니다.
+		 * toUser를 일원화시키려면 아래 같은 식으로 name 값을 nickname 값으로 바꿔주셔야해요.
+		 */
+		Map<String, String> response = (Map<String, String>)jsonMap.get("response");
+		response.put("nickname", response.get("name"));
+		return response;
 	}
 
 	public Map<String, String> findResponseFromKakako(String result) throws BaseException {

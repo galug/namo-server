@@ -46,13 +46,17 @@ public class Category extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private CategoryStatus status;
 
+	@Enumerated(EnumType.STRING)
+	private CategoryKind kind;
+
 	@Builder
-	public Category(Palette palette, User user, String name, Boolean share) {
+	public Category(Palette palette, User user, String name, Boolean share, CategoryKind kind) {
 		this.palette = palette;
 		this.user = user;
 		this.name = name;
 		this.share = share;
 		this.status = CategoryStatus.ACTIVE;
+		this.kind = kind;
 	}
 
 	public void update(String name, Boolean share, Palette palette) {
@@ -63,5 +67,16 @@ public class Category extends BaseTimeEntity {
 
 	public void delete() {
 		this.status = CategoryStatus.DELETE;
+	}
+
+	public boolean isNotCreatedByUser(Long userId) {
+		return this.user.getId() != userId;
+	}
+
+	public boolean isBaseCategory() {
+		if (kind == CategoryKind.SCHEDULE || kind == CategoryKind.MOIM) {
+			return true;
+		}
+		return false;
 	}
 }
