@@ -19,9 +19,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 
-import com.example.namo2.domain.user.application.converter.UserResponseConverter;
-import com.example.namo2.domain.user.ui.dto.UserResponse;
-
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 
@@ -39,10 +36,10 @@ public class JwtUtils {
 	@Value("${jwt.secret-key}")
 	private String secretKey;
 
-	public UserResponse.SignUpDto generateTokens(Long userId) {
+	public String[] generateTokens(Long userId) {
 		String accessToken = createAccessToken(userId);
 		String refreshToken = createRefreshToken(userId);
-		return UserResponseConverter.toSignUpDto(accessToken, refreshToken);
+		return new String[] {accessToken, refreshToken};
 	}
 
 	private String createAccessToken(Long userId) {

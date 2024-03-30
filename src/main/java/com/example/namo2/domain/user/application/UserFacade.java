@@ -64,6 +64,7 @@ import com.example.namo2.domain.schedule.domain.Schedule;
 
 import com.example.namo2.domain.user.application.converter.TermConverter;
 import com.example.namo2.domain.user.application.converter.UserConverter;
+import com.example.namo2.domain.user.application.converter.UserResponseConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
@@ -109,6 +110,8 @@ public class UserFacade {
 	private final AppleAuthClient appleAuthClient;
 	private final AppleProperties appleProperties;
 
+	private boolean isNewUser;
+
 	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) {
 		try {
@@ -122,7 +125,8 @@ public class UserFacade {
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
 			User user = UserConverter.toUserForKakao(response);
 			User savedUser = saveOrNot(user);
-			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+			String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+			UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 			return signUpRes;
 		} catch (IOException e) {
@@ -141,7 +145,8 @@ public class UserFacade {
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
 			User user = UserConverter.toUserForNaver(response);
 			User savedUser = saveOrNot(user);
-			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+			String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+			UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 			return signUpRes;
 		} catch (IOException e) {
@@ -196,12 +201,15 @@ public class UserFacade {
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
 			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
 			makeBaseCategory(savedUser);
+			isNewUser = true;
 		} else { //재로그인
 			savedUser = userByEmail.get();
 			savedUser.setStatus(UserStatus.ACTIVE);
+			isNewUser = false;
 		}
 
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+		String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+		UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
@@ -249,16 +257,17 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
+	public UserResponse.ReissueDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
 		if (!jwtUtils.validateToken(signUpDto.getRefreshToken())) {
 			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
 		}
 		validateLogout(signUpDto);
 
 		User user = userService.getUserByRefreshToken(signUpDto.getRefreshToken());
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(user.getId());
-		user.updateRefreshToken(signUpRes.getRefreshToken());
-		return signUpRes;
+		String[] tokens = jwtUtils.generateTokens(user.getId());
+		UserResponse.ReissueDto reissueRes = UserResponseConverter.toReissueDto(tokens[0], tokens[1]);
+		user.updateRefreshToken(reissueRes.getRefreshToken());
+		return reissueRes;
 	}
 
 	@Transactional
@@ -277,10 +286,12 @@ public class UserFacade {
 		if (userByEmail.isEmpty()) {
 			User save = userService.createUser(user);
 			makeBaseCategory(save);
+			isNewUser = true;
 			return save;
 		}
 		User eixtingUser = userByEmail.get();
 		eixtingUser.setStatus(UserStatus.ACTIVE);
+		isNewUser = false;
 		return eixtingUser;
 	}
 
@@ -414,7 +425,7 @@ public class UserFacade {
 	 * - moimScheduleAlarm 삭제
 	 * moimMemoLocationAndUser 삭제
 	 */
-	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
+	@Scheduled(cron = "0 46 21 * * *") // 매일 자정에 실행
 	@Transactional
 	public void removeUserFromDB() {
 		List<User> users = userService.getInactiveUser();
