@@ -23,4 +23,6 @@ public interface MoimAndUserRepository extends JpaRepository<MoimAndUser, Long> 
 	List<MoimAndUser> findMoimAndUserByMoim(List<Moim> moims);
 
 	Optional<MoimAndUser> findMoimAndUserByUserAndMoim(User user, Moim moim);
+
+	void deleteAllByUser(User user);
 }
