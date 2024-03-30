@@ -3,6 +3,7 @@ package com.example.namo2.domain.moim.ui;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,14 +36,10 @@ import lombok.extern.slf4j.Slf4j;
 public class MoimController {
 	private final MoimFacade moimFacade;
 
-	/**
-	 * TODO
-	 * MultipartFile img 가 null 일 때 기본 이미지가 들어가게 수정한다.
-	 */
 	@Operation(summary = "모임 생성", description = "모임 생성 API")
 	@PostMapping("")
-	public BaseResponse<MoimResponse.MoimIdDto> createMoim(@RequestPart MultipartFile img,
-		@RequestPart String groupName,
+	public BaseResponse<MoimResponse.MoimIdDto> createMoim(@RequestPart(required = false) MultipartFile img,
+		@RequestPart(required = true) String groupName,
 		HttpServletRequest request) {
 		MoimResponse.MoimIdDto moimIdDto = moimFacade.createMoim((Long)request.getAttribute("userId"), groupName, img);
 		return new BaseResponse(moimIdDto);
@@ -57,7 +54,7 @@ public class MoimController {
 
 	@Operation(summary = "모임 이름 변경", description = "모임 이름 변경 API, 변경자 입장에서만 적용")
 	@PatchMapping("/name")
-	public BaseResponse<Long> modifyMoimName(@RequestBody MoimRequest.PatchMoimNameDto patchMoimNameDto,
+	public BaseResponse<Long> modifyMoimName(@Valid @RequestBody MoimRequest.PatchMoimNameDto patchMoimNameDto,
 		HttpServletRequest request) {
 		Long moimId = moimFacade.modifyMoimName(patchMoimNameDto, (Long)request.getAttribute("userId"));
 		return new BaseResponse(moimId);

@@ -64,7 +64,7 @@ public class MoimScheduleFacade {
 	 */
 	@Transactional(readOnly = false)
 	public Long createSchedule(MoimScheduleRequest.PostMoimScheduleDto moimScheduleDto) {
-		Moim moim = moimService.getMoim(moimScheduleDto.getMoimId());
+		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimScheduleDto.getMoimId());
 		Period period = MoimScheduleConverter.toPeriod(moimScheduleDto);
 		Location location = MoimScheduleConverter.toLocation(moimScheduleDto);
 		MoimSchedule moimSchedule = MoimScheduleConverter
@@ -169,7 +169,7 @@ public class MoimScheduleFacade {
 	@Transactional(readOnly = true)
 	public List<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(Long moimId,
 		List<LocalDateTime> localDateTimes) {
-		Moim moim = moimService.getMoim(moimId);
+		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
 		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
 
@@ -182,7 +182,7 @@ public class MoimScheduleFacade {
 
 	@Transactional(readOnly = true)
 	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId) {
-		Moim moim = moimService.getMoim(moimId);
+		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
 		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
 
