@@ -10,18 +10,10 @@ public class UserConverter {
 		throw new IllegalStateException("Utility class");
 	}
 
-	public static User toUserForKakao(Map<String, String> response) {
+	public static User toUser(Map<String, String> response) {
 		return User.builder()
 			.email(response.get("email"))
 			.name(response.get("nickname"))
-			.birthday(response.getOrDefault("birthday", null))
-			.build();
-	}
-
-	public static User toUserForNaver(Map<String, String> response) {
-		return User.builder()
-			.email(response.get("email"))
-			.name(response.get("name"))
 			.birthday(response.getOrDefault("birthday", null))
 			.build();
 	}

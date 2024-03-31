@@ -120,9 +120,10 @@ public class UserFacade {
 			log.debug("result = " + result);
 
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
-			User user = UserConverter.toUserForKakao(response);
+			User user = UserConverter.toUser(response);
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 			return signUpRes;
 		} catch (IOException e) {
@@ -139,9 +140,10 @@ public class UserFacade {
 			String result = socialUtils.findSocialLoginUsersInfo(con);
 
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
-			User user = UserConverter.toUserForNaver(response);
+			User user = UserConverter.toUser(response);
 			User savedUser = saveOrNot(user);
 			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 			return signUpRes;
 		} catch (IOException e) {

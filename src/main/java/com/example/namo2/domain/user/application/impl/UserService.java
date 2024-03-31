@@ -77,19 +77,6 @@ public class UserService {
 		}
 	}
 
-	/*
-	 * User status 도입?
-	 * 삭제 한다면..
-	 * - 개인 스케줄 삭제
-	 *  - 개인 스케줄 알람 삭제
-	 *  - 개인 스케줄 이미지 삭제
-	 * - 모임 스케줄 & 유저에서 삭제
-	 * - 모임 스케줄 알람 삭제
-	 * - 카테고리 삭제
-	 * - 모임 메모 삭제
-	 * - 모임 메모 로케이션 & 유저 삭제
-	 * - 모임 & 유저에서 삭제
-	 */
 	public void removeUser(User user) {
 		userRepository.delete(user);
 	}
