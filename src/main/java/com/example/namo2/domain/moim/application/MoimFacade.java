@@ -73,7 +73,7 @@ public class MoimFacade {
 
 		List<MoimAndUser> moimAndUsersInMoims = moimAndUserService
 			.getMoimAndUsers(moimsInUser);
-		return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims);
+		return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims, moimsInUser);
 	}
 
 	@Transactional(readOnly = false)
