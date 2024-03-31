@@ -29,9 +29,11 @@ public class TestController {
 	public BaseResponse<TestResponse.LogTestDto> loggingTest(
 			@RequestBody TestRequest.LogTestDto logTestDto
 	) {
-		return new BaseResponse<>(TestResponse.LogTestDto.builder()
+		TestResponse.LogTestDto dto = TestResponse.LogTestDto.builder()
 				.text(logTestDto.getText())
 				.number(logTestDto.getNumber())
-				.build());
+				.build();
+
+		return new BaseResponse<>(dto);
 	}
 }
