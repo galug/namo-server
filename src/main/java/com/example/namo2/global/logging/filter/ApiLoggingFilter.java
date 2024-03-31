@@ -69,10 +69,13 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 	private static void logPayload(String prefix, String contentType, byte[] rowData) throws IOException {
 		boolean visible = isVisible(MediaType.valueOf(contentType == null ? "application/json" : contentType));
 
+		ObjectMapper objectMapper = new ObjectMapper();
+		Object jsonObject = objectMapper.readValue(new String(rowData), Object.class);
+		String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+
 		if (visible) {
 			if (rowData.length > 0) {
-				String contentString = new String(rowData);
-				log.info("{} Payload: {}", prefix, contentString);
+				log.info("{} Payload: {}", prefix, json);
 			}
 		} else {
 			log.info("{} Payload: Binary Content", prefix);
