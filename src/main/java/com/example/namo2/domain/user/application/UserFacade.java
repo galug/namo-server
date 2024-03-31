@@ -110,8 +110,6 @@ public class UserFacade {
 	private final AppleAuthClient appleAuthClient;
 	private final AppleProperties appleProperties;
 
-	private boolean isNewUser;
-
 	@Transactional
 	public UserResponse.SignUpDto signupKakao(UserRequest.SocialSignUpDto signUpDto) {
 		try {
@@ -124,7 +122,11 @@ public class UserFacade {
 
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
 			User user = UserConverter.toUserForKakao(response);
-			User savedUser = saveOrNot(user);
+
+			Object[] objects = saveOrNot(user);
+			User savedUser = (User)objects[0];
+			boolean isNewUser = (boolean)objects[1];
+
 			String[] tokens = jwtUtils.generateTokens(savedUser.getId());
 			UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -144,7 +146,11 @@ public class UserFacade {
 
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
 			User user = UserConverter.toUserForNaver(response);
-			User savedUser = saveOrNot(user);
+
+			Object[] objects = saveOrNot(user);
+			User savedUser = (User)objects[0];
+			boolean isNewUser = (boolean)objects[1];
+
 			String[] tokens = jwtUtils.generateTokens(savedUser.getId());
 			UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
@@ -196,6 +202,7 @@ public class UserFacade {
 
 		//로그인 분기처리
 		User savedUser;
+		boolean isNewUser;
 		Optional<User> userByEmail = userService.getUserByEmail(email);
 		if (userByEmail.isEmpty()) { //첫로그인
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
@@ -281,18 +288,18 @@ public class UserFacade {
 		redisTemplate.opsForValue().set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 	}
 
-	private User saveOrNot(User user) {
+	private Object[] saveOrNot(User user) {
 		Optional<User> userByEmail = userService.getUserByEmail(user.getEmail());
 		if (userByEmail.isEmpty()) {
 			User save = userService.createUser(user);
 			makeBaseCategory(save);
-			isNewUser = true;
-			return save;
+			boolean isNewUser = true;
+			return new Object[] {save, isNewUser};
 		}
-		User eixtingUser = userByEmail.get();
-		eixtingUser.setStatus(UserStatus.ACTIVE);
-		isNewUser = false;
-		return eixtingUser;
+		User exitingUser = userByEmail.get();
+		exitingUser.setStatus(UserStatus.ACTIVE);
+		boolean isNewUser = false;
+		return new Object[] {exitingUser, isNewUser};
 	}
 
 	private void makeBaseCategory(User save) {
