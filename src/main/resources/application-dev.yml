@@ -18,7 +18,10 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.type: trace
-    com.example.namo2: debug
-    root: debug
+    ROOT: INFO
+    org.hibernate: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.orm: TRACE
+    org.springframework.transaction: TRACE
+    com.zaxxer.hikari: TRACE
+    com.mysql.cj.jdbc: TRACE
