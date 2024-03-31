@@ -155,4 +155,13 @@ public class MoimMemoFacade {
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 		moimScheduleAndUserService.modifyText(moimScheduleAndUser, moimScheduleText.getText());
 	}
+
+	@Transactional(readOnly = false)
+	public void removeMoimMemo(Long memoId) {
+		MoimMemo moimMemoWithLocations = moimMemoService.getMoimMemoWithLocations(memoId);
+		for (MoimMemoLocation moimMemoLocation : moimMemoWithLocations.getMoimMemoLocations()) {
+			removeMoimMemoLocation(moimMemoLocation.getId());
+		}
+		moimMemoService.removeMoimMemo(moimMemoWithLocations);
+	}
 }

@@ -50,6 +50,7 @@ public enum BaseResponseStatus {
 	NOT_FOUND_MOIM_FAILURE(404, "모임을 찾을 수 없습니다."),
 	NOT_FOUND_MOIM_AND_USER_FAILURE(404, "그룹 구성원이 아닙니다."),
 	NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE(404, "그룹 스케줄 구성원이 아닙니다."),
+	NOT_FOUND_MOIM_MEMO_FAILURE(404, "모임 메모를 찾을 수 없습니다."),
 	NOT_FOUND_MOIM_MEMO_LOCATION_FAILURE(404, "모임 장소를 찾을 수 없습니다."),
 	NOT_FOUND_COLOR(404, "색깔을 찾을 수 없습니다."),
 
