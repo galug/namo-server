@@ -1,18 +1,16 @@
 package com.example.namo2.global.logging.filter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import com.example.namo2.global.logging.wrapper.RequestWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,7 +32,7 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		} else {
 			doFilterWrapped(
-					new RequestWrapper(request),
+					new ContentCachingRequestWrapper(request),
 					new ContentCachingResponseWrapper(response),
 					filterChain
 			);
@@ -42,7 +40,7 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 	}
 
 	protected void doFilterWrapped(
-			RequestWrapper request,
+			ContentCachingRequestWrapper request,
 			ContentCachingResponseWrapper response,
 			FilterChain filterChain
 	) throws ServletException, IOException {
@@ -55,40 +53,25 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 		}
 	}
 
-	private static void logRequest(
-			RequestWrapper request
-	) throws IOException {
+	private static void logRequest(ContentCachingRequestWrapper request) throws IOException {
 		String queryString = request.getQueryString();
-		String uri = Optional.ofNullable(queryString)
-				.map(string -> request.getRequestURI() + string)
-				.orElseGet(request::getRequestURI);
+		String s = queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString;
+		log.info("Request : {} uri=[{}] content-type[{}]",
+				request.getMethod(), s, request.getContentType());
 
-		log.info("Request : [{}] /[{}] content-type[{}]",
-				request.getMethod(), uri, request.getContentType());
-
-		logPayload("Request",
-				request.getContentType(),
-				request.getInputStream());
+		logPayload("Request", request.getContentType(), request.getContentAsByteArray());
 	}
 
-	private static void logResponse(
-			ContentCachingResponseWrapper response
-	) throws IOException {
-		logPayload("Response", response.getContentType(), response.getContentInputStream());
+	private static void logResponse(ContentCachingResponseWrapper response) throws IOException {
+		logPayload("Response", response.getContentType(), response.getContentAsByteArray());
 	}
 
-	private static void logPayload(
-			String prefix,
-			String contentType,
-			InputStream inputStream
-	) throws IOException {
-		MediaType mediaType = MediaType.valueOf(contentType == null ? "application/json" : contentType);
-		boolean visible = isVisible(mediaType);
+	private static void logPayload(String prefix, String contentType, byte[] rowData) throws IOException {
+		boolean visible = isVisible(MediaType.valueOf(contentType == null ? "application/json" : contentType));
 
 		if (visible) {
-			byte[] content = StreamUtils.copyToByteArray(inputStream);
-			if (content.length > 0) {
-				String contentString = new String(content);
+			if (rowData.length > 0) {
+				String contentString = new String(rowData);
 				log.info("{} Payload: {}", prefix, contentString);
 			}
 		} else {
