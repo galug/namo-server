@@ -35,11 +35,8 @@ public class MoimScheduleAndUserService {
 		moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
 	}
 
-	public void removeMoimScheduleAndUser(MoimSchedule moimSchedule, MoimScheduleAndUser moimScheduleAndUser) {
-		if (moimSchedule.isLastScheduleMember()) {
-			moimSchedule.deleteMoimSchedule();
-		}
-		moimScheduleAndUserRepository.delete(moimScheduleAndUser);
+	public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+		moimScheduleAndUser.handleDeletedPersonalSchedule();
 	}
 
 	public void removeMoimScheduleAndUsers(List<MoimScheduleAndUser> moimScheduleAndUsers) {
