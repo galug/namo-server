@@ -35,7 +35,7 @@ public class MoimScheduleAndUserService {
 		moimScheduleAndUserRepository.deleteMoimScheduleAndUserByMoimSchedule(moimSchedule);
 	}
 
-	public void removeMoimScheduleAndUser(MoimScheduleAndUser moimScheduleAndUser) {
+	public void removeMoimScheduleAndUserInPersonalSpace(MoimScheduleAndUser moimScheduleAndUser) {
 		moimScheduleAndUser.handleDeletedPersonalSchedule();
 	}
 
@@ -80,5 +80,9 @@ public class MoimScheduleAndUserService {
 
 	public void modifyText(MoimScheduleAndUser moimScheduleAndUser, String moimScheduleText) {
 		moimScheduleAndUser.updateText(moimScheduleText);
+	}
+
+	public void removeMoimScheduleMemoInPersonalSpace(MoimScheduleAndUser moimScheduleAndUser) {
+		moimScheduleAndUser.handleDeletedPersonalMoimMemo();
 	}
 }

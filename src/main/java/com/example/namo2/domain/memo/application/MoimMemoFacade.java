@@ -164,4 +164,13 @@ public class MoimMemoFacade {
 		}
 		moimMemoService.removeMoimMemo(moimMemoWithLocations);
 	}
+
+	@Transactional(readOnly = false)
+	public void removePersonMoimMemo(Long scheduleId, Long userId) {
+		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleId);
+		User user = userService.getUser(userId);
+		MoimScheduleAndUser moimScheduleAndUser
+			= moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
+		moimScheduleAndUserService.removeMoimScheduleMemoInPersonalSpace(moimScheduleAndUser);
+	}
 }

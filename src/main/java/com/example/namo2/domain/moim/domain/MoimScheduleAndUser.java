@@ -80,6 +80,10 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
 		this.visibleStatus = VisibleStatus.NOT_SEEN_PERSONAL_SCHEDULE;
 	}
 
+	public void handleDeletedPersonalMoimMemo() {
+		this.visibleStatus = VisibleStatus.NOT_SEEN_MEMO;
+	}
+
 	@Override
 	public String toString() {
 		return "MoimScheduleAndUser{"
