@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.namo2.domain.test.ui.dto.TestRequest;
@@ -16,8 +15,12 @@ import com.example.namo2.global.common.response.BaseResponse;
 public class TestController {
 
 	@GetMapping("/log")
-	public String testLog() {
-		return "test";
+	public BaseResponse<TestResponse.TestDto> testLog() {
+		return new BaseResponse<>(
+				TestResponse.TestDto.builder()
+						.test("test")
+						.build()
+		);
 	}
 
 	@GetMapping("/authenticate")

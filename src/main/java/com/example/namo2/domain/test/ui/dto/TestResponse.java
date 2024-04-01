@@ -15,4 +15,10 @@ public class TestResponse {
 		private String text;
 		private Integer number;
 	}
+
+	@Getter
+	@Builder
+	public static class TestDto {
+		private String test;
+	}
 }
