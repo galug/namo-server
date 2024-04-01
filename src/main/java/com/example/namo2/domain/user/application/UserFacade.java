@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -60,6 +61,7 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.application.impl.AlarmService;
 import com.example.namo2.domain.schedule.application.impl.ImageService;
 import com.example.namo2.domain.schedule.application.impl.ScheduleService;
+import com.example.namo2.domain.schedule.domain.Image;
 import com.example.namo2.domain.schedule.domain.Schedule;
 
 import com.example.namo2.domain.user.application.converter.TermConverter;
@@ -79,6 +81,7 @@ import com.example.namo2.global.feignclient.apple.AppleResponse;
 import com.example.namo2.global.feignclient.apple.AppleResponseConverter;
 import com.example.namo2.global.feignclient.kakao.KakaoAuthClient;
 import com.example.namo2.global.feignclient.naver.NaverAuthClient;
+import com.example.namo2.global.utils.FileUtils;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
@@ -92,6 +95,7 @@ public class UserFacade {
 	private final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
+	private final FileUtils fileUtils;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	private final UserService userService;
@@ -426,6 +430,9 @@ public class UserFacade {
 
 				List<Schedule> schedules = scheduleService.getSchedulesByUser(user);
 				alarmService.removeAlarmsBySchedules(schedules);
+				List<Image> images = imageService.getImagesBySchedules(schedules);
+				List<String> urls = images.stream().map(Image::getImgUrl).collect(Collectors.toList());
+				fileUtils.deleteImages(urls);
 				imageService.removeImgsBySchedules(schedules);
 				scheduleService.removeSchedules(schedules);
 
