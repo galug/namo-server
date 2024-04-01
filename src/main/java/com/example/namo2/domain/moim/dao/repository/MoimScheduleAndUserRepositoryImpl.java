@@ -15,6 +15,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.moim.domain.VisibleStatus;
 
 import com.example.namo2.domain.user.domain.User;
 
@@ -65,7 +66,8 @@ public class MoimScheduleAndUserRepositoryImpl implements MoimScheduleAndUserRep
 			.join(category.palette).fetchJoin()
 			.where(moimSchedule.period.startDate.before(dates.get(1)),
 				moimSchedule.period.endDate.after(dates.get(0)),
-				moimScheduleAndUser.user.eq(user)
+				moimScheduleAndUser.user.eq(user),
+				moimScheduleAndUser.visibleStatus.eq(VisibleStatus.ALL)
 			)
 			.orderBy(moimSchedule.period.startDate.desc())
 			.offset(pageable.getOffset())
