@@ -66,6 +66,7 @@ import com.example.namo2.domain.schedule.domain.Schedule;
 
 import com.example.namo2.domain.user.application.converter.TermConverter;
 import com.example.namo2.domain.user.application.converter.UserConverter;
+import com.example.namo2.domain.user.application.converter.UserResponseConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
@@ -125,8 +126,13 @@ public class UserFacade {
 
 			Map<String, String> response = socialUtils.findResponseFromKakako(result);
 			User user = UserConverter.toUserForKakao(response);
-			User savedUser = saveOrNot(user);
-			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+
+			Object[] objects = saveOrNot(user);
+			User savedUser = (User)objects[0];
+			boolean isNewUser = (boolean)objects[1];
+
+			String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+			UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 			return signUpRes;
 		} catch (IOException e) {
@@ -144,8 +150,13 @@ public class UserFacade {
 
 			Map<String, String> response = socialUtils.findResponseFromNaver(result);
 			User user = UserConverter.toUserForNaver(response);
-			User savedUser = saveOrNot(user);
-			UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+
+			Object[] objects = saveOrNot(user);
+			User savedUser = (User)objects[0];
+			boolean isNewUser = (boolean)objects[1];
+
+			String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+			UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 			userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 			return signUpRes;
 		} catch (IOException e) {
@@ -195,17 +206,21 @@ public class UserFacade {
 
 		//로그인 분기처리
 		User savedUser;
+		boolean isNewUser;
 		Optional<User> userByEmail = userService.getUserByEmail(email);
 		if (userByEmail.isEmpty()) { //첫로그인
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
 			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
 			makeBaseCategory(savedUser);
+			isNewUser = true;
 		} else { //재로그인
 			savedUser = userByEmail.get();
 			savedUser.setStatus(UserStatus.ACTIVE);
+			isNewUser = false;
 		}
 
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+		String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+		UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
@@ -253,16 +268,17 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
+	public UserResponse.ReissueDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
 		if (!jwtUtils.validateToken(signUpDto.getRefreshToken())) {
 			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
 		}
 		validateLogout(signUpDto);
 
 		User user = userService.getUserByRefreshToken(signUpDto.getRefreshToken());
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(user.getId());
-		user.updateRefreshToken(signUpRes.getRefreshToken());
-		return signUpRes;
+		String[] tokens = jwtUtils.generateTokens(user.getId());
+		UserResponse.ReissueDto reissueRes = UserResponseConverter.toReissueDto(tokens[0], tokens[1]);
+		user.updateRefreshToken(reissueRes.getRefreshToken());
+		return reissueRes;
 	}
 
 	@Transactional
@@ -276,16 +292,18 @@ public class UserFacade {
 		redisTemplate.opsForValue().set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 	}
 
-	private User saveOrNot(User user) {
+	private Object[] saveOrNot(User user) {
 		Optional<User> userByEmail = userService.getUserByEmail(user.getEmail());
 		if (userByEmail.isEmpty()) {
 			User save = userService.createUser(user);
 			makeBaseCategory(save);
-			return save;
+			boolean isNewUser = true;
+			return new Object[] {save, isNewUser};
 		}
-		User eixtingUser = userByEmail.get();
-		eixtingUser.setStatus(UserStatus.ACTIVE);
-		return eixtingUser;
+		User exitingUser = userByEmail.get();
+		exitingUser.setStatus(UserStatus.ACTIVE);
+		boolean isNewUser = false;
+		return new Object[] {exitingUser, isNewUser};
 	}
 
 	private void makeBaseCategory(User save) {
@@ -418,7 +436,7 @@ public class UserFacade {
 	 * - moimScheduleAlarm 삭제
 	 * moimMemoLocationAndUser 삭제
 	 */
-	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
+	@Scheduled(cron = "0 46 21 * * *") // 매일 자정에 실행
 	@Transactional
 	public void removeUserFromDB() {
 		List<User> users = userService.getInactiveUser();
