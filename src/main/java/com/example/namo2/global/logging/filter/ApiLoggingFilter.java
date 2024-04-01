@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -69,17 +70,20 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 	private static void logPayload(String prefix, String contentType, byte[] rowData) throws IOException {
 		boolean visible = isVisible(MediaType.valueOf(contentType == null ? "application/json" : contentType));
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		Object jsonObject = objectMapper.readValue(new String(rowData), Object.class);
-		String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-
 		if (visible) {
 			if (rowData.length > 0) {
+				String json = getJsonString(rowData);
 				log.info("{} Payload: {}", prefix, json);
 			}
 		} else {
 			log.info("{} Payload: Binary Content", prefix);
 		}
+	}
+
+	private static String getJsonString(byte[] rowData) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Object jsonObject = objectMapper.readValue(new String(rowData), Object.class);
+		return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
 	}
 
 	private static boolean isVisible(MediaType mediaType) {
