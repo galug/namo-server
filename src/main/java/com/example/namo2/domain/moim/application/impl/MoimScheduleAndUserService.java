@@ -2,12 +2,16 @@ package com.example.namo2.domain.moim.application.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAlarmRepository;
 import com.example.namo2.domain.moim.dao.repository.MoimScheduleAndUserRepository;
+import com.example.namo2.domain.moim.domain.Moim;
+import com.example.namo2.domain.moim.domain.MoimAndUser;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
@@ -27,8 +31,29 @@ public class MoimScheduleAndUserService {
 	private final MoimScheduleAndUserRepository moimScheduleAndUserRepository;
 	private final MoimScheduleAlarmRepository moimScheduleAlarmRepository;
 
-	public void createAll(List<MoimScheduleAndUser> moimScheduleAndUsers) {
+	public void createAll(List<MoimScheduleAndUser> moimScheduleAndUsers, Moim moim) {
+		validateMoimScheduleAndUserSize(moimScheduleAndUsers);
+		validateMoimScheduleAndUsersInMoimAndUsers(moimScheduleAndUsers, moim);
 		moimScheduleAndUserRepository.saveAll(moimScheduleAndUsers);
+	}
+
+	private void validateMoimScheduleAndUserSize(List<MoimScheduleAndUser> moimScheduleAndUsers) {
+		if (moimScheduleAndUsers.size() == 0) {
+			throw new BaseException(BaseResponseStatus.EMPTY_USERS_FAILURE);
+		}
+	}
+
+	private void validateMoimScheduleAndUsersInMoimAndUsers(List<MoimScheduleAndUser> moimScheduleAndUsers, Moim moim) {
+		Set<User> moimUsers = moim.getMoimAndUsers()
+			.stream()
+			.map(MoimAndUser::getUser)
+			.collect(Collectors.toSet());
+		for (MoimScheduleAndUser moimScheduleAndUser : moimScheduleAndUsers) {
+			if (!moimUsers.contains(moimScheduleAndUser.getUser())) {
+				throw new BaseException(BaseResponseStatus.NOT_USERS_IN_MOIM);
+			}
+
+		}
 	}
 
 	public void removeMoimScheduleAndUser(MoimSchedule moimSchedule) {

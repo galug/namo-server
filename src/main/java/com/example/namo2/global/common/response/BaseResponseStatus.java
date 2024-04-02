@@ -61,6 +61,8 @@ public enum BaseResponseStatus {
 	NOT_CHECK_TERM_ERROR(404, "약관에 무조건 동의 해야합니다."),
 	MOIM_IS_FULL_ERROR(404, "모임이 가득 차 있습니다."),
 	NOT_INCLUDE_MOIM_USER(404, "모임 안에 포함되어 있지 않은 유저입니다."),
+	EMPTY_USERS_FAILURE(404, "스케줄 참여 유저가 없습니다."),
+	NOT_HAS_MOIM_CATEGORIES_USERS(404, "유저들에 대한 모임의 카테고리가 없습니다."),
 
 	/**
 	 * 404: 중복 에러
@@ -73,6 +75,7 @@ public enum BaseResponseStatus {
 	 * 404 오용 오류
 	 */
 	NOT_USERS_CATEGORY(404, "잘못된 접근 요청입니다.."),
+	NOT_USERS_IN_MOIM(404, "유저가 모임에 포함되어 있지 않습니다."),
 
 	/**
 	 * 404: 인프라 에러
