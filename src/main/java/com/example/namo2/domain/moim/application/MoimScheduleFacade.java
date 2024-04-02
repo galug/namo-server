@@ -175,8 +175,9 @@ public class MoimScheduleFacade {
 
 	@Transactional(readOnly = true)
 	public List<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(Long moimId,
-		List<LocalDateTime> localDateTimes) {
+		List<LocalDateTime> localDateTimes, Long userId) {
 		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
+		existMoimAndUser(userId, moim);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
 		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
 
@@ -188,8 +189,9 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId) {
+	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId, Long userId) {
 		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
+		existMoimAndUser(userId, moim);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
 		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
 

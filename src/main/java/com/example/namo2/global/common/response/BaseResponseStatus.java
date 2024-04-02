@@ -89,6 +89,7 @@ public enum BaseResponseStatus {
 	 * 404: IllegalArgumentException
 	 */
 	NOT_NULL_FAILURE(404, "널 혹은 비어 있는 값을 카테고리 값으로 넣지 말아주세요,"),
+	INVALID_FORMAT_FAILURE(404, "유효한 날짜 값을 입력해주세요"),
 
 	/**
 	 * 500 : 서버 에러
