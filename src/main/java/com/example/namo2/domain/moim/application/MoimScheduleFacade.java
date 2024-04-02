@@ -106,15 +106,22 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void removeMoimSchedule(Long moimScheduleId) {
+	public void removeMoimSchedule(Long moimScheduleId, Long userId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(moimScheduleId);
 		List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService.getMoimScheduleAndUsers(moimSchedule);
+
+		existMoimAndUser(userId, moimSchedule.getMoim());
 
 		removeMoimScheduleMemo(moimSchedule.getMoimMemo());
 
 		moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUsers);
 		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
 		moimScheduleService.remove(moimSchedule);
+	}
+
+	private void existMoimAndUser(Long userId, Moim moim) {
+		User user = userService.getUser(userId);
+		moimAndUserService.getMoimAndUser(moim, user);
 	}
 
 	private void removeMoimScheduleMemo(MoimMemo moimMemo) {
