@@ -189,7 +189,7 @@ public class ScheduleFacade {
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
 		moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUser);
-		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule, moimScheduleAndUser);
+		moimScheduleAndUserService.removeMoimScheduleAndUserInPersonalSpace(moimScheduleAndUser);
 	}
 
 }
