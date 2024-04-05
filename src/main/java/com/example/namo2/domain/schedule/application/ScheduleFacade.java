@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class ScheduleFacade {
+	private final Logger logger = LoggerFactory.getLogger(ScheduleFacade.class);
 	private final UserService userService;
 	private final ScheduleService scheduleService;
 	private final AlarmService alarmService;
@@ -173,6 +176,10 @@ public class ScheduleFacade {
 		if (kind == 0) { // 개인 스케줄 :스케줄 알람, 이미지 함께 삭제
 			Schedule schedule = scheduleService.getScheduleById(scheduleId);
 			alarmService.removeAlarmsBySchedule(schedule);
+			List<String> urls = schedule.getImages().stream()
+				.map(Image::getImgUrl)
+				.collect(Collectors.toList());
+			fileUtils.deleteImages(urls);
 			imageService.removeImgsBySchedule(schedule);
 			scheduleService.removeSchedule(schedule);
 			return;
@@ -182,7 +189,7 @@ public class ScheduleFacade {
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 
 		moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUser);
-		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule, moimScheduleAndUser);
+		moimScheduleAndUserService.removeMoimScheduleAndUserInPersonalSpace(moimScheduleAndUser);
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -39,10 +40,12 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.schedule.application.impl.AlarmService;
 import com.example.namo2.domain.schedule.application.impl.ImageService;
 import com.example.namo2.domain.schedule.application.impl.ScheduleService;
+import com.example.namo2.domain.schedule.domain.Image;
 import com.example.namo2.domain.schedule.domain.Schedule;
 
 import com.example.namo2.domain.user.application.converter.TermConverter;
 import com.example.namo2.domain.user.application.converter.UserConverter;
+import com.example.namo2.domain.user.application.converter.UserResponseConverter;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.Term;
 import com.example.namo2.domain.user.domain.User;
@@ -56,6 +59,7 @@ import com.example.namo2.global.feignclient.apple.AppleResponse;
 import com.example.namo2.global.feignclient.apple.AppleResponseConverter;
 import com.example.namo2.global.feignclient.kakao.KakaoAuthClient;
 import com.example.namo2.global.feignclient.naver.NaverAuthClient;
+import com.example.namo2.global.utils.FileUtils;
 import com.example.namo2.global.utils.JwtUtils;
 import com.example.namo2.global.utils.SocialUtils;
 
@@ -69,6 +73,7 @@ public class UserFacade {
 	private final Logger logger = LoggerFactory.getLogger(UserFacade.class);
 	private final SocialUtils socialUtils;
 	private final JwtUtils jwtUtils;
+	private final FileUtils fileUtils;
 	private final RedisTemplate<String, String> redisTemplate;
 
 	private final UserService userService;
@@ -155,17 +160,21 @@ public class UserFacade {
 
 		//로그인 분기처리
 		User savedUser;
+		boolean isNewUser;
 		Optional<User> userByEmail = userService.getUserByEmail(email);
 		if (userByEmail.isEmpty()) { //첫로그인
 			userService.checkEmailAndName(req.getEmail(), req.getUsername());
 			savedUser = userService.createUser(UserConverter.toUser(req.getEmail(), req.getUsername()));
 			makeBaseCategory(savedUser);
+			isNewUser = true;
 		} else { //재로그인
 			savedUser = userByEmail.get();
 			savedUser.setStatus(UserStatus.ACTIVE);
+			isNewUser = false;
 		}
 
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
+		String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+		UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
@@ -176,9 +185,10 @@ public class UserFacade {
 		userService.checkLogoutUser(signUpDto);
 
 		User user = userService.getUserByRefreshToken(signUpDto.getRefreshToken());
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(user.getId());
-		user.updateRefreshToken(signUpRes.getRefreshToken());
-		return signUpRes;
+		String[] tokens = jwtUtils.generateTokens(user.getId());
+		UserResponse.ReissueDto reissueRes = UserResponseConverter.toReissueDto(tokens[0], tokens[1]);
+		user.updateRefreshToken(reissueRes.getRefreshToken());
+		return reissueRes;
 	}
 
 	@Transactional
@@ -190,16 +200,18 @@ public class UserFacade {
 		redisTemplate.opsForValue().set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 	}
 
-	private User saveOrNot(User user) {
+	private Object[] saveOrNot(User user) {
 		Optional<User> userByEmail = userService.getUserByEmail(user.getEmail());
 		if (userByEmail.isEmpty()) {
 			User save = userService.createUser(user);
 			makeBaseCategory(save);
-			return save;
+			boolean isNewUser = true;
+			return new Object[] {save, isNewUser};
 		}
-		User eixtingUser = userByEmail.get();
-		eixtingUser.setStatus(UserStatus.ACTIVE);
-		return eixtingUser;
+		User exitingUser = userByEmail.get();
+		exitingUser.setStatus(UserStatus.ACTIVE);
+		boolean isNewUser = false;
+		return new Object[] {exitingUser, isNewUser};
 	}
 
 	private void makeBaseCategory(User save) {
@@ -306,7 +318,7 @@ public class UserFacade {
 	 * - moimScheduleAlarm 삭제
 	 * moimMemoLocationAndUser 삭제
 	 */
-	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
+	@Scheduled(cron = "0 46 21 * * *") // 매일 자정에 실행
 	@Transactional
 	public void removeUserFromDB() {
 		List<User> users = userService.getInactiveUser();
@@ -318,6 +330,9 @@ public class UserFacade {
 
 				List<Schedule> schedules = scheduleService.getSchedulesByUser(user);
 				alarmService.removeAlarmsBySchedules(schedules);
+				List<Image> images = imageService.getImagesBySchedules(schedules);
+				List<String> urls = images.stream().map(Image::getImgUrl).collect(Collectors.toList());
+				fileUtils.deleteImages(urls);
 				imageService.removeImgsBySchedules(schedules);
 				scheduleService.removeSchedules(schedules);
 

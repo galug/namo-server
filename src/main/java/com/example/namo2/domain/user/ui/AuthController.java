@@ -55,11 +55,11 @@ public class AuthController {
 
 	@Operation(summary = "토큰 재발급", description = "토큰 재발급")
 	@PostMapping(value = "/reissuance")
-	public BaseResponse<UserResponse.SignUpDto> reissueAccessToken(
+	public BaseResponse<UserResponse.ReissueDto> reissueAccessToken(
 		@Valid @RequestBody UserRequest.SignUpDto signUpDto
 	) {
-		UserResponse.SignUpDto signupDto = userFacade.reissueAccessToken(signUpDto);
-		return new BaseResponse<>(signupDto);
+		UserResponse.ReissueDto reissueDto = userFacade.reissueAccessToken(signUpDto);
+		return new BaseResponse<>(reissueDto);
 	}
 
 	@Operation(summary = "로그아웃", description = "로그아웃")

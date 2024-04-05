@@ -51,6 +51,7 @@ public enum BaseResponseStatus {
 	NOT_FOUND_MOIM_FAILURE(404, "모임을 찾을 수 없습니다."),
 	NOT_FOUND_MOIM_AND_USER_FAILURE(404, "그룹 구성원이 아닙니다."),
 	NOT_FOUND_MOIM_SCHEDULE_AND_USER_FAILURE(404, "그룹 스케줄 구성원이 아닙니다."),
+	NOT_FOUND_MOIM_MEMO_FAILURE(404, "모임 메모를 찾을 수 없습니다."),
 	NOT_FOUND_MOIM_MEMO_LOCATION_FAILURE(404, "모임 장소를 찾을 수 없습니다."),
 	NOT_FOUND_COLOR(404, "색깔을 찾을 수 없습니다."),
 
@@ -62,6 +63,8 @@ public enum BaseResponseStatus {
 	NOT_CHECK_TERM_ERROR(404, "약관에 무조건 동의 해야합니다."),
 	MOIM_IS_FULL_ERROR(404, "모임이 가득 차 있습니다."),
 	NOT_INCLUDE_MOIM_USER(404, "모임 안에 포함되어 있지 않은 유저입니다."),
+	EMPTY_USERS_FAILURE(404, "스케줄 참여 유저가 없습니다."),
+	NOT_HAS_MOIM_CATEGORIES_USERS(404, "유저들에 대한 모임의 카테고리가 없습니다."),
 
 	/**
 	 * 404: 중복 에러
@@ -74,6 +77,7 @@ public enum BaseResponseStatus {
 	 * 404 오용 오류
 	 */
 	NOT_USERS_CATEGORY(404, "잘못된 접근 요청입니다.."),
+	NOT_USERS_IN_MOIM(404, "유저가 모임에 포함되어 있지 않습니다."),
 
 	/**
 	 * 404: 인프라 에러
@@ -87,6 +91,7 @@ public enum BaseResponseStatus {
 	 * 404: IllegalArgumentException
 	 */
 	NOT_NULL_FAILURE(404, "널 혹은 비어 있는 값을 카테고리 값으로 넣지 말아주세요,"),
+	INVALID_FORMAT_FAILURE(404, "유효한 날짜 값을 입력해주세요"),
 
 	/**
 	 * 500 : 서버 에러

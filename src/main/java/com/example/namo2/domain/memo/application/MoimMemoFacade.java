@@ -72,7 +72,7 @@ public class MoimMemoFacade {
 
 	private void createMoimMemoLocationAndUsers(MoimMemoRequest.LocationDto locationDto,
 		MoimMemoLocation moimMemoLocation) {
-		List<User> users = userService.getUsers(locationDto.getParticipants());
+		List<User> users = userService.getUsersInMoimSchedule(locationDto.getParticipants());
 		List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = MoimMemoLocationConverter
 			.toMoimMemoLocationLocationAndUsers(moimMemoLocation, users);
 		moimMemoLocationService.createMoimMemoLocationAndUsers(moimMemoLocationAndUsers);
@@ -154,5 +154,23 @@ public class MoimMemoFacade {
 		User user = userService.getUser(userId);
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
 		moimScheduleAndUserService.modifyText(moimScheduleAndUser, moimScheduleText.getText());
+	}
+
+	@Transactional(readOnly = false)
+	public void removeMoimMemo(Long memoId) {
+		MoimMemo moimMemoWithLocations = moimMemoService.getMoimMemoWithLocations(memoId);
+		for (MoimMemoLocation moimMemoLocation : moimMemoWithLocations.getMoimMemoLocations()) {
+			removeMoimMemoLocation(moimMemoLocation.getId());
+		}
+		moimMemoService.removeMoimMemo(moimMemoWithLocations);
+	}
+
+	@Transactional(readOnly = false)
+	public void removePersonMoimMemo(Long scheduleId, Long userId) {
+		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleId);
+		User user = userService.getUser(userId);
+		MoimScheduleAndUser moimScheduleAndUser
+			= moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);
+		moimScheduleAndUserService.removeMoimScheduleMemoInPersonalSpace(moimScheduleAndUser);
 	}
 }

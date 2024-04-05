@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -52,6 +54,9 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
 	@OneToMany(mappedBy = "moimScheduleAndUser", fetch = FetchType.LAZY)
 	private List<MoimScheduleAlarm> moimScheduleAlarms = new ArrayList<>();
 
+	@Enumerated(EnumType.STRING)
+	private VisibleStatus visibleStatus;
+
 	@Builder
 	public MoimScheduleAndUser(Long id, String memo, User user, MoimSchedule moimSchedule, Category category) {
 		this.id = id;
@@ -60,6 +65,7 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
 		this.moimSchedule = moimSchedule;
 		this.category = category;
 		moimSchedule.getMoimScheduleAndUsers().add(this);
+		visibleStatus = VisibleStatus.ALL;
 	}
 
 	public void updateCategory(Category category) {
@@ -68,6 +74,14 @@ public class MoimScheduleAndUser extends BaseTimeEntity {
 
 	public void updateText(String memo) {
 		this.memo = memo;
+	}
+
+	public void handleDeletedPersonalSchedule() {
+		this.visibleStatus = VisibleStatus.NOT_SEEN_PERSONAL_SCHEDULE;
+	}
+
+	public void handleDeletedPersonalMoimMemo() {
+		this.visibleStatus = VisibleStatus.NOT_SEEN_MEMO;
 	}
 
 	@Override

@@ -71,18 +71,18 @@ public class MoimScheduleFacade {
 			.toMoimSchedule(moim, period, location, moimScheduleDto);
 		MoimSchedule savedMoimSchedule = moimScheduleService.create(moimSchedule);
 
-		createMoimScheduleAndUsers(moimScheduleDto.getUsers(), savedMoimSchedule);
+		createMoimScheduleAndUsers(moimScheduleDto.getUsers(), savedMoimSchedule, moim);
 
 		return savedMoimSchedule.getId();
 	}
 
-	private void createMoimScheduleAndUsers(List<Long> usersId, MoimSchedule savedMoimSchedule) {
-		List<User> users = userService.getUsers(usersId);
+	private void createMoimScheduleAndUsers(List<Long> usersId, MoimSchedule savedMoimSchedule, Moim moim) {
+		List<User> users = userService.getUsersInMoimSchedule(usersId);
 		List<Category> categories = categoryService
 			.getMoimUsersCategories(users);
 		List<MoimScheduleAndUser> moimScheduleAndUsers = MoimScheduleConverter
 			.toMoimScheduleAndUsers(categories, savedMoimSchedule, users);
-		moimScheduleAndUserService.createAll(moimScheduleAndUsers);
+		moimScheduleAndUserService.createAll(moimScheduleAndUsers, moim);
 	}
 
 	@Transactional(readOnly = false)
@@ -92,7 +92,7 @@ public class MoimScheduleFacade {
 		Location location = MoimScheduleConverter.toLocation(moimScheduleDto);
 		moimSchedule.update(moimScheduleDto.getName(), period, location);
 		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
-		createMoimScheduleAndUsers(moimScheduleDto.getUsers(), moimSchedule);
+		createMoimScheduleAndUsers(moimScheduleDto.getUsers(), moimSchedule, moimSchedule.getMoim());
 	}
 
 	@Transactional(readOnly = false)
@@ -106,15 +106,22 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void removeMoimSchedule(Long moimScheduleId) {
+	public void removeMoimSchedule(Long moimScheduleId, Long userId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimScheduleWithMoimMemo(moimScheduleId);
 		List<MoimScheduleAndUser> moimScheduleAndUsers = moimScheduleService.getMoimScheduleAndUsers(moimSchedule);
+
+		existMoimAndUser(userId, moimSchedule.getMoim());
 
 		removeMoimScheduleMemo(moimSchedule.getMoimMemo());
 
 		moimScheduleAndUserService.removeMoimScheduleAlarm(moimScheduleAndUsers);
 		moimScheduleAndUserService.removeMoimScheduleAndUser(moimSchedule);
 		moimScheduleService.remove(moimSchedule);
+	}
+
+	private void existMoimAndUser(Long userId, Moim moim) {
+		User user = userService.getUser(userId);
+		moimAndUserService.getMoimAndUser(moim, user);
 	}
 
 	private void removeMoimScheduleMemo(MoimMemo moimMemo) {
@@ -168,8 +175,9 @@ public class MoimScheduleFacade {
 
 	@Transactional(readOnly = true)
 	public List<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(Long moimId,
-		List<LocalDateTime> localDateTimes) {
+		List<LocalDateTime> localDateTimes, Long userId) {
 		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
+		existMoimAndUser(userId, moim);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
 		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
 
@@ -181,8 +189,9 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId) {
+	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId, Long userId) {
 		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
+		existMoimAndUser(userId, moim);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);
 		List<User> users = MoimAndUserConverter.toUsers(moimAndUsersInMoim);
 

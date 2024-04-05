@@ -1,6 +1,7 @@
 package com.example.namo2.domain.moim.application.converter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.example.namo2.domain.moim.domain.Moim;
@@ -18,15 +19,15 @@ public class MoimResponseConverter {
 			.build();
 	}
 
-	public static List<MoimResponse.MoimDto> toMoimDtos(List<MoimAndUser> moimAndUsers) {
-		return moimAndUsers.stream()
+	public static List<MoimResponse.MoimDto> toMoimDtos(List<MoimAndUser> moimAndUsers, List<Moim> moimsInUser) {
+		Map<Moim, List<MoimAndUser>> moimMappingMoimAndUsers = moimAndUsers.stream()
 			.collect(
 				Collectors.groupingBy(
 					MoimAndUser::getMoim
 				)
-			)
-			.entrySet().stream()
-			.map((entrySet) -> toMoimDto(entrySet.getKey(), entrySet.getValue()))
+			);
+		return moimsInUser.stream()
+			.map((moim) -> toMoimDto(moim, moimMappingMoimAndUsers.get(moim)))
 			.collect(Collectors.toList());
 	}
 
