@@ -72,7 +72,7 @@ public class MoimMemoFacade {
 
 	private void createMoimMemoLocationAndUsers(MoimMemoRequest.LocationDto locationDto,
 		MoimMemoLocation moimMemoLocation) {
-		List<User> users = userService.getUsers(locationDto.getParticipants());
+		List<User> users = userService.getUsersInMoimSchedule(locationDto.getParticipants());
 		List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = MoimMemoLocationConverter
 			.toMoimMemoLocationLocationAndUsers(moimMemoLocation, users);
 		moimMemoLocationService.createMoimMemoLocationAndUsers(moimMemoLocationAndUsers);
