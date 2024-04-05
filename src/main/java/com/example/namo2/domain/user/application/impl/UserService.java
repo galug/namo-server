@@ -2,9 +2,15 @@ package com.example.namo2.domain.user.application.impl;
 
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
@@ -14,9 +20,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -177,5 +187,20 @@ public class UserService {
 			throw new IllegalArgumentException("Token expired");
 		}
 		return true;
+	}
+
+	public PrivateKey getPrivateKey() {
+		try {
+			ClassPathResource resource = new ClassPathResource(appleProperties.getPrivateKeyPath());
+			String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+			Reader pemReader = new StringReader(privateKey);
+
+			PEMParser pemParser = new PEMParser(pemReader);
+			JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+			PrivateKeyInfo object = (PrivateKeyInfo)pemParser.readObject();
+			return converter.getPrivateKey(object);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

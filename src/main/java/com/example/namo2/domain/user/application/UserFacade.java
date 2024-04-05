@@ -1,14 +1,6 @@
 package com.example.namo2.domain.user.application;
 
-import static com.example.namo2.global.common.response.BaseResponseStatus.*;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,13 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -62,7 +50,6 @@ import com.example.namo2.domain.user.domain.UserStatus;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
 
-import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.feignclient.apple.AppleAuthClient;
 import com.example.namo2.global.feignclient.apple.AppleProperties;
 import com.example.namo2.global.feignclient.apple.AppleResponse;
@@ -233,7 +220,7 @@ public class UserFacade {
 		categoryService.create(baseCategory);
 		categoryService.create(groupCategory);
 	}
-	
+
 	@Transactional(readOnly = false)
 	public void createTerm(UserRequest.TermDto termDto, Long userId) {
 		User user = userService.getUser(userId);
@@ -245,9 +232,7 @@ public class UserFacade {
 	public void removeKakaoUser(HttpServletRequest request, String kakaoAccessToken) {
 		//유저 토큰 만료시 예외 처리
 		String accessToken = request.getHeader("Authorization");
-		if (!jwtUtils.validateToken(accessToken)) {
-			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-		}
+		userService.checkAccessTokenValidation(accessToken);
 
 		kakaoAuthClient.unlinkKakao(kakaoAccessToken);
 
@@ -258,9 +243,7 @@ public class UserFacade {
 	public void removeNaverUser(HttpServletRequest request, String naverAccessToken) {
 		//유저 토큰 만료시 예외 처리
 		String accessToken = request.getHeader("Authorization");
-		if (!jwtUtils.validateToken(accessToken)) {
-			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-		}
+		userService.checkAccessTokenValidation(accessToken);
 
 		naverAuthClient.tokenAvailability(naverAccessToken);
 		naverAuthClient.unlinkNaver(naverAccessToken);
@@ -272,26 +255,22 @@ public class UserFacade {
 	public void removeAppleUser(HttpServletRequest request, String authorizationCode) {
 		//유저 토큰 만료시 예외 처리
 		String accessToken = request.getHeader("Authorization");
-		if (!jwtUtils.validateToken(accessToken)) {
-			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-		}
+		userService.checkAccessTokenValidation(accessToken);
 
 		String clientSecret = "";
-		try {
-			clientSecret = createClientSecret();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		clientSecret = createClientSecret();
+
 		String appleToken = appleAuthClient.getAppleToken(clientSecret, authorizationCode);
 		logger.debug("appleToken {}", appleToken);
 		appleAuthClient.revoke(clientSecret, appleToken);
-		// appleAuthClient.revoke(clientSecret, authorizationCode);
 
 		setUserInactive(request);
 	}
 
-	public String createClientSecret() throws IOException {
-		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
+	public String createClientSecret() {
+		Date expirationDate = Date.from(
+			LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
 
 		return Jwts.builder()
 			.setHeaderParam("kid", appleProperties.getKeyId())
@@ -301,19 +280,8 @@ public class UserFacade {
 			.setExpiration(expirationDate)
 			.setAudience("https://appleid.apple.com")
 			.setSubject(appleProperties.getClientId())
-			.signWith(SignatureAlgorithm.ES256, getPrivateKey())
+			.signWith(SignatureAlgorithm.ES256, userService.getPrivateKey())
 			.compact();
-	}
-
-	public PrivateKey getPrivateKey() throws IOException {
-		ClassPathResource resource = new ClassPathResource(appleProperties.getPrivateKeyPath());
-		String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
-		Reader pemReader = new StringReader(privateKey);
-
-		PEMParser pemParser = new PEMParser(pemReader);
-		JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-		PrivateKeyInfo object = (PrivateKeyInfo)pemParser.readObject();
-		return converter.getPrivateKey(object);
 	}
 
 	private void setUserInactive(HttpServletRequest request) {
