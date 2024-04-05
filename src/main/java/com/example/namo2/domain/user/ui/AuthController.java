@@ -3,6 +3,7 @@ package com.example.namo2.domain.user.ui;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +49,7 @@ public class AuthController {
 	@PostMapping(value = "/apple/signup")
 	public BaseResponse<UserResponse.SignUpDto> appleSignup(
 		@Valid @RequestBody UserRequest.AppleSignUpDto dto
-	) {
+	) throws ParseException {
 		UserResponse.SignUpDto signupDto = userFacade.signupApple(dto);
 		return new BaseResponse<>(signupDto);
 	}
