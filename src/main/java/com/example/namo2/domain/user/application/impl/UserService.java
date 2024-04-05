@@ -17,7 +17,9 @@ import java.util.Optional;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -30,8 +32,10 @@ import com.example.namo2.domain.user.domain.UserStatus;
 import com.example.namo2.domain.user.ui.dto.UserRequest;
 
 import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.feignclient.apple.AppleProperties;
 import com.example.namo2.global.feignclient.apple.AppleResponse;
+import com.example.namo2.global.utils.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +49,8 @@ public class UserService {
 	private final TermRepository termRepository;
 
 	private final AppleProperties appleProperties;
+	private final JwtUtils jwtUtils;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	public User createUser(User user) {
 		return userRepository.save(user);
@@ -97,6 +103,25 @@ public class UserService {
 	public void checkEmailAndName(String email, String name) {
 		if (email.isBlank() || name.isBlank()) {
 			throw new BaseException(USER_POST_ERROR);
+		}
+	}
+
+	public void checkAccessTokenValidation(String accessToken) {
+		if (!jwtUtils.validateToken(accessToken)) {
+			throw new BaseException(EXPIRATION_ACCESS_TOKEN);
+		}
+	}
+
+	public void checkRefreshTokenValidation(String refreshToken) {
+		if (!jwtUtils.validateToken(refreshToken)) {
+			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
+		}
+	}
+
+	public void checkLogoutUser(UserRequest.SignUpDto signUpDto) {
+		String blackToken = redisTemplate.opsForValue().get(signUpDto.getAccessToken());
+		if (StringUtils.hasText(blackToken)) {
+			throw new BaseException(BaseResponseStatus.LOGOUT_ERROR);
 		}
 	}
 

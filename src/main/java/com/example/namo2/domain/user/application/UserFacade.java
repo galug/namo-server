@@ -31,7 +31,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -64,7 +63,6 @@ import com.example.namo2.domain.user.ui.dto.UserRequest;
 import com.example.namo2.domain.user.ui.dto.UserResponse;
 
 import com.example.namo2.global.common.exception.BaseException;
-import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.feignclient.apple.AppleAuthClient;
 import com.example.namo2.global.feignclient.apple.AppleProperties;
 import com.example.namo2.global.feignclient.apple.AppleResponse;
@@ -186,10 +184,8 @@ public class UserFacade {
 
 	@Transactional
 	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
-		if (!jwtUtils.validateToken(signUpDto.getRefreshToken())) {
-			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-		}
-		validateLogout(signUpDto);
+		userService.checkRefreshTokenValidation(signUpDto.getRefreshToken());
+		userService.checkLogoutUser(signUpDto);
 
 		User user = userService.getUserByRefreshToken(signUpDto.getRefreshToken());
 		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(user.getId());
@@ -200,9 +196,7 @@ public class UserFacade {
 	@Transactional
 	public void logout(UserRequest.LogoutDto logoutDto) {
 		// AccessToken 만료시 종료
-		if (!jwtUtils.validateToken(logoutDto.getAccessToken())) {
-			throw new BaseException(EXPIRATION_REFRESH_TOKEN);
-		}
+		userService.checkAccessTokenValidation(logoutDto.getAccessToken());
 
 		Long expiration = jwtUtils.getExpiration(logoutDto.getAccessToken());
 		redisTemplate.opsForValue().set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
@@ -239,14 +233,7 @@ public class UserFacade {
 		categoryService.create(baseCategory);
 		categoryService.create(groupCategory);
 	}
-
-	private void validateLogout(UserRequest.SignUpDto signUpDto) {
-		String blackToken = redisTemplate.opsForValue().get(signUpDto.getAccessToken());
-		if (StringUtils.hasText(blackToken)) {
-			throw new BaseException(BaseResponseStatus.LOGOUT_ERROR);
-		}
-	}
-
+	
 	@Transactional(readOnly = false)
 	public void createTerm(UserRequest.TermDto termDto, Long userId) {
 		User user = userService.getUser(userId);
