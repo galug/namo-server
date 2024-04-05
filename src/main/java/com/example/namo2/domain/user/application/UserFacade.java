@@ -123,7 +123,6 @@ public class UserFacade {
 	@Transactional
 	public UserResponse.SignUpDto signupApple(UserRequest.AppleSignUpDto req) {
 		AppleResponse.ApplePublicKeyListDto applePublicKeys = appleAuthClient.getApplePublicKeys();
-		AppleResponse.ApplePublicKeyDto applePublicKey = null;
 		String email = "";
 
 		JSONObject headerJson = userService.getHeaderJson(req);
@@ -131,7 +130,8 @@ public class UserFacade {
 		Object alg = headerJson.get("alg"); //토큰을 암호화하는데 사용되는 암호화 알고리즘
 
 		//identityToken 검증
-		applePublicKey = AppleResponseConverter.toApplePublicKey(applePublicKeys, alg, kid);
+		AppleResponse.ApplePublicKeyDto applePublicKey =
+			AppleResponseConverter.toApplePublicKey(applePublicKeys, alg, kid);
 
 		PublicKey publicKey = userService.getPublicKey(applePublicKey);
 		userService.validateToken(publicKey, req.getIdentityToken());
@@ -146,6 +146,7 @@ public class UserFacade {
 		String appleEmail = claims.get("email", String.class);
 		log.debug("email: {}, oauthId : {}", appleEmail, appleOauthId);
 
+		//이메일 셋팅
 		if (!req.getEmail().isBlank()) { //첫 로그인
 			email = req.getEmail();
 		} else { //재로그인

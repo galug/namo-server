@@ -23,6 +23,7 @@ public enum BaseResponseStatus {
 	 * 401 : 소셜 로그인 오류
 	 */
 	SOCIAL_LOGIN_FAILURE(401, "소셜 로그인에 실패하였습니다."),
+	SOCIAL_WITHDRAWAL_FAILURE(401, "소셜 로그인 회원탈퇴에 실패하였습니다."),
 	KAKAO_UNAUTHORIZED(401, "카카오 accessToken이 잘못되었습니다"),
 	NAVER_UNAUTHORIZED(401, "네이버 accessToken이 잘못되었습니다"),
 	APPLE_UNAUTHORIZED(401, "애플 authorization code가 잘못되었습니다."),
