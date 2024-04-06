@@ -91,7 +91,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	@Operation(summary = "모든 일정 조회", description = "모든 일정 조회 API")
+	@Operation(summary = "모든 일정 조회", description = "유저의 모든 개인 일정과 모임 일정 조회 API")
 	@GetMapping("/all")
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllSchedulesByUser(HttpServletRequest request) throws
 		BaseException {

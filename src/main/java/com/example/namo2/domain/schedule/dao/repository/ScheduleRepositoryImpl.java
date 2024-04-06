@@ -21,6 +21,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.moim.domain.VisibleStatus;
 
 import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
 import com.example.namo2.domain.schedule.domain.Schedule;
@@ -88,7 +89,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 			.leftJoin(moimSchedule.moimMemo).fetchJoin()
 			.where(moimScheduleAndUser.user.eq(user),
 				moimScheduleDateLoe(endDate),
-				moimScheduleDateGoe(startDate)
+				moimScheduleDateGoe(startDate),
+				moimScheduleAndUser.visibleStatus.ne(VisibleStatus.NOT_SEEN_PERSONAL_SCHEDULE)
 			)
 			.fetch();
 		return moimScheduleAndUsers.stream()
