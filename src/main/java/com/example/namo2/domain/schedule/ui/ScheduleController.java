@@ -32,7 +32,7 @@ import com.example.namo2.global.utils.Converter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Schedule", description = "스케줄 관련 API")
+@Tag(name = "Schedule", description = "일정 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +41,7 @@ public class ScheduleController {
 	private final ScheduleFacade scheduleFacade;
 	private final Converter converter;
 
-	@Operation(summary = "스케줄 생성", description = "스케줄 생성 API")
+	@Operation(summary = "일정 생성", description = "일정 생성 API")
 	@PostMapping("")
 	public BaseResponse<ScheduleResponse.ScheduleIdDto> createSchedule(
 		@Valid @RequestBody ScheduleRequest.PostScheduleDto postScheduleDto,
@@ -54,7 +54,7 @@ public class ScheduleController {
 		return new BaseResponse<>(scheduleIddto);
 	}
 
-	@Operation(summary = "스케줄 다이어리 생성", description = "스케줄 다이어리 생성 API")
+	@Operation(summary = "일정 다이어리 생성", description = "일정 다이어리 생성 API")
 	@PostMapping("/diary")
 	public BaseResponse<ScheduleResponse.ScheduleIdDto> createDiary(
 		@RequestPart(required = false) List<MultipartFile> imgs,
@@ -65,7 +65,7 @@ public class ScheduleController {
 		return new BaseResponse<>(dto);
 	}
 
-	@Operation(summary = "스케줄 월별 조회", description = "스케줄 월별 조회 API")
+	@Operation(summary = "일정 월별 조회", description = "개인 일정 & 모임 일정 월별 조회 API")
 	@GetMapping("/{month}")
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getSchedulesByUser(
 		@PathVariable("month") String month,
@@ -77,7 +77,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	@Operation(summary = "모임 스케줄 월별 조회", description = "모임 스케줄 월별 조회 API")
+	@Operation(summary = "모임 일정 월별 조회", description = "모임 일정 월별 조회 API")
 	@GetMapping("/moim/{month}")
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getMoimSchedulesByUser(
 		@PathVariable("month") String month,
@@ -91,7 +91,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	@Operation(summary = "모든 스케줄 조회", description = "모든 스케줄 조회 API")
+	@Operation(summary = "모든 일정 조회", description = "모든 일정 조회 API")
 	@GetMapping("/all")
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllSchedulesByUser(HttpServletRequest request) throws
 		BaseException {
@@ -101,7 +101,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	@Operation(summary = "모든 모임 스케줄 조회", description = "모든 모임 스케줄 조회 API")
+	@Operation(summary = "모든 모임 일정 조회", description = "모든 모임 일정 조회 API")
 	@GetMapping("/moim/all")
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllMoimSchedulesByUser(
 		HttpServletRequest request) throws BaseException {
@@ -111,7 +111,7 @@ public class ScheduleController {
 		return new BaseResponse<>(moimSchedule);
 	}
 
-	@Operation(summary = "스케줄 다이어리 월간 조회", description = "스케줄 다이어리 월간 조회 API")
+	@Operation(summary = "일정 다이어리 월간 조회", description = "일정 다이어리 월간 조회 API")
 	@GetMapping("/diary/{month}")
 	public BaseResponse<ScheduleResponse.SliceDiaryDto> findDiaryByMonth(
 		@PathVariable("month") String month,
@@ -125,7 +125,7 @@ public class ScheduleController {
 	}
 
 	//유저별 다이어리 조회
-	@Operation(summary = "개인 스케줄 다이어리 전체 조회", description = "개인 스케줄 다이어리 전체 조회 API")
+	@Operation(summary = "개인 일정 다이어리 전체 조회", description = "개인 일정 다이어리 전체 조회 API")
 	@GetMapping("/diary/all")
 	public BaseResponse<List<ScheduleResponse.GetDiaryByUserDto>> findAllDiary(HttpServletRequest request) throws
 		BaseException {
@@ -134,8 +134,8 @@ public class ScheduleController {
 		return new BaseResponse<>(diaries);
 	}
 
-	//스케줄 별 다이어리 조회 == 1개 조회
-	@Operation(summary = "스케줄 다이어리 개별 조회", description = "스케줄 다이어리 개별 조회 API")
+	//일정 별 다이어리 조회 == 1개 조회
+	@Operation(summary = "일정 다이어리 개별 조회", description = "일정 다이어리 개별 조회 API")
 	@GetMapping("/diary/day/{scheduleId}")
 	public BaseResponse<ScheduleResponse.GetDiaryByScheduleDto> findDiaryById(
 		@PathVariable("scheduleId") Long scheduleId
@@ -144,16 +144,21 @@ public class ScheduleController {
 		return new BaseResponse<>(diary);
 	}
 
-	@Operation(summary = "스케줄 수정", description = "스케줄 수정 API")
+	@Operation(summary = "일정 수정", description = "일정 수정 API")
 	@PatchMapping("/{scheduleId}")
 	public BaseResponse<ScheduleResponse.ScheduleIdDto> modifyUserSchedule(
+		HttpServletRequest request,
 		@PathVariable("scheduleId") Long scheduleId,
 		@RequestBody ScheduleRequest.PostScheduleDto req) throws BaseException {
-		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.modifySchedule(scheduleId, req);
+		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.modifySchedule(
+			scheduleId,
+			req,
+			(Long)request.getAttribute("userId")
+		);
 		return new BaseResponse<>(dto);
 	}
 
-	@Operation(summary = "스케줄 다이어리 수정", description = "스케줄 다이어리 수정 API")
+	@Operation(summary = "일정 다이어리 수정", description = "일정 다이어리 수정 API")
 	@PatchMapping("/diary")
 	public BaseResponse<String> updateDiary(
 		@RequestPart(required = false) List<MultipartFile> imgs,
@@ -166,10 +171,10 @@ public class ScheduleController {
 	}
 
 	/**
-	 * kind 0 은 개인 스케줄
-	 * kind 1 은 모임 스케줄
+	 * kind 0 은 개인 일정
+	 * kind 1 은 모임 일정
 	 */
-	@Operation(summary = "스케줄 삭제", description = "스케줄 삭제 API")
+	@Operation(summary = "일정 삭제", description = "개인 캘린더에서 개인 혹은 모임 일정 삭제 API")
 	@DeleteMapping("/{scheduleId}/{kind}")
 	public BaseResponse<String> deleteUserSchedule(
 		@PathVariable("scheduleId") Long scheduleId,
@@ -180,7 +185,7 @@ public class ScheduleController {
 		return new BaseResponse<>("삭제에 성공하였습니다.");
 	}
 
-	@Operation(summary = "스케줄 다이어리 삭제", description = "스케줄 다이어리 삭제 API")
+	@Operation(summary = "일정 다이어리 삭제", description = "일정 다이어리 삭제 API")
 	@DeleteMapping("/diary/{scheduleId}")
 	public BaseResponse<String> deleteDiary(@PathVariable("scheduleId") Long scheduleId) throws BaseException {
 		scheduleFacade.removeDiary(scheduleId);

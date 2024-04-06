@@ -60,6 +60,8 @@ public class ScheduleFacade {
 
 		User user = userService.getUser(userId);
 		Category category = categoryService.getCategory(req.getCategoryId());
+		categoryService.validateUsersCategory(userId, category);
+
 		Period period = ScheduleConverter.toPeriod(req);
 		Schedule schedule = ScheduleConverter.toSchedule(req, period, user, category);
 		List<Alarm> alarms = AlarmConverter.toAlarms(req, schedule);
@@ -137,10 +139,12 @@ public class ScheduleFacade {
 	@Transactional
 	public ScheduleResponse.ScheduleIdDto modifySchedule(
 		Long scheduleId,
-		ScheduleRequest.PostScheduleDto req
+		ScheduleRequest.PostScheduleDto req,
+		Long userId
 	) throws BaseException {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		Category category = categoryService.getCategory(req.getCategoryId());
+		categoryService.validateUsersCategory(userId, category);
 		Period period = ScheduleConverter.toPeriod(req);
 
 		schedule.clearAlarm();

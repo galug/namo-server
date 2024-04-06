@@ -75,13 +75,14 @@ public enum BaseResponseStatus {
 	/**
 	 * 404 오용 오류
 	 */
-	NOT_USERS_CATEGORY(404, "잘못된 접근 요청입니다.."),
+	NOT_USERS_CATEGORY(404, "해당 유저의 카테고리가 아닙니다."),
 	NOT_USERS_IN_MOIM(404, "유저가 모임에 포함되어 있지 않습니다."),
 
 	/**
 	 * 404: 인프라 에러
 	 */
 	FILE_NAME_EXCEPTION(404, "파일 확장자가 잘못되었습니다."),
+
 	S3_FAILURE(404, "파일 업로드 과정에서 오류가 발생하였습니다."),
 
 	NAVER_NOT_FOUND(404, "[네이버] 검색 결과가 없습니다"),
@@ -90,6 +91,7 @@ public enum BaseResponseStatus {
 	 * 404: IllegalArgumentException
 	 */
 	NOT_NULL_FAILURE(404, "널 혹은 비어 있는 값을 카테고리 값으로 넣지 말아주세요,"),
+
 	INVALID_FORMAT_FAILURE(404, "유효한 날짜 값을 입력해주세요"),
 
 	/**
@@ -100,8 +102,11 @@ public enum BaseResponseStatus {
 	JPA_FAILURE(500, "jpa, sql 상에서 오류가 발생했습니다."),
 
 	KAKAO_INTERNAL_SERVER_ERROR(500, "카카오 서버 오류"),
+
 	KAKAO_BAD_GATEWAY(500, "카카오 시스템 오류"),
+
 	KAKAO_SERVICE_UNAVAILABLE(500, "카카오 서비스 점검 중"),
+
 	FEIGN_SERVER_ERROR(500, "feign 서버 에러");
 
 	private final int code;
