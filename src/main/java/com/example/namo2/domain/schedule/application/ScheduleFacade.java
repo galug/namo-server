@@ -37,7 +37,6 @@ import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 
-import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -86,14 +85,14 @@ public class ScheduleFacade {
 
 	@Transactional(readOnly = true)
 	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUser(Long userId,
-		List<LocalDateTime> localDateTimes) throws BaseException {
+		List<LocalDateTime> localDateTimes) {
 		User user = userService.getUser(userId);
 		return scheduleService.getSchedulesByUserId(user, localDateTimes.get(0), localDateTimes.get(1));
 	}
 
 	@Transactional(readOnly = true)
 	public List<ScheduleResponse.GetScheduleDto> getMoimSchedulesByUser(Long userId,
-		List<LocalDateTime> localDateTimes) throws BaseException {
+		List<LocalDateTime> localDateTimes) {
 		User user = userService.getUser(userId);
 		return scheduleService.getMoimSchedulesByUser(user, localDateTimes.get(0), localDateTimes.get(1));
 	}
@@ -114,7 +113,7 @@ public class ScheduleFacade {
 		Long userId,
 		List<LocalDateTime> localDateTimes,
 		Pageable pageable
-	) throws BaseException {
+	) {
 		User user = userService.getUser(userId);
 		return scheduleService.getScheduleDiaryByUser(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
 	}
@@ -141,11 +140,12 @@ public class ScheduleFacade {
 		Long scheduleId,
 		ScheduleRequest.PostScheduleDto req,
 		Long userId
-	) throws BaseException {
+	) {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		Category category = categoryService.getCategory(req.getCategoryId());
 		categoryService.validateUsersCategory(userId, category);
 		Period period = ScheduleConverter.toPeriod(req);
+		periodService.checkValidDate(period);
 
 		schedule.clearAlarm();
 		List<Alarm> alarms = AlarmConverter.toAlarms(req, schedule);
@@ -164,7 +164,7 @@ public class ScheduleFacade {
 	}
 
 	@Transactional
-	public void removeDiary(Long scheduleId) throws BaseException {
+	public void removeDiary(Long scheduleId) {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		schedule.deleteDiary();
 		List<String> urls = schedule.getImages().stream()
@@ -175,8 +175,7 @@ public class ScheduleFacade {
 	}
 
 	@Transactional
-	public void removeSchedule(Long scheduleId, Integer kind, Long userId
-	) throws BaseException {
+	public void removeSchedule(Long scheduleId, Integer kind, Long userId) {
 		if (kind == 0) { // 개인 스케줄 :스케줄 알람, 이미지 함께 삭제
 			Schedule schedule = scheduleService.getScheduleById(scheduleId);
 			alarmService.removeAlarmsBySchedule(schedule);

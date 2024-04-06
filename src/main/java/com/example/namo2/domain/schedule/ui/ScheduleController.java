@@ -25,7 +25,6 @@ import com.example.namo2.domain.schedule.application.ScheduleFacade;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleRequest;
 import com.example.namo2.domain.schedule.ui.dto.ScheduleResponse;
 
-import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.utils.Converter;
 
@@ -46,7 +45,7 @@ public class ScheduleController {
 	public BaseResponse<ScheduleResponse.ScheduleIdDto> createSchedule(
 		@Valid @RequestBody ScheduleRequest.PostScheduleDto postScheduleDto,
 		HttpServletRequest request
-	) throws BaseException {
+	) {
 		ScheduleResponse.ScheduleIdDto scheduleIddto = scheduleFacade.createSchedule(
 			postScheduleDto,
 			(Long)request.getAttribute("userId")
@@ -60,7 +59,7 @@ public class ScheduleController {
 		@RequestPart(required = false) List<MultipartFile> imgs,
 		@RequestPart String scheduleId,
 		@RequestPart(required = false) String content
-	) throws BaseException {
+	) {
 		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
 		return new BaseResponse<>(dto);
 	}
@@ -70,7 +69,7 @@ public class ScheduleController {
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getSchedulesByUser(
 		@PathVariable("month") String month,
 		HttpServletRequest request
-	) throws BaseException {
+	) {
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
 		List<ScheduleResponse.GetScheduleDto> userSchedule = scheduleFacade.getSchedulesByUser(
 			(Long)request.getAttribute("userId"), localDateTimes);
@@ -82,7 +81,7 @@ public class ScheduleController {
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getMoimSchedulesByUser(
 		@PathVariable("month") String month,
 		HttpServletRequest request
-	) throws BaseException {
+	) {
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
 		List<ScheduleResponse.GetScheduleDto> userSchedule = scheduleFacade.getMoimSchedulesByUser(
 			(Long)request.getAttribute("userId"),
@@ -93,8 +92,7 @@ public class ScheduleController {
 
 	@Operation(summary = "모든 일정 조회", description = "유저의 모든 개인 일정과 모임 일정 조회 API")
 	@GetMapping("/all")
-	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllSchedulesByUser(HttpServletRequest request) throws
-		BaseException {
+	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllSchedulesByUser(HttpServletRequest request) {
 		List<ScheduleResponse.GetScheduleDto> userSchedule = scheduleFacade.getAllSchedulesByUser(
 			(Long)request.getAttribute("userId")
 		);
@@ -104,42 +102,41 @@ public class ScheduleController {
 	@Operation(summary = "모든 모임 일정 조회", description = "모든 모임 일정 조회 API")
 	@GetMapping("/moim/all")
 	public BaseResponse<List<ScheduleResponse.GetScheduleDto>> getAllMoimSchedulesByUser(
-		HttpServletRequest request) throws BaseException {
+		HttpServletRequest request) {
 		List<ScheduleResponse.GetScheduleDto> moimSchedule = scheduleFacade.getAllMoimSchedulesByUser(
 			(Long)request.getAttribute("userId")
 		);
 		return new BaseResponse<>(moimSchedule);
 	}
 
-	@Operation(summary = "일정 다이어리 월간 조회", description = "일정 다이어리 월간 조회 API")
+	@Operation(summary = "일정 기록 월간 조회", description = "일정 기록 월간 조회 API")
 	@GetMapping("/diary/{month}")
 	public BaseResponse<ScheduleResponse.SliceDiaryDto> findDiaryByMonth(
 		@PathVariable("month") String month,
 		Pageable pageable,
 		HttpServletRequest request
-	) throws BaseException {
+	) {
 		Long userId = (Long)request.getAttribute("userId");
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
 		ScheduleResponse.SliceDiaryDto diaries = scheduleFacade.getMonthDiary(userId, localDateTimes, pageable);
 		return new BaseResponse<>(diaries);
 	}
 
-	//유저별 다이어리 조회
-	@Operation(summary = "개인 일정 다이어리 전체 조회", description = "개인 일정 다이어리 전체 조회 API")
+	//유저별 기록 조회
+	@Operation(summary = "개인 일정 기록 전체 조회", description = "개인 일정 기록 전체 조회 API")
 	@GetMapping("/diary/all")
-	public BaseResponse<List<ScheduleResponse.GetDiaryByUserDto>> findAllDiary(HttpServletRequest request) throws
-		BaseException {
+	public BaseResponse<List<ScheduleResponse.GetDiaryByUserDto>> findAllDiary(HttpServletRequest request) {
 		Long userId = (Long)request.getAttribute("userId");
 		List<ScheduleResponse.GetDiaryByUserDto> diaries = scheduleFacade.getAllDiariesByUser(userId);
 		return new BaseResponse<>(diaries);
 	}
 
-	//일정 별 다이어리 조회 == 1개 조회
-	@Operation(summary = "일정 다이어리 개별 조회", description = "일정 다이어리 개별 조회 API")
+	//일정 별 기록 조회 == 1개 조회
+	@Operation(summary = "일정 기록 개별 조회", description = "일정 기록 개별 조회 API")
 	@GetMapping("/diary/day/{scheduleId}")
 	public BaseResponse<ScheduleResponse.GetDiaryByScheduleDto> findDiaryById(
 		@PathVariable("scheduleId") Long scheduleId
-	) throws BaseException {
+	) {
 		ScheduleResponse.GetDiaryByScheduleDto diary = scheduleFacade.getDiaryBySchedule(scheduleId);
 		return new BaseResponse<>(diary);
 	}
@@ -149,7 +146,7 @@ public class ScheduleController {
 	public BaseResponse<ScheduleResponse.ScheduleIdDto> modifyUserSchedule(
 		HttpServletRequest request,
 		@PathVariable("scheduleId") Long scheduleId,
-		@RequestBody ScheduleRequest.PostScheduleDto req) throws BaseException {
+		@RequestBody ScheduleRequest.PostScheduleDto req) {
 		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.modifySchedule(
 			scheduleId,
 			req,
@@ -164,7 +161,7 @@ public class ScheduleController {
 		@RequestPart(required = false) List<MultipartFile> imgs,
 		@RequestPart String scheduleId,
 		@RequestPart(required = false) String content
-	) throws BaseException {
+	) {
 		scheduleFacade.removeDiary(Long.valueOf(scheduleId));
 		scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
 		return new BaseResponse<>("수정에 성공하셨습니다.");
@@ -180,14 +177,14 @@ public class ScheduleController {
 		@PathVariable("scheduleId") Long scheduleId,
 		@PathVariable("kind") Integer kind,
 		HttpServletRequest request
-	) throws BaseException {
+	) {
 		scheduleFacade.removeSchedule(scheduleId, kind, (Long)request.getAttribute("userId"));
 		return new BaseResponse<>("삭제에 성공하였습니다.");
 	}
 
 	@Operation(summary = "일정 다이어리 삭제", description = "일정 다이어리 삭제 API")
 	@DeleteMapping("/diary/{scheduleId}")
-	public BaseResponse<String> deleteDiary(@PathVariable("scheduleId") Long scheduleId) throws BaseException {
+	public BaseResponse<String> deleteDiary(@PathVariable("scheduleId") Long scheduleId) {
 		scheduleFacade.removeDiary(scheduleId);
 		return new BaseResponse<>("삭제에 성공하셨습니다.");
 	}
