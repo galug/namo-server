@@ -64,6 +64,7 @@ public enum BaseResponseStatus {
 	NOT_INCLUDE_MOIM_USER(404, "모임 안에 포함되어 있지 않은 유저입니다."),
 	EMPTY_USERS_FAILURE(404, "스케줄 참여 유저가 없습니다."),
 	NOT_HAS_MOIM_CATEGORIES_USERS(404, "유저들에 대한 모임의 카테고리가 없습니다."),
+	INVALID_DATE(404, "시작 날짜가 종료 날짜 이전 이어야 합니다."),
 
 	/**
 	 * 404: 중복 에러

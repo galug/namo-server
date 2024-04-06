@@ -25,6 +25,7 @@ import com.example.namo2.domain.schedule.application.converter.ScheduleConverter
 import com.example.namo2.domain.schedule.application.converter.ScheduleResponseConverter;
 import com.example.namo2.domain.schedule.application.impl.AlarmService;
 import com.example.namo2.domain.schedule.application.impl.ImageService;
+import com.example.namo2.domain.schedule.application.impl.PeriodService;
 import com.example.namo2.domain.schedule.application.impl.ScheduleService;
 import com.example.namo2.domain.schedule.domain.Alarm;
 import com.example.namo2.domain.schedule.domain.Image;
@@ -51,18 +52,18 @@ public class ScheduleFacade {
 	private final ImageService imageService;
 	private final CategoryService categoryService;
 	private final MoimScheduleService moimScheduleService;
+	private final PeriodService periodService;
 	private final MoimScheduleAndUserService moimScheduleAndUserService;
 	private final FileUtils fileUtils;
 
 	@Transactional
-	public ScheduleResponse.ScheduleIdDto createSchedule(ScheduleRequest.PostScheduleDto req, Long userId)
-		throws BaseException {
-
+	public ScheduleResponse.ScheduleIdDto createSchedule(ScheduleRequest.PostScheduleDto req, Long userId) {
 		User user = userService.getUser(userId);
 		Category category = categoryService.getCategory(req.getCategoryId());
 		categoryService.validateUsersCategory(userId, category);
 
 		Period period = ScheduleConverter.toPeriod(req);
+		periodService.checkValidDate(period);
 		Schedule schedule = ScheduleConverter.toSchedule(req, period, user, category);
 		List<Alarm> alarms = AlarmConverter.toAlarms(req, schedule);
 		schedule.addAlarms(alarms);
@@ -72,8 +73,7 @@ public class ScheduleFacade {
 	}
 
 	@Transactional
-	public ScheduleResponse.ScheduleIdDto createDiary(Long scheduleId, String content, List<MultipartFile> imgs)
-		throws BaseException {
+	public ScheduleResponse.ScheduleIdDto createDiary(Long scheduleId, String content, List<MultipartFile> imgs) {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		schedule.updateDiaryContents(content);
 		if (imgs != null) {
