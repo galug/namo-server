@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.namo2.domain.schedule.dao.repository.AlarmRepository;
+import com.example.namo2.domain.schedule.domain.Alarm;
 import com.example.namo2.domain.schedule.domain.Schedule;
+
+import com.example.namo2.global.common.exception.BaseException;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +25,19 @@ public class AlarmService {
 	public void removeAlarmsBySchedules(List<Schedule> schedules) {
 		schedules.forEach(schedule ->
 			alarmRepository.deleteAll(schedule.getAlarms())
+		);
+	}
+
+	public void checkValidAlarm(List<Alarm> alarms) {
+		alarms.forEach(alarm -> {
+				Integer time = alarm.getAlarmDate();
+				if (time != 0 &&
+					time != 5 &&
+					time != 10 &&
+					time != 30 &&
+					time != 60)
+					throw new BaseException(BaseResponseStatus.INVALID_ALARM);
+			}
 		);
 	}
 }

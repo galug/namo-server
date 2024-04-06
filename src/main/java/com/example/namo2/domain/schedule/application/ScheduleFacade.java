@@ -65,6 +65,7 @@ public class ScheduleFacade {
 		periodService.checkValidDate(period);
 		Schedule schedule = ScheduleConverter.toSchedule(req, period, user, category);
 		List<Alarm> alarms = AlarmConverter.toAlarms(req, schedule);
+		alarmService.checkValidAlarm(alarms);
 		schedule.addAlarms(alarms);
 		Schedule saveSchedule = scheduleService.createSchedule(schedule);
 
@@ -149,6 +150,7 @@ public class ScheduleFacade {
 
 		schedule.clearAlarm();
 		List<Alarm> alarms = AlarmConverter.toAlarms(req, schedule);
+		alarmService.checkValidAlarm(alarms);
 		schedule.addAlarms(alarms);
 
 		schedule.updateSchedule(

@@ -155,7 +155,7 @@ public class ScheduleController {
 		return new BaseResponse<>(dto);
 	}
 
-	@Operation(summary = "일정 다이어리 수정", description = "일정 다이어리 수정 API")
+	@Operation(summary = "일정 기록 수정", description = "일정 기록 수정 API")
 	@PatchMapping("/diary")
 	public BaseResponse<String> updateDiary(
 		@RequestPart(required = false) List<MultipartFile> imgs,
