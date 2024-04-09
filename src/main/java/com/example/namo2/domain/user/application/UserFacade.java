@@ -102,9 +102,14 @@ public class UserFacade {
 
 		Map<String, String> response = socialUtils.findResponseFromKakako(result);
 		User user = UserConverter.toUser(response);
-		User savedUser = saveOrNot(user);
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 
+		Object[] objects = saveOrNot(user);
+		User savedUser = (User)objects[0];
+		boolean isNewUser = (boolean)objects[1];
+
+		String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+		UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1],
+			isNewUser); //access, refresh순
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
@@ -118,9 +123,13 @@ public class UserFacade {
 
 		Map<String, String> response = socialUtils.findResponseFromNaver(result);
 		User user = UserConverter.toUser(response);
-		User savedUser = saveOrNot(user);
-		UserResponse.SignUpDto signUpRes = jwtUtils.generateTokens(savedUser.getId());
 
+		Object[] objects = saveOrNot(user);
+		User savedUser = (User)objects[0];
+		boolean isNewUser = (boolean)objects[1];
+
+		String[] tokens = jwtUtils.generateTokens(savedUser.getId());
+		UserResponse.SignUpDto signUpRes = UserResponseConverter.toSignUpDto(tokens[0], tokens[1], isNewUser);
 		userService.updateRefreshToken(savedUser.getId(), signUpRes.getRefreshToken());
 		return signUpRes;
 	}
@@ -180,7 +189,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	public UserResponse.SignUpDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
+	public UserResponse.ReissueDto reissueAccessToken(UserRequest.SignUpDto signUpDto) {
 		userService.checkRefreshTokenValidation(signUpDto.getRefreshToken());
 		userService.checkLogoutUser(signUpDto);
 
@@ -318,7 +327,7 @@ public class UserFacade {
 	 * - moimScheduleAlarm 삭제
 	 * moimMemoLocationAndUser 삭제
 	 */
-	@Scheduled(cron = "0 46 21 * * *") // 매일 자정에 실행
+	@Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
 	@Transactional
 	public void removeUserFromDB() {
 		List<User> users = userService.getInactiveUser();
