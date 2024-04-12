@@ -153,7 +153,8 @@ public class ScheduleFacade {
 			category,
 			req.getX(),
 			req.getY(),
-			req.getLocationName()
+			req.getLocationName(),
+			req.getKakaoLocationId()
 		);
 
 		return ScheduleResponseConverter.toScheduleIdRes(schedule);

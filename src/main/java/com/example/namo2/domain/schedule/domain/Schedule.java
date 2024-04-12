@@ -68,20 +68,21 @@ public class Schedule extends BaseTimeEntity {
 
 	@Builder
 	public Schedule(Long id, String name, Period period, User user, Category category, Double x, Double y,
-		String locationName, Integer eventId) {
+		String locationName, String kakaoLocationId, Integer eventId) {
 		this.id = id;
 		this.name = name;
 		this.period = period;
-		this.location = new Location(x, y, locationName);
+		this.location = new Location(x, y, locationName, kakaoLocationId);
 		this.user = user;
 		this.category = category;
 		hasDiary = false;
 	}
 
-	public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName) {
+	public void updateSchedule(String name, Period period, Category category, Double x, Double y, String locationName,
+		String kakaoLocationId) {
 		this.name = name;
 		this.period = period;
-		this.location = new Location(x, y, locationName);
+		this.location = new Location(x, y, locationName, kakaoLocationId);
 		this.category = category;
 	}
 
