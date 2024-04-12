@@ -25,6 +25,7 @@ public class ScheduleConverter {
 			.x(dto.getX())
 			.y(dto.getY())
 			.locationName(dto.getLocationName())
+			.kakaoLocationId(dto.getKakaoLocationId())
 			.user(user)
 			.category(category)
 			.build();

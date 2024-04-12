@@ -64,8 +64,6 @@ public class ScheduleFacade {
 		Period period = ScheduleConverter.toPeriod(req);
 		periodService.checkValidDate(period);
 		Schedule schedule = ScheduleConverter.toSchedule(req, period, user, category);
-		if (!req.getKakaoLocationId().isBlank())
-			schedule.getLocation().updateKakaoLocationId(req.getKakaoLocationId());
 		List<Alarm> alarms = AlarmConverter.toAlarms(req, schedule);
 		alarmService.checkValidAlarm(alarms);
 		schedule.addAlarms(alarms);
@@ -161,11 +159,9 @@ public class ScheduleFacade {
 			category,
 			req.getX(),
 			req.getY(),
-			req.getLocationName()
+			req.getLocationName(),
+			req.getKakaoLocationId()
 		);
-
-		if (!req.getKakaoLocationId().isBlank())
-			schedule.getLocation().updateKakaoLocationId(req.getKakaoLocationId());
 
 		return ScheduleResponseConverter.toScheduleIdRes(schedule);
 	}
