@@ -37,13 +37,13 @@ public class ScheduleService {
 
 	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUserId(User user, LocalDateTime startDate,
 		LocalDateTime endDate
-	) throws BaseException {
+	) {
 		return scheduleRepository.findSchedulesByUserId(user, startDate, endDate);
 	}
 
 	public List<ScheduleResponse.GetScheduleDto> getMoimSchedulesByUser(User user, LocalDateTime startDate,
 		LocalDateTime endDate
-	) throws BaseException {
+	) {
 		return scheduleRepository.findMoimSchedulesByUserId(user, startDate, endDate);
 	}
 
@@ -60,7 +60,7 @@ public class ScheduleService {
 		LocalDateTime startDate,
 		LocalDateTime endDate,
 		Pageable pageable
-	) throws BaseException {
+	) {
 		return scheduleRepository.findScheduleDiaryByMonthDto(user, startDate, endDate, pageable);
 	}
 

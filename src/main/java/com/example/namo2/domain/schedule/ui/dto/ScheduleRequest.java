@@ -28,6 +28,7 @@ public class ScheduleRequest {
 		private Double x;
 		private Double y;
 		private String locationName;
+		private String kakaoLocationId;
 		@NotNull
 		private Long categoryId;
 	}

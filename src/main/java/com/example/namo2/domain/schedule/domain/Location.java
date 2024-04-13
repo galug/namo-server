@@ -14,16 +14,17 @@ public class Location {
 	private Double x;
 	private Double y;
 	private String locationName;
+	private String kakaoLocationId;
 
 	@Builder
-	public Location(Double x, Double y, String locationName) {
+	public Location(Double x, Double y, String locationName, String kakaoLocationId) {
 		this.x = x;
 		this.y = y;
 		this.locationName = locationName;
+		this.kakaoLocationId = kakaoLocationId;
 	}
 
-	public static Location create(Double x, Double y, String locationName) {
-		return new Location(x, y, locationName);
+	public static Location create(Double x, Double y, String locationName, String kakaoLocationId) {
+		return new Location(x, y, locationName, kakaoLocationId);
 	}
-
 }

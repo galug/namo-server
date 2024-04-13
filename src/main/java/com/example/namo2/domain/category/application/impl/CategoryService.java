@@ -58,7 +58,7 @@ public class CategoryService {
 		return category;
 	}
 
-	private void validateUsersCategory(Long userId, Category category) {
+	public void validateUsersCategory(Long userId, Category category) {
 		if (category.isNotCreatedByUser(userId)) {
 			throw new BaseException(BaseResponseStatus.NOT_USERS_CATEGORY);
 		}
@@ -84,4 +84,5 @@ public class CategoryService {
 			throw new BaseException(BaseResponseStatus.NOT_HAS_MOIM_CATEGORIES_USERS);
 		}
 	}
+
 }

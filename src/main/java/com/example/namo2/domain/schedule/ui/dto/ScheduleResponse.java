@@ -44,6 +44,7 @@ public class ScheduleResponse {
 		private Double x;
 		private Double y;
 		private String locationName;
+		private String kakaoLocationId;
 		private Long categoryId;
 		private boolean hasDiary;
 		private boolean isMoimSchedule;
