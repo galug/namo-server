@@ -43,6 +43,7 @@ public class MoimScheduleConverter {
 			.x(moimScheduleDto.getX())
 			.y(moimScheduleDto.getY())
 			.locationName(moimScheduleDto.getLocationName())
+			.kakaoLocationId(moimScheduleDto.getKakaoLocationId())
 			.build();
 	}
 

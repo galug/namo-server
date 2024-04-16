@@ -34,12 +34,13 @@ public class MoimScheduleResponse {
 		private Double x;
 		private Double y;
 		private String locationName;
+		private String kakaoLocationId;
 		private boolean hasDiaryPlace;
 
 		@QueryProjection
 		@Builder
 		public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval,
-			Long moimId, Long moimScheduleId, Double x, Double y, String locationName) {
+			Long moimId, Long moimScheduleId, Double x, Double y, String locationName, String kakaoLocationId) {
 			this.name = name;
 			this.startDate = startDate.atZone(ZoneId.systemDefault())
 				.toInstant()
@@ -53,6 +54,7 @@ public class MoimScheduleResponse {
 			this.x = x;
 			this.y = y;
 			this.locationName = locationName;
+			this.kakaoLocationId = kakaoLocationId;
 		}
 
 		@QueryProjection

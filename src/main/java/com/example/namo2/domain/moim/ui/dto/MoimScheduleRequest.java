@@ -35,6 +35,7 @@ public class MoimScheduleRequest {
 		@SuppressWarnings("checkstyle:MemberName")
 		private Double y;
 		private String locationName;
+		private String kakaoLocationId;
 
 		@NotNull
 		private List<Long> users;
@@ -59,6 +60,7 @@ public class MoimScheduleRequest {
 		private Double x;
 		private Double y;
 		private String locationName;
+		private String kakaoLocationId;
 
 		@NotNull
 		private List<Long> users;
