@@ -3,6 +3,7 @@ package com.example.namo2.domain.user.application.converter;
 import java.util.Map;
 
 import com.example.namo2.domain.user.domain.User;
+import com.example.namo2.domain.user.domain.UserStatus;
 
 public class UserConverter {
 
@@ -12,17 +13,19 @@ public class UserConverter {
 
 	public static User toUser(Map<String, String> response) {
 		return User.builder()
-			.email(response.get("email"))
-			.name(response.get("nickname"))
-			.birthday(response.getOrDefault("birthday", null))
-			.build();
+				.email(response.get("email"))
+				.name(response.get("nickname"))
+				.birthday(response.getOrDefault("birthday", null))
+				.status(UserStatus.ACTIVE)
+				.build();
 	}
 
 	public static User toUser(String email, String name) {
 		return User.builder()
-			.email(email)
-			.name(name)
-			.build();
+				.email(email)
+				.name(name)
+				.status(UserStatus.ACTIVE)
+				.build();
 	}
 
 }
