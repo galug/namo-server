@@ -29,7 +29,7 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 			HttpServletResponse response,
 			FilterChain filterChain
 	) throws ServletException, IOException {
-		if(isAsyncDispatch(request)) {
+		if (isAsyncDispatch(request)) {
 			filterChain.doFilter(request, response);
 		} else {
 			doFilterWrapped(
@@ -54,9 +54,13 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 		}
 	}
 
-	private static void logRequest(ContentCachingRequestWrapper request) throws IOException {
+	private static String getQueryString(ContentCachingRequestWrapper request) {
 		String queryString = request.getQueryString();
-		String s = queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString;
+		return queryString == null ? request.getRequestURI() : request.getRequestURI() + queryString;
+	}
+
+	private static void logRequest(ContentCachingRequestWrapper request) throws IOException {
+		String s = getQueryString(request);
 		log.info("Request : {} uri=[{}] content-type[{}]",
 				request.getMethod(), s, request.getContentType());
 
@@ -69,6 +73,7 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 
 	private static void logPayload(String prefix, String contentType, byte[] rowData) throws IOException {
 		boolean visible = isVisible(MediaType.valueOf(contentType == null ? "application/json" : contentType));
+		log.info("{} Content-Type: {}", prefix, contentType);
 
 		if (visible) {
 			if (rowData.length > 0) {
@@ -88,7 +93,6 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 
 	private static boolean isVisible(MediaType mediaType) {
 		final List<MediaType> visibleTypes = Arrays.asList(
-				MediaType.valueOf("text/*"),
 				MediaType.APPLICATION_FORM_URLENCODED,
 				MediaType.APPLICATION_JSON,
 				MediaType.APPLICATION_XML,
