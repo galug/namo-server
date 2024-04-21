@@ -4,11 +4,14 @@ spring:
       on-profile: "docs"
 
 springdoc:
-  packages-to-scan: com.saybetter.domain
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     path: /swagger
-    disable-swagger-default-url: true
+    groups-order: desc
+    operations-sorter: method
     display-request-duration: true
-    operations-sorter: alpha
+    disable-swagger-default-url: true
+  show-actuator: true
+  api-docs:
+    path: /v3/api-docs
