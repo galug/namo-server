@@ -83,6 +83,21 @@ public class MoimMemoController {
 		return new BaseResponse(diaryDto);
 	}
 
+	@Operation(summary = "개인 페이지 모임 메모 삭제", description = "모임 메모 장소 삭제 API")
+	@DeleteMapping("/schedule/memo/person/{scheduleId}")
+	public BaseResponse<Object> removePersonMoimMemo(@PathVariable Long scheduleId, HttpServletRequest request) {
+		Long userId = (Long)request.getAttribute("userId");
+		moimMemoFacade.removePersonMoimMemo(scheduleId, userId);
+		return BaseResponse.ok();
+	}
+
+	@Operation(summary = "모임 메모 전체 삭제", description = "모임 메모 전체 삭제 API")
+	@DeleteMapping("/schedule/memo/all/{memoId}")
+	public BaseResponse<Object> removeMoimMemo(@PathVariable Long memoId) {
+		moimMemoFacade.removeMoimMemo(memoId);
+		return BaseResponse.ok();
+	}
+
 	@Operation(summary = "모임 메모 장소 삭제", description = "모임 메모 장소 삭제 API")
 	@DeleteMapping("/schedule/memo/{memoLocationId}")
 	public BaseResponse<Object> removeMoimMemoLocation(@PathVariable Long memoLocationId) {

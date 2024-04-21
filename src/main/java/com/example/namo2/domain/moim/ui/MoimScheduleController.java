@@ -63,26 +63,27 @@ public class MoimScheduleController {
 
 	@Operation(summary = "모임 스케쥴 삭제", description = "모임 스케쥴 삭제 API")
 	@DeleteMapping("/{moimScheduleId}")
-	public BaseResponse<Long> removeMoimSchedule(@PathVariable Long moimScheduleId) {
-		moimScheduleFacade.removeMoimSchedule(moimScheduleId);
+	public BaseResponse<Long> removeMoimSchedule(@PathVariable Long moimScheduleId, HttpServletRequest request) {
+		moimScheduleFacade.removeMoimSchedule(moimScheduleId, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "월간 모임 스케쥴 조회", description = "월간 모임 스케쥴 조회 API")
 	@GetMapping("/{moimId}/{month}")
 	public BaseResponse<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(@PathVariable("moimId") Long moimId,
-		@PathVariable("month") String month) {
+		@PathVariable("month") String month, HttpServletRequest request) {
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
 		List<MoimScheduleResponse.MoimScheduleDto> schedules = moimScheduleFacade.getMonthMoimSchedules(moimId,
-			localDateTimes);
+			localDateTimes, (Long)request.getAttribute("userId"));
 		return new BaseResponse(schedules);
 	}
 
 	@Operation(summary = "모든 모임 스케쥴 조회", description = "모든 모임 스케쥴 조회 API")
 	@GetMapping("/{moimId}/all")
 	public BaseResponse<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(
-		@PathVariable("moimId") Long moimId) {
-		List<MoimScheduleResponse.MoimScheduleDto> schedules = moimScheduleFacade.getAllMoimSchedules(moimId);
+		@PathVariable("moimId") Long moimId, HttpServletRequest request) {
+		List<MoimScheduleResponse.MoimScheduleDto> schedules
+			= moimScheduleFacade.getAllMoimSchedules(moimId, (Long)request.getAttribute("userId"));
 		return new BaseResponse(schedules);
 	}
 

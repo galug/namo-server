@@ -3,6 +3,8 @@ package com.example.namo2.domain.category.application.impl;
 import static com.example.namo2.global.common.response.BaseResponseStatus.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -56,7 +58,7 @@ public class CategoryService {
 		return category;
 	}
 
-	private void validateUsersCategory(Long userId, Category category) {
+	public void validateUsersCategory(Long userId, Category category) {
 		if (category.isNotCreatedByUser(userId)) {
 			throw new BaseException(BaseResponseStatus.NOT_USERS_CATEGORY);
 		}
@@ -69,6 +71,18 @@ public class CategoryService {
 	}
 
 	public List<Category> getMoimUsersCategories(List<User> users) {
-		return categoryRepository.findMoimCategoriesByUsers(users, CategoryKind.MOIM);
+		List<Category> moimCategoriesByUsers = categoryRepository.findMoimCategoriesByUsers(users, CategoryKind.MOIM);
+		validateMoimUsersCategories(users, moimCategoriesByUsers);
+		return moimCategoriesByUsers;
 	}
+
+	private void validateMoimUsersCategories(List<User> users, List<Category> moimCategoriesByUsers) {
+		Set<User> moimCategoriesUsers = moimCategoriesByUsers.stream()
+			.map(Category::getUser)
+			.collect(Collectors.toSet());
+		if (users.size() != moimCategoriesUsers.size()) {
+			throw new BaseException(BaseResponseStatus.NOT_HAS_MOIM_CATEGORIES_USERS);
+		}
+	}
+
 }

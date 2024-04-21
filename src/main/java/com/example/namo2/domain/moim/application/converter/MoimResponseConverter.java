@@ -1,6 +1,7 @@
 package com.example.namo2.domain.moim.application.converter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.example.namo2.domain.moim.domain.Moim;
@@ -18,24 +19,25 @@ public class MoimResponseConverter {
 			.build();
 	}
 
-	public static List<MoimResponse.MoimDto> toMoimDtos(List<MoimAndUser> moimAndUsers) {
-		return moimAndUsers.stream()
+	public static List<MoimResponse.MoimDto> toMoimDtos(List<MoimAndUser> moimAndUsers,
+		List<MoimAndUser> curUserMoimsInUser) {
+		Map<Moim, List<MoimAndUser>> moimMappingMoimAndUsers = moimAndUsers.stream()
 			.collect(
 				Collectors.groupingBy(
 					MoimAndUser::getMoim
 				)
-			)
-			.entrySet().stream()
-			.map((entrySet) -> toMoimDto(entrySet.getKey(), entrySet.getValue()))
+			);
+		return curUserMoimsInUser.stream()
+			.map((moimAndUser) -> toMoimDto(moimAndUser, moimMappingMoimAndUsers.get(moimAndUser.getMoim())))
 			.collect(Collectors.toList());
 	}
 
-	public static MoimResponse.MoimDto toMoimDto(Moim moim, List<MoimAndUser> moimAndUsers) {
+	public static MoimResponse.MoimDto toMoimDto(MoimAndUser moimAndUser, List<MoimAndUser> moimAndUsers) {
 		return MoimResponse.MoimDto.builder()
-			.groupId(moim.getId())
-			.groupName(moim.getName())
-			.groupImgUrl(moim.getImgUrl())
-			.groupCode(moim.getCode())
+			.groupId(moimAndUser.getMoim().getId())
+			.groupName(moimAndUser.getMoimCustomName())
+			.groupImgUrl(moimAndUser.getMoim().getImgUrl())
+			.groupCode(moimAndUser.getMoim().getCode())
 			.moimUsers(toMoimUserDtos(moimAndUsers))
 			.build();
 	}

@@ -24,4 +24,10 @@ public interface MoimMemoRepository extends JpaRepository<MoimMemo, Long> {
 		+ " left join fetch mm.moimMemoLocations"
 		+ " where mm.moimSchedule =:moimSchedule")
 	MoimMemo findMoimMemoAndLocationsByMoimSchedule(MoimSchedule moimSchedule);
+
+	@Query("select mm"
+		+ " from MoimMemo mm"
+		+ " left join fetch mm.moimMemoLocations"
+		+ " where mm.id =:moimMemoId")
+	Optional<MoimMemo> findMoimMemoAndLocationsByMoimSchedule(Long moimMemoId);
 }

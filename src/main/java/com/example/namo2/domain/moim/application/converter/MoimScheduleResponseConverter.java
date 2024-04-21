@@ -112,7 +112,8 @@ public class MoimScheduleResponseConverter {
 			moimSchedule.getId(),
 			moimSchedule.getLocation().getX(),
 			moimSchedule.getLocation().getY(),
-			moimSchedule.getLocation().getLocationName()
+			moimSchedule.getLocation().getLocationName(),
+			moimSchedule.getLocation().getKakaoLocationId()
 		);
 	}
 

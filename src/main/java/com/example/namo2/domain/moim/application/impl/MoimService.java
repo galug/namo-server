@@ -32,7 +32,7 @@ public class MoimService {
 	}
 
 	public Moim getMoimWithMoimAndUsersByMoimId(Long moimId) {
-		return moimRepository.findById(moimId)
+		return moimRepository.findMoimWithMoimAndUsersByMoimId(moimId)
 			.orElseThrow(() -> new BaseException(NOT_FOUND_MOIM_FAILURE));
 	}
 

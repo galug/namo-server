@@ -67,13 +67,14 @@ public class MoimFacade {
 	@Transactional(readOnly = true)
 	public List<MoimResponse.MoimDto> getMoims(Long userId) {
 		User user = userService.getUser(userId);
-		List<Moim> moimsInUser = moimAndUserService.getMoimAndUsers(user)
+		List<MoimAndUser> curUsersMoimAndUsers = moimAndUserService.getMoimAndUsers(user);
+		List<Moim> moimsInUser = curUsersMoimAndUsers
 			.stream().map(MoimAndUser::getMoim)
 			.collect(Collectors.toList());
 
 		List<MoimAndUser> moimAndUsersInMoims = moimAndUserService
 			.getMoimAndUsers(moimsInUser);
-		return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims);
+		return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims, curUsersMoimAndUsers);
 	}
 
 	@Transactional(readOnly = false)
