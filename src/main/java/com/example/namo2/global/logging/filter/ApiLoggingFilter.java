@@ -73,7 +73,6 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 
 	private static void logPayload(String prefix, String contentType, byte[] rowData) throws IOException {
 		boolean visible = isVisible(MediaType.valueOf(contentType == null ? "application/json" : contentType));
-		log.info("{} Content-Type: {}", prefix, contentType);
 
 		if (visible) {
 			if (rowData.length > 0) {
