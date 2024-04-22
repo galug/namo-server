@@ -1,7 +1,7 @@
 name: 🚀 Deploy for ECS
 
 on:
-  pull_request:
+  push:
     branches:
       - dev
 
