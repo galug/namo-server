@@ -57,16 +57,23 @@ public class SwaggerConfig {
 				.info(getInfo());
 	}
 
+	/**
+	 * Swagger ApiErrorCodes, ApiErrorCode Annotation을 통해 에러코드를 설정할 수 있도록 하는 Customizer
+	 *
+	 * @return
+	 */
 	@Bean
 	public OperationCustomizer customize() {
 		return (Operation operation, HandlerMethod handlerMethod) -> {
 			ApiErrorCodes apiErrorCodes = handlerMethod.getMethodAnnotation(ApiErrorCodes.class);
 
+			// @ApiErrorCodes가 존재할 경우 해당 에러코드를 설정
 			if (apiErrorCodes != null) {
 				generateErrorCodeResponse(operation, apiErrorCodes.value());
 			} else {
 				ApiErrorCode apiErrorCode = handlerMethod.getMethodAnnotation(ApiErrorCode.class);
 
+				// @ApiErrorCodes가 존재하지 않으며, @ApiErrorCode가 존재할 경우 해당 에러코드를 설정
 				if (apiErrorCode != null) {
 					generateErrorCodeResponse(operation, apiErrorCode.value());
 				}
@@ -76,6 +83,12 @@ public class SwaggerConfig {
 		};
 	}
 
+	/**
+	 * {@code @ApiErrorCodes} 어노테이션이 존재할 경우 Operation에 에러코드를 설정하는 메소드
+	 *
+	 * @param operation
+	 * @param errorCodes
+	 */
 	private void generateErrorCodeResponse(Operation operation, BaseResponseStatus[] errorCodes) {
 		ApiResponses responses = operation.getResponses();
 
@@ -92,6 +105,12 @@ public class SwaggerConfig {
 		addExamplesToResponses(responses, statusWithExampleHolders);
 	}
 
+	/**
+	 * {@code @ApiErrorCode} 어노테이션이 존재할 경우 Operation에 에러코드를 설정하는 메소드
+	 *
+	 * @param operation
+	 * @param value
+	 */
 	private void generateErrorCodeResponse(Operation operation, BaseResponseStatus value) {
 		ApiResponses responses = operation.getResponses();
 		ExampleHolder exampleHolder = ExampleHolder.builder()
@@ -102,6 +121,12 @@ public class SwaggerConfig {
 		addExamplesToResponses(responses, exampleHolder);
 	}
 
+	/**
+	 * {@code @ApiErrorCodes} 어노테이션이 존재할 경우 {@code ApiResponses}에 {@code Example}를 추가하는 메소드
+	 *
+	 * @param responses
+	 * @param statusWithExampleHolders
+	 */
 	private void addExamplesToResponses(
 			ApiResponses responses,
 			Map<Integer, List<ExampleHolder>> statusWithExampleHolders
@@ -125,6 +150,12 @@ public class SwaggerConfig {
 				});
 	}
 
+	/**
+	 * {@code @ApiErrorCode} 어노테이션이 존재할 경우 {@code ApiResponses}에 {@code Example}를 추가하는 메소드
+	 *
+	 * @param responses
+	 * @param exampleHolder
+	 */
 	private void addExamplesToResponses(ApiResponses responses, ExampleHolder exampleHolder) {
 		Content content = new Content();
 		MediaType mediaType = new MediaType();
@@ -136,6 +167,12 @@ public class SwaggerConfig {
 		responses.addApiResponse(String.valueOf(exampleHolder.getCode()), apiResponse);
 	}
 
+	/**
+	 * {@code BaseResponseStatus}를 통해 {@code Example}를 생성하는 메소드
+	 *
+	 * @param errorCode
+	 * @return
+	 */
 	private Example getSwaggerExample(BaseResponseStatus errorCode) {
 		BaseResponse<BaseResponseStatus> response = new BaseResponse<>(errorCode);
 		Example example = new Example();
