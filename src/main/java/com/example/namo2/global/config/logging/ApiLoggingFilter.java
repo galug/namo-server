@@ -1,4 +1,4 @@
-package com.example.namo2.global.logging.filter;
+package com.example.namo2.global.config.logging;
 
 import java.io.IOException;
 import java.util.Arrays;
