@@ -31,17 +31,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Moim Memo", description = "모임 메모 관련 API")
+@Tag(name = "Diary (그룹)", description = "그룹 기록 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/moims")
-public class MoimMemoController {
+@RequestMapping("/group/diaries")
+public class GroupDiaryController {
 	private final MoimMemoFacade moimMemoFacade;
 	private final Converter converter;
 
-	@Operation(summary = "모임 메모 생성", description = "모임 모임 매모 생성 API")
-	@PostMapping("/schedule/memo/{moimScheduleId}")
+	@Operation(summary = "그룹 기록 생성", description = "그룹 기록 생성 API")
+	@PostMapping("/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -60,8 +60,8 @@ public class MoimMemoController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 메모 장소 수정", description = "모임 메모 장소 수정 API")
-	@PatchMapping("/schedule/memo/{memoLocationId}")
+	@Operation(summary = "그룹 기록 장소 수정", description = "그룹 기록 장소 수정 API")
+	@PatchMapping("/{memoLocationId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -80,8 +80,8 @@ public class MoimMemoController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 메모 조회", description = "모임 메모 조회 API")
-	@GetMapping("/schedule/memo/{moimScheduleId}")
+	@Operation(summary = "그룹 기록 조회", description = "그룹 기록 조회 API")
+	@GetMapping("/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -95,8 +95,8 @@ public class MoimMemoController {
 		return new BaseResponse(moimMemoDto);
 	}
 
-	@Operation(summary = "월간 모임 메모 조회", description = "월간 모임 메모 조회 API")
-	@GetMapping("/schedule/memo/month/{month}")
+	@Operation(summary = "월간 그룹 기록 조회", description = "월간 그룹 기록 조회 API")
+	@GetMapping("/month/{month}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -114,8 +114,8 @@ public class MoimMemoController {
 		return new BaseResponse(diaryDto);
 	}
 
-	@Operation(summary = "개인 페이지 모임 메모 삭제", description = "모임 메모 장소 삭제 API")
-	@DeleteMapping("/schedule/memo/person/{scheduleId}")
+	@Operation(summary = "개인 페이지 그룹 기록 삭제", description = "그룹 기록 장소 삭제 API")
+	@DeleteMapping("/person/{scheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -131,8 +131,8 @@ public class MoimMemoController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 메모 전체 삭제", description = "모임 메모 전체 삭제 API")
-	@DeleteMapping("/schedule/memo/all/{memoId}")
+	@Operation(summary = "그룹 기록 전체 삭제", description = "그룹 기록 전체 삭제 API")
+	@DeleteMapping("/all/{memoId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -146,8 +146,8 @@ public class MoimMemoController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 메모 장소 삭제", description = "모임 메모 장소 삭제 API")
-	@DeleteMapping("/schedule/memo/{memoLocationId}")
+	@Operation(summary = "그룹 기록 장소 삭제", description = "그룹 기록 장소 삭제 API")
+	@DeleteMapping("/{memoLocationId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -161,8 +161,8 @@ public class MoimMemoController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 메모 텍스트 추가", description = "모임 메모 텍스트 추가 API")
-	@PatchMapping("/schedule/memo/text/{moimScheduleId}")
+	@Operation(summary = "그룹 기록 텍스트 추가", description = "그룹 기록 텍스트 추가 API")
+	@PatchMapping("/text/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
