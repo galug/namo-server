@@ -35,11 +35,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 public class SwaggerConfig {
-	public static final String ACCESS_TOKEN = "accessToken";
 
 	private static final String API_NAME = "Namo Api";
 	private static final String API_VERSION = "0.0.1";
 	private static final String API_DESCRIPTION = "나모 프로젝트 명세서 ";
+	public static final String AUTHORIZATION = "Authorization";
 
 	@Value("${swagger.server.url}")
 	private String serverUrl;
@@ -47,14 +47,18 @@ public class SwaggerConfig {
 	@Bean
 	public OpenAPI getOpenAPI() {
 
-		SecurityRequirement securityRequirement = new SecurityRequirement()
-				.addList(ACCESS_TOKEN);
-
 		return new OpenAPI()
 				.components(getComponents())
 				.servers(List.of(getServer()))
-				.security(Collections.singletonList(securityRequirement))
+				.security(getSecurity())
 				.info(getInfo());
+	}
+
+	private static List<SecurityRequirement> getSecurity() {
+		SecurityRequirement securityRequirement = new SecurityRequirement()
+				.addList(AUTHORIZATION);
+
+		return Collections.singletonList(securityRequirement);
 	}
 
 	/**
@@ -183,10 +187,11 @@ public class SwaggerConfig {
 
 	private static Components getComponents() {
 		SecurityScheme securityScheme = new SecurityScheme()
-				.type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-				.in(SecurityScheme.In.HEADER).name("Authorization");
+				.type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT").name(AUTHORIZATION)
+				.in(SecurityScheme.In.HEADER).name(AUTHORIZATION);
 
-		return new Components().addSecuritySchemes(ACCESS_TOKEN, securityScheme);
+		return new Components()
+				.addSecuritySchemes(AUTHORIZATION, securityScheme);
 	}
 
 	private Info getInfo() {
