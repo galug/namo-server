@@ -18,15 +18,15 @@ import com.example.namo2.global.common.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "User", description = "유저 관련 API")
+@Tag(name = "Term", description = "약관 동의 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/terms")
+public class TermController {
 	private final UserFacade userFacade;
 
 	@Operation(summary = "약관을 동의합니다. ", description = "약관 동의 API")
-	@PostMapping("/term")
+	@PostMapping("")
 	public BaseResponse<Void> createTerm(@Valid @RequestBody UserRequest.TermDto termDto, HttpServletRequest request) {
 		userFacade.createTerm(termDto, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
