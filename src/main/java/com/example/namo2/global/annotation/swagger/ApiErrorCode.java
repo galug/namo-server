@@ -7,9 +7,8 @@ import java.lang.annotation.Target;
 
 import com.example.namo2.global.common.response.BaseResponseStatus;
 
-@Target({ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ApiErrorCode(BaseResponseStatus.INTERNET_SERVER_ERROR)
 public @interface ApiErrorCode {
 
 	BaseResponseStatus value();
