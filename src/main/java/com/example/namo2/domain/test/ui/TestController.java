@@ -8,13 +8,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.namo2.domain.test.ui.dto.TestRequest;
 import com.example.namo2.domain.test.ui.dto.TestResponse;
+import com.example.namo2.global.annotation.swagger.ApiErrorCode;
+import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 
 @RestController
 @RequestMapping("/test")
 public class TestController {
 
 	@GetMapping("/log")
+	@ApiErrorCode(BaseResponseStatus.INTERNET_SERVER_ERROR)
 	public BaseResponse<TestResponse.TestDto> testLog() {
 		return new BaseResponse<>(
 				TestResponse.TestDto.builder()
@@ -24,11 +28,18 @@ public class TestController {
 	}
 
 	@GetMapping("/authenticate")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public String test() {
 		return "인증 완료";
 	}
 
 	@PostMapping("/log")
+	@ApiErrorCode(BaseResponseStatus.INTERNET_SERVER_ERROR)
 	public BaseResponse<TestResponse.LogTestDto> loggingTest(
 			@RequestBody TestRequest.LogTestDto logTestDto
 	) {

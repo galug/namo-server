@@ -3,9 +3,6 @@ package com.example.namo2.domain.moim.ui;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,16 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import com.example.namo2.domain.moim.application.MoimScheduleFacade;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
-
+import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
+import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.Converter;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,68 +38,130 @@ public class MoimScheduleController {
 
 	@Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
 	@PostMapping("")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public BaseResponse<Long> createMoimSchedule(
-		@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleDto scheduleReq) {
+			@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleDto scheduleReq
+	) {
 		Long scheduleId = moimScheduleFacade.createSchedule(scheduleReq);
 		return new BaseResponse(scheduleId);
 	}
 
 	@Operation(summary = "모임 스케쥴 수정", description = "모임 스케쥴 수정 API")
 	@PatchMapping("")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public BaseResponse<Long> modifyMoimSchedule(
-		@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleDto scheduleReq) {
+			@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleDto scheduleReq
+	) {
 		moimScheduleFacade.modifyMoimSchedule(scheduleReq);
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "모임 스케쥴 카테고리 수정", description = "모임 스케쥴 카테고리 수정 API")
 	@PatchMapping("category")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public BaseResponse<Long> modifyMoimScheduleCategory(
-		@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleReq, HttpServletRequest request) {
+			@Valid @RequestBody MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleReq,
+			HttpServletRequest request
+	) {
 		moimScheduleFacade.modifyMoimScheduleCategory(scheduleReq, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "모임 스케쥴 삭제", description = "모임 스케쥴 삭제 API")
 	@DeleteMapping("/{moimScheduleId}")
-	public BaseResponse<Long> removeMoimSchedule(@PathVariable Long moimScheduleId, HttpServletRequest request) {
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
+	public BaseResponse<Long> removeMoimSchedule(
+			@PathVariable Long moimScheduleId,
+			HttpServletRequest request
+	) {
 		moimScheduleFacade.removeMoimSchedule(moimScheduleId, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "월간 모임 스케쥴 조회", description = "월간 모임 스케쥴 조회 API")
 	@GetMapping("/{moimId}/{month}")
-	public BaseResponse<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(@PathVariable("moimId") Long moimId,
-		@PathVariable("month") String month, HttpServletRequest request) {
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
+	public BaseResponse<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(
+			@PathVariable("moimId") Long moimId,
+			@PathVariable("month") String month,
+			HttpServletRequest request
+	) {
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
 		List<MoimScheduleResponse.MoimScheduleDto> schedules = moimScheduleFacade.getMonthMoimSchedules(moimId,
-			localDateTimes, (Long)request.getAttribute("userId"));
+				localDateTimes, (Long)request.getAttribute("userId"));
 		return new BaseResponse(schedules);
 	}
 
 	@Operation(summary = "모든 모임 스케쥴 조회", description = "모든 모임 스케쥴 조회 API")
 	@GetMapping("/{moimId}/all")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public BaseResponse<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(
-		@PathVariable("moimId") Long moimId, HttpServletRequest request) {
+			@PathVariable("moimId") Long moimId,
+			HttpServletRequest request
+	) {
 		List<MoimScheduleResponse.MoimScheduleDto> schedules
-			= moimScheduleFacade.getAllMoimSchedules(moimId, (Long)request.getAttribute("userId"));
+				= moimScheduleFacade.getAllMoimSchedules(moimId, (Long)request.getAttribute("userId"));
 		return new BaseResponse(schedules);
 	}
 
 	@Operation(summary = "모임 스케쥴 생성 알람", description = "모임 스케쥴 생성 알람 API")
 	@PostMapping("/alarm")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public BaseResponse createMoimScheduleAlarm(
-		@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto,
-		HttpServletRequest request) {
+			@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto,
+			HttpServletRequest request
+	) {
 		moimScheduleFacade.createMoimScheduleAlarm(postMoimScheduleAlarmDto, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "모임 스케쥴 변경 알람", description = "모임 스케쥴 변경 알람 API")
 	@PatchMapping("/alarm")
+	@ApiErrorCodes({
+			BaseResponseStatus.EMPTY_ACCESS_KEY,
+			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+			BaseResponseStatus.INTERNET_SERVER_ERROR
+	})
 	public BaseResponse modifyMoimScheduleAlarm(
-		@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto,
-		HttpServletRequest request) {
+			@Valid @RequestBody MoimScheduleRequest.PostMoimScheduleAlarmDto postMoimScheduleAlarmDto,
+			HttpServletRequest request
+	) {
 		moimScheduleFacade.modifyMoimScheduleAlarm(postMoimScheduleAlarmDto, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
 	}
