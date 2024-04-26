@@ -18,7 +18,7 @@ import com.example.namo2.global.common.response.BaseResponse;
 
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Term", description = "약관 동의 관련 API")
+@Tag(name = "2. Term", description = "약관 동의 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/terms")

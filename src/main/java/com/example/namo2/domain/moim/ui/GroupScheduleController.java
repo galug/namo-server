@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Schedule (그룹)", description = "그룹 일정 관련 API")
+@Tag(name = "7. Schedule (그룹)", description = "그룹 일정 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Diary (그룹)", description = "그룹 기록 관련 API")
+@Tag(name = "8. Diary (그룹)", description = "그룹 기록 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

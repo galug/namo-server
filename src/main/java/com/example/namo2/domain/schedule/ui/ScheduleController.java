@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Schedule (개인)", description = "개인 일정 관련 API")
+@Tag(name = "3. Schedule (개인)", description = "개인 일정 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor

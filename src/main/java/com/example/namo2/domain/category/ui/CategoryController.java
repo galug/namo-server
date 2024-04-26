@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Category", description = "카테고리 관련 API")
+@Tag(name = "5. Category", description = "카테고리 관련 API")
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
