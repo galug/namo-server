@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Auth", description = "로그인, 회원가입 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/auths")
 public class AuthController {
 	private final UserFacade userFacade;
 
