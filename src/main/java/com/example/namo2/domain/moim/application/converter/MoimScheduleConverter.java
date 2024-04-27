@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.individual.domain.Category;
 
 import com.example.namo2.domain.moim.domain.Moim;
 import com.example.namo2.domain.moim.domain.MoimSchedule;
@@ -12,8 +12,8 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 
-import com.example.namo2.domain.schedule.domain.Location;
-import com.example.namo2.domain.schedule.domain.Period;
+import com.example.namo2.domain.individual.domain.constant.Location;
+import com.example.namo2.domain.individual.domain.constant.Period;
 
 import com.example.namo2.domain.user.domain.User;
 

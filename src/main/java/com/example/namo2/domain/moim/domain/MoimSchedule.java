@@ -20,8 +20,8 @@ import jakarta.persistence.Table;
 
 import com.example.namo2.domain.memo.domain.MoimMemo;
 
-import com.example.namo2.domain.schedule.domain.Location;
-import com.example.namo2.domain.schedule.domain.Period;
+import com.example.namo2.domain.individual.domain.constant.Location;
+import com.example.namo2.domain.individual.domain.constant.Period;
 
 import com.example.namo2.global.common.entity.BaseTimeEntity;
 

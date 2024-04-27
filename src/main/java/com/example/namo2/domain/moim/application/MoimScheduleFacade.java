@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.namo2.domain.category.application.impl.CategoryService;
-import com.example.namo2.domain.category.domain.Category;
+import com.example.namo2.domain.individual.application.impl.CategoryService;
+import com.example.namo2.domain.individual.domain.Category;
 
 import com.example.namo2.domain.memo.application.impl.MoimMemoLocationService;
 import com.example.namo2.domain.memo.application.impl.MoimMemoService;
@@ -31,10 +31,10 @@ import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleRequest;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 
-import com.example.namo2.domain.schedule.application.impl.ScheduleService;
-import com.example.namo2.domain.schedule.domain.Location;
-import com.example.namo2.domain.schedule.domain.Period;
-import com.example.namo2.domain.schedule.domain.Schedule;
+import com.example.namo2.domain.individual.application.impl.ScheduleService;
+import com.example.namo2.domain.individual.domain.constant.Location;
+import com.example.namo2.domain.individual.domain.constant.Period;
+import com.example.namo2.domain.individual.domain.Schedule;
 
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;

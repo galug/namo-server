@@ -1,6 +1,6 @@
 package com.example.namo2.domain.moim.dao.repository;
 
-import static com.example.namo2.domain.category.domain.QCategory.*;
+import static com.example.namo2.domain.individual.domain.QCategory.*;
 import static com.example.namo2.domain.moim.domain.QMoimSchedule.*;
 import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.*;
 

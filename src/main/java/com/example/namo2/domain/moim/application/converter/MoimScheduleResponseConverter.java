@@ -9,7 +9,7 @@ import com.example.namo2.domain.moim.domain.MoimSchedule;
 import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.moim.ui.dto.MoimScheduleResponse;
 
-import com.example.namo2.domain.schedule.domain.Schedule;
+import com.example.namo2.domain.individual.domain.Schedule;
 
 import com.example.namo2.domain.user.domain.User;
 
