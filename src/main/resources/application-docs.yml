@@ -8,7 +8,7 @@ springdoc:
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     path: /swagger
-    groups-order: desc
+    tags-sorter: alpha
     operations-sorter: method
     display-request-duration: true
     disable-swagger-default-url: true

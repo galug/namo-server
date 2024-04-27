@@ -18,10 +18,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Auth", description = "로그인, 회원가입 관련 API")
+@Tag(name = "1. Auth", description = "로그인, 회원가입 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auths")
 public class AuthController {
 	private final UserFacade userFacade;
 

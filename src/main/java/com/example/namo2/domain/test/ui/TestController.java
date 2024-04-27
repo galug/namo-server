@@ -13,6 +13,9 @@ import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "A. Test", description = "테스트 API")
 @RestController
 @RequestMapping("/test")
 public class TestController {

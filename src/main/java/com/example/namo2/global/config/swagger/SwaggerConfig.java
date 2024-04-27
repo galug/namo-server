@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SwaggerConfig {
 
 	private static final String API_NAME = "Namo Api";
-	private static final String API_VERSION = "0.0.1";
+	private static final String API_VERSION = "1.0.0";
 	private static final String API_DESCRIPTION = "나모 프로젝트 명세서 ";
 	public static final String AUTHORIZATION = "Authorization";
 
@@ -46,12 +47,19 @@ public class SwaggerConfig {
 
 	@Bean
 	public OpenAPI getOpenAPI() {
-
 		return new OpenAPI()
 				.components(getComponents())
 				.servers(List.of(getServer()))
 				.security(getSecurity())
 				.info(getInfo());
+	}
+
+	@Bean
+	public GroupedOpenApi publicApi() {
+		return GroupedOpenApi.builder()
+				.group("v1")
+				.pathsToMatch("/api/v1/**")
+				.build();
 	}
 
 	private static List<SecurityRequirement> getSecurity() {
@@ -203,7 +211,6 @@ public class SwaggerConfig {
 
 	private Server getServer() {
 		return new Server()
-				.url(serverUrl)
-				.description("dev server");
+				.url(serverUrl);
 	}
 }

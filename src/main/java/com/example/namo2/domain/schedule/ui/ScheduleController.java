@@ -30,11 +30,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Schedule", description = "일정 관련 API")
+@Tag(name = "3. Schedule (개인)", description = "개인 일정 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/schedules")
+@RequestMapping("/api/v1/schedules")
 public class ScheduleController {
 	private final ScheduleFacade scheduleFacade;
 	private final Converter converter;
@@ -58,23 +58,6 @@ public class ScheduleController {
 		return new BaseResponse<>(scheduleIddto);
 	}
 
-	@Operation(summary = "일정 다이어리 생성", description = "일정 다이어리 생성 API")
-	@PostMapping("/diary")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
-	})
-	public BaseResponse<ScheduleResponse.ScheduleIdDto> createDiary(
-			@RequestPart(required = false) List<MultipartFile> imgs,
-			@RequestPart String scheduleId,
-			@RequestPart(required = false) String content
-	) {
-		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
-		return new BaseResponse<>(dto);
-	}
-
 	@Operation(summary = "일정 월별 조회", description = "개인 일정 & 모임 일정 월별 조회 API")
 	@GetMapping("/{month}")
 	@ApiErrorCodes({
@@ -93,6 +76,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
+	// TODO: 2024-04-26 "모임" 일정인데 이동해야할지 고민해보기
 	@Operation(summary = "모임 일정 월별 조회", description = "모임 일정 월별 조회 API")
 	@GetMapping("/moim/{month}")
 	@ApiErrorCodes({
@@ -113,6 +97,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
+	// TODO: 2024-04-26 "모임" 일정인데 이동해야할지 고민해보기
 	@Operation(summary = "모든 일정 조회", description = "유저의 모든 개인 일정과 모임 일정 조회 API")
 	@GetMapping("/all")
 	@ApiErrorCodes({
@@ -130,6 +115,7 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
+	// TODO: 2024-04-26 "모임" 일정인데 이동해야할지 고민해보기
 	@Operation(summary = "모든 모임 일정 조회", description = "모든 모임 일정 조회 API")
 	@GetMapping("/moim/all")
 	@ApiErrorCodes({
@@ -145,58 +131,6 @@ public class ScheduleController {
 				(Long)request.getAttribute("userId")
 		);
 		return new BaseResponse<>(moimSchedule);
-	}
-
-	@Operation(summary = "일정 기록 월간 조회", description = "일정 기록 월간 조회 API")
-	@GetMapping("/diary/{month}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
-	})
-	public BaseResponse<ScheduleResponse.SliceDiaryDto> findDiaryByMonth(
-			@PathVariable("month") String month,
-			Pageable pageable,
-			HttpServletRequest request
-	) {
-		Long userId = (Long)request.getAttribute("userId");
-		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-		ScheduleResponse.SliceDiaryDto diaries = scheduleFacade.getMonthDiary(userId, localDateTimes, pageable);
-		return new BaseResponse<>(diaries);
-	}
-
-	//유저별 기록 조회
-	@Operation(summary = "개인 일정 기록 전체 조회", description = "개인 일정 기록 전체 조회 API")
-	@GetMapping("/diary/all")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
-	})
-	public BaseResponse<List<ScheduleResponse.GetDiaryByUserDto>> findAllDiary(
-			HttpServletRequest request
-	) {
-		Long userId = (Long)request.getAttribute("userId");
-		List<ScheduleResponse.GetDiaryByUserDto> diaries = scheduleFacade.getAllDiariesByUser(userId);
-		return new BaseResponse<>(diaries);
-	}
-
-	//일정 별 기록 조회 == 1개 조회
-	@Operation(summary = "일정 기록 개별 조회", description = "일정 기록 개별 조회 API")
-	@GetMapping("/diary/day/{scheduleId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
-	})
-	public BaseResponse<ScheduleResponse.GetDiaryByScheduleDto> findDiaryById(
-			@PathVariable("scheduleId") Long scheduleId
-	) {
-		ScheduleResponse.GetDiaryByScheduleDto diary = scheduleFacade.getDiaryBySchedule(scheduleId);
-		return new BaseResponse<>(diary);
 	}
 
 	@Operation(summary = "일정 수정", description = "일정 수정 API")
@@ -220,24 +154,6 @@ public class ScheduleController {
 		return new BaseResponse<>(dto);
 	}
 
-	@Operation(summary = "일정 기록 수정", description = "일정 기록 수정 API")
-	@PatchMapping("/diary")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
-	})
-	public BaseResponse<String> updateDiary(
-			@RequestPart(required = false) List<MultipartFile> imgs,
-			@RequestPart String scheduleId,
-			@RequestPart(required = false) String content
-	) {
-		scheduleFacade.removeDiary(Long.valueOf(scheduleId));
-		scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
-		return new BaseResponse<>("수정에 성공하셨습니다.");
-	}
-
 	/**
 	 * kind 0 은 개인 일정
 	 * kind 1 은 모임 일정
@@ -259,18 +175,4 @@ public class ScheduleController {
 		return new BaseResponse<>("삭제에 성공하였습니다.");
 	}
 
-	@Operation(summary = "일정 다이어리 삭제", description = "일정 다이어리 삭제 API")
-	@DeleteMapping("/diary/{scheduleId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
-	})
-	public BaseResponse<String> deleteDiary(
-			@PathVariable("scheduleId") Long scheduleId
-	) {
-		scheduleFacade.removeDiary(scheduleId);
-		return new BaseResponse<>("삭제에 성공하셨습니다.");
-	}
 }

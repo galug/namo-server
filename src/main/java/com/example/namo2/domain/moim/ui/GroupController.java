@@ -27,15 +27,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Moim", description = "모임 관련 API")
+@Tag(name = "6. Group", description = "그룹 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/moims")
-public class MoimController {
+@RequestMapping("/api/v1/groups")
+public class GroupController {
 	private final MoimFacade moimFacade;
 
-	@Operation(summary = "모임 생성", description = "모임 생성 API")
+	@Operation(summary = "그룹 생성", description = "그룹 생성 API")
 	@PostMapping("")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -52,7 +52,7 @@ public class MoimController {
 		return new BaseResponse(moimIdDto);
 	}
 
-	@Operation(summary = "모임 조회", description = "모임 조회 API")
+	@Operation(summary = "그룹 조회", description = "유저가 참여중인 그룹 조회 API")
 	@GetMapping("")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -67,7 +67,7 @@ public class MoimController {
 		return new BaseResponse(moims);
 	}
 
-	@Operation(summary = "모임 이름 변경", description = "모임 이름 변경 API, 변경자 입장에서만 적용")
+	@Operation(summary = "그룹 이름 수정", description = "그룹 이름 수정 API, 변경자의 입장에서만 수정되어 적용됨")
 	@PatchMapping("/name")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -83,7 +83,7 @@ public class MoimController {
 		return new BaseResponse(moimId);
 	}
 
-	@Operation(summary = "모임 참여", description = "모임 참여 API")
+	@Operation(summary = "그룹 참여", description = "그룹 참여 API")
 	@PatchMapping("/participate/{code}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -101,7 +101,7 @@ public class MoimController {
 		return new BaseResponse(moimParticipantDto);
 	}
 
-	@Operation(summary = "모임 탈퇴", description = "모임 탈퇴 API")
+	@Operation(summary = "그룹 탈퇴", description = "그룹 탈퇴 API")
 	@DeleteMapping("/withdraw/{moimId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,

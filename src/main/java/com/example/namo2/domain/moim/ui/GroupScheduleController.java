@@ -27,16 +27,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "Moim", description = "모임 관련 API")
+@Tag(name = "7. Schedule (그룹)", description = "그룹 일정 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/moims/schedule")
-public class MoimScheduleController {
+@RequestMapping("/api/v1/group/schedules")
+public class GroupScheduleController {
 	private final MoimScheduleFacade moimScheduleFacade;
 	private final Converter converter;
 
-	@Operation(summary = "모임 스케쥴 생성", description = "모임 스케쥴 생성 API")
+	@Operation(summary = "그룹 스케쥴 생성", description = "그룹 스케쥴 생성 API")
 	@PostMapping("")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -51,7 +51,7 @@ public class MoimScheduleController {
 		return new BaseResponse(scheduleId);
 	}
 
-	@Operation(summary = "모임 스케쥴 수정", description = "모임 스케쥴 수정 API")
+	@Operation(summary = "그룹 스케쥴 수정", description = "그룹 스케쥴 수정 API")
 	@PatchMapping("")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -66,7 +66,7 @@ public class MoimScheduleController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 스케쥴 카테고리 수정", description = "모임 스케쥴 카테고리 수정 API")
+	@Operation(summary = "그룹 스케쥴 카테고리 수정", description = "그룹 스케쥴 카테고리 수정 API")
 	@PatchMapping("category")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -82,7 +82,7 @@ public class MoimScheduleController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 스케쥴 삭제", description = "모임 스케쥴 삭제 API")
+	@Operation(summary = "그룹 스케쥴 삭제", description = "그룹 스케쥴 삭제 API")
 	@DeleteMapping("/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -98,7 +98,7 @@ public class MoimScheduleController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "월간 모임 스케쥴 조회", description = "월간 모임 스케쥴 조회 API")
+	@Operation(summary = "월간 그룹 스케쥴 조회", description = "월간 그룹 스케쥴 조회 API")
 	@GetMapping("/{moimId}/{month}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -117,7 +117,7 @@ public class MoimScheduleController {
 		return new BaseResponse(schedules);
 	}
 
-	@Operation(summary = "모든 모임 스케쥴 조회", description = "모든 모임 스케쥴 조회 API")
+	@Operation(summary = "모든 그룹 스케쥴 조회", description = "모든 그룹 스케쥴 조회 API")
 	@GetMapping("/{moimId}/all")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -134,7 +134,7 @@ public class MoimScheduleController {
 		return new BaseResponse(schedules);
 	}
 
-	@Operation(summary = "모임 스케쥴 생성 알람", description = "모임 스케쥴 생성 알람 API")
+	@Operation(summary = "그룹 스케쥴 생성 알람", description = "그룹 스케쥴 생성 알람 API")
 	@PostMapping("/alarm")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -150,7 +150,7 @@ public class MoimScheduleController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "모임 스케쥴 변경 알람", description = "모임 스케쥴 변경 알람 API")
+	@Operation(summary = "그룹 스케쥴 변경 알람", description = "그룹 스케쥴 변경 알람 API")
 	@PatchMapping("/alarm")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
