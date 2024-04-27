@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/schedules")
+@RequestMapping("/api/v1/schedules")
 public class ScheduleController {
 	private final ScheduleFacade scheduleFacade;
 	private final Converter converter;

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "2. Term", description = "약관 동의 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/terms")
+@RequestMapping("/api/v1/terms")
 public class TermController {
 	private final UserFacade userFacade;
 

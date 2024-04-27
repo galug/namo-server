@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/api/v1/groups")
 public class GroupController {
 	private final MoimFacade moimFacade;
 

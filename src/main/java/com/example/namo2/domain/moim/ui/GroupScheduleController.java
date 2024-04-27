@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/group/schedules")
+@RequestMapping("/api/v1/group/schedules")
 public class GroupScheduleController {
 	private final MoimScheduleFacade moimScheduleFacade;
 	private final Converter converter;

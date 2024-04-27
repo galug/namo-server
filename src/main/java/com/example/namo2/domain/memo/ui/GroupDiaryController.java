@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/group/diaries")
+@RequestMapping("/api/v1/group/diaries")
 public class GroupDiaryController {
 	private final MoimMemoFacade moimMemoFacade;
 	private final Converter converter;
