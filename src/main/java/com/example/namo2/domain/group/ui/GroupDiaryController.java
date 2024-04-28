@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "8. Diary (그룹)", description = "그룹 기록 관련 API")
+@Tag(name = "8. Diary (그룹)", description = "모임 기록 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -40,7 +40,7 @@ public class GroupDiaryController {
 	private final MoimMemoFacade moimMemoFacade;
 	private final Converter converter;
 
-	@Operation(summary = "그룹 기록 생성", description = "그룹 기록 생성 API")
+	@Operation(summary = "모임 기록 생성", description = "모임 기록 생성 API")
 	@PostMapping("/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -60,7 +60,7 @@ public class GroupDiaryController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "그룹 기록 장소 수정", description = "그룹 기록 장소 수정 API")
+	@Operation(summary = "모임 기록 장소 수정", description = "모임 기록 장소 수정 API")
 	@PatchMapping("/{memoLocationId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -80,7 +80,7 @@ public class GroupDiaryController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "그룹 기록 조회", description = "그룹 기록 조회 API")
+	@Operation(summary = "모임 기록 조회", description = "모임 기록 조회 API")
 	@GetMapping("/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -95,7 +95,7 @@ public class GroupDiaryController {
 		return new BaseResponse(moimMemoDto);
 	}
 
-	@Operation(summary = "월간 그룹 기록 조회", description = "월간 그룹 기록 조회 API")
+	@Operation(summary = "월간 모임 기록 조회", description = "월간 모임 기록 조회 API")
 	@GetMapping("/month/{month}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -114,7 +114,7 @@ public class GroupDiaryController {
 		return new BaseResponse(diaryDto);
 	}
 
-	@Operation(summary = "개인 페이지 그룹 기록 삭제", description = "그룹 기록 장소 삭제 API")
+	@Operation(summary = "개인 페이지 모임 기록 삭제", description = "모임 기록 장소 삭제 API")
 	@DeleteMapping("/person/{scheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -131,7 +131,7 @@ public class GroupDiaryController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "그룹 기록 전체 삭제", description = "그룹 기록 전체 삭제 API")
+	@Operation(summary = "모임 기록 전체 삭제", description = "모임 기록 전체 삭제 API")
 	@DeleteMapping("/all/{memoId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -146,7 +146,7 @@ public class GroupDiaryController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "그룹 기록 장소 삭제", description = "그룹 기록 장소 삭제 API")
+	@Operation(summary = "모임 기록 장소 삭제", description = "모임 기록 장소 삭제 API")
 	@DeleteMapping("/{memoLocationId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
@@ -161,7 +161,7 @@ public class GroupDiaryController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "그룹 기록 텍스트 추가", description = "그룹 기록 텍스트 추가 API")
+	@Operation(summary = "모임 기록 텍스트 추가", description = "모임 기록 텍스트 추가 API")
 	@PatchMapping("/text/{moimScheduleId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
