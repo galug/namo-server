@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Slice;
 
-import com.example.namo2.domain.moim.domain.MoimScheduleAlarm;
-import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.group.domain.MoimScheduleAlarm;
+import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
 
 import com.example.namo2.domain.individual.domain.Alarm;
 import com.example.namo2.domain.individual.domain.Schedule;

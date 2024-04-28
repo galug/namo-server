@@ -14,10 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.namo2.domain.individual.application.impl.CategoryService;
 import com.example.namo2.domain.individual.domain.Category;
 
-import com.example.namo2.domain.moim.application.impl.MoimScheduleAndUserService;
-import com.example.namo2.domain.moim.application.impl.MoimScheduleService;
-import com.example.namo2.domain.moim.domain.MoimSchedule;
-import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.group.application.impl.MoimScheduleAndUserService;
+import com.example.namo2.domain.group.application.impl.MoimScheduleService;
+import com.example.namo2.domain.group.domain.MoimSchedule;
+import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
 
 import com.example.namo2.domain.individual.application.converter.AlarmConverter;
 import com.example.namo2.domain.individual.application.converter.ImageConverter;

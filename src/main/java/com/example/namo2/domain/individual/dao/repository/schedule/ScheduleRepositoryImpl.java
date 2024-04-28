@@ -20,8 +20,8 @@ import org.springframework.data.domain.SliceImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import com.example.namo2.domain.moim.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.moim.domain.VisibleStatus;
+import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.group.domain.VisibleStatus;
 
 import com.example.namo2.domain.individual.application.converter.ScheduleResponseConverter;
 import com.example.namo2.domain.individual.domain.Schedule;
