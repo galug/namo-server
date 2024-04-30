@@ -1,6 +1,6 @@
 package com.example.namo2.domain.group.dao.repository.group;
 
-import static com.example.namo2.domain.moim.domain.QMoim.*;
+import static com.example.namo2.domain.group.domain.QMoim.*;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;

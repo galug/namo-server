@@ -1,8 +1,8 @@
 package com.example.namo2.domain.group.dao.repository.schedule;
 
+import static com.example.namo2.domain.group.domain.QMoimSchedule.*;
+import static com.example.namo2.domain.group.domain.QMoimScheduleAndUser.*;
 import static com.example.namo2.domain.individual.domain.QCategory.*;
-import static com.example.namo2.domain.moim.domain.QMoimSchedule.*;
-import static com.example.namo2.domain.moim.domain.QMoimScheduleAndUser.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

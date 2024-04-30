@@ -1,7 +1,8 @@
 package com.example.namo2.domain.group.dao.repository.diary;
 
-import static com.example.namo2.domain.memo.domain.QMoimMemoLocation.*;
-import static com.example.namo2.domain.memo.domain.QMoimMemoLocationAndUser.*;
+
+import static com.example.namo2.domain.group.domain.QMoimMemoLocation.*;
+import static com.example.namo2.domain.group.domain.QMoimMemoLocationAndUser.*;
 
 import java.util.List;
 
