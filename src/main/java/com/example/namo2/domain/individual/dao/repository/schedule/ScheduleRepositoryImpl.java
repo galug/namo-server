@@ -23,8 +23,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
 import com.example.namo2.domain.group.domain.constant.VisibleStatus;
 
+import com.example.namo2.domain.individual.application.converter.DiaryResponseConverter;
 import com.example.namo2.domain.individual.application.converter.ScheduleResponseConverter;
 import com.example.namo2.domain.individual.domain.Schedule;
+import com.example.namo2.domain.individual.ui.dto.DiaryResponse;
 import com.example.namo2.domain.individual.ui.dto.ScheduleResponse;
 
 import com.example.namo2.domain.user.domain.User;
@@ -106,7 +108,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 	}
 
 	@Override
-	public ScheduleResponse.SliceDiaryDto findScheduleDiaryByMonthDto(User user, LocalDateTime startDate,
+	public DiaryResponse.SliceDiaryDto findScheduleDiaryByMonthDto(User user, LocalDateTime startDate,
 		LocalDateTime endDate, Pageable pageable) {
 		List<Schedule> content = queryFactory
 			.select(schedule)
@@ -129,11 +131,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 		}
 		SliceImpl<Schedule> schedules = new SliceImpl<>(content, pageable, hasNext);
 		Slice<ScheduleResponse.DiaryDto> diarySlices = schedules.map(ScheduleResponseConverter::toDiaryDto);
-		return ScheduleResponseConverter.toSliceDiaryDto(diarySlices);
+		return DiaryResponseConverter.toSliceDiaryDto(diarySlices);
 	}
 
 	@Override
-	public List<ScheduleResponse.GetDiaryByUserDto> findAllScheduleDiary(User user) {
+	public List<DiaryResponse.GetDiaryByUserDto> findAllScheduleDiary(User user) {
 		List<Schedule> schedules = queryFactory
 			.select(schedule).distinct()
 			.from(schedule)
@@ -142,7 +144,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
 				schedule.hasDiary.isTrue()
 			)
 			.fetch();
-		return schedules.stream().map(ScheduleResponseConverter::toGetDiaryByUserRes).toList();
+		return schedules.stream().map(DiaryResponseConverter::toGetDiaryByUserRes).toList();
 	}
 
 	@Override

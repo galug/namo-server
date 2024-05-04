@@ -3,6 +3,9 @@ package com.example.namo2.domain.individual.ui;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,18 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.example.namo2.domain.individual.application.ScheduleFacade;
 import com.example.namo2.domain.individual.ui.dto.ScheduleRequest;
 import com.example.namo2.domain.individual.ui.dto.ScheduleResponse;
+
 import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.Converter;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,9 +76,8 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	// TODO: 2024-04-26 "모임" 일정인데 이동해야할지 고민해보기
 	@Operation(summary = "모임 일정 월별 조회", description = "모임 일정 월별 조회 API")
-	@GetMapping("/moim/{month}")
+	@GetMapping("/group/{month}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -94,7 +96,6 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	// TODO: 2024-04-26 "모임" 일정인데 이동해야할지 고민해보기
 	@Operation(summary = "모든 일정 조회", description = "유저의 모든 개인 일정과 모임 일정 조회 API")
 	@GetMapping("/all")
 	@ApiErrorCodes({
@@ -112,9 +113,8 @@ public class ScheduleController {
 		return new BaseResponse<>(userSchedule);
 	}
 
-	// TODO: 2024-04-26 "모임" 일정인데 이동해야할지 고민해보기
 	@Operation(summary = "모든 모임 일정 조회", description = "모든 모임 일정 조회 API")
-	@GetMapping("/moim/all")
+	@GetMapping("/group/all")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,

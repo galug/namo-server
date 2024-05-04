@@ -75,34 +75,6 @@ public class ScheduleResponseConverter {
 			.build();
 	}
 
-	public static ScheduleResponse.GetDiaryByUserDto toGetDiaryByUserRes(Schedule schedule) {
-		return ScheduleResponse.GetDiaryByUserDto.builder()
-			.scheduleId(schedule.getId())
-			.contents(schedule.getContents())
-			.urls(schedule.getImages().stream()
-				.map(image -> image.getImgUrl())
-				.collect(Collectors.toList()))
-			.build();
-	}
-
-	public static ScheduleResponse.GetDiaryByScheduleDto toGetDiaryByScheduleRes(Schedule schedule,
-		List<String> imgUrls) {
-		return ScheduleResponse.GetDiaryByScheduleDto.builder()
-			.contents(schedule.getContents())
-			.urls(imgUrls)
-			.build();
-	}
-
-	public static ScheduleResponse.SliceDiaryDto toSliceDiaryDto(Slice<ScheduleResponse.DiaryDto> slice) {
-		return ScheduleResponse.SliceDiaryDto.builder()
-			.content(slice.getContent())
-			.currentPage(slice.getNumber())
-			.size(slice.getSize())
-			.first(slice.isFirst())
-			.last(slice.isLast())
-			.build();
-	}
-
 	public static ScheduleResponse.DiaryDto toDiaryDto(Schedule schedule) {
 		return ScheduleResponse.DiaryDto.builder()
 			.scheduleId(schedule.getId())

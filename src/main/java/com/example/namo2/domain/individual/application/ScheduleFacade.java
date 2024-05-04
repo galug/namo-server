@@ -6,13 +6,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.example.namo2.domain.individual.application.impl.CategoryService;
-import com.example.namo2.domain.individual.domain.Category;
 
 import com.example.namo2.domain.group.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.group.application.impl.MoimScheduleService;
@@ -20,17 +15,18 @@ import com.example.namo2.domain.group.domain.MoimSchedule;
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
 
 import com.example.namo2.domain.individual.application.converter.AlarmConverter;
-import com.example.namo2.domain.individual.application.converter.ImageConverter;
 import com.example.namo2.domain.individual.application.converter.ScheduleConverter;
 import com.example.namo2.domain.individual.application.converter.ScheduleResponseConverter;
 import com.example.namo2.domain.individual.application.impl.AlarmService;
+import com.example.namo2.domain.individual.application.impl.CategoryService;
 import com.example.namo2.domain.individual.application.impl.ImageService;
 import com.example.namo2.domain.individual.application.impl.PeriodService;
 import com.example.namo2.domain.individual.application.impl.ScheduleService;
 import com.example.namo2.domain.individual.domain.Alarm;
+import com.example.namo2.domain.individual.domain.Category;
 import com.example.namo2.domain.individual.domain.Image;
-import com.example.namo2.domain.individual.domain.constant.Period;
 import com.example.namo2.domain.individual.domain.Schedule;
+import com.example.namo2.domain.individual.domain.constant.Period;
 import com.example.namo2.domain.individual.ui.dto.ScheduleRequest;
 import com.example.namo2.domain.individual.ui.dto.ScheduleResponse;
 
@@ -72,18 +68,6 @@ public class ScheduleFacade {
 		return ScheduleResponseConverter.toScheduleIdRes(saveSchedule);
 	}
 
-	@Transactional
-	public ScheduleResponse.ScheduleIdDto createDiary(Long scheduleId, String content, List<MultipartFile> imgs) {
-		Schedule schedule = scheduleService.getScheduleById(scheduleId);
-		schedule.updateDiaryContents(content);
-		if (imgs != null) {
-			List<String> urls = fileUtils.uploadImages(imgs);
-			List<Image> imgList = urls.stream().map(url -> ImageConverter.toImage(url, schedule)).toList();
-			imageService.createImgs(imgList);
-		}
-		return ScheduleResponseConverter.toScheduleIdRes(schedule);
-	}
-
 	@Transactional(readOnly = true)
 	public List<ScheduleResponse.GetScheduleDto> getSchedulesByUser(Long userId,
 		List<LocalDateTime> localDateTimes) {
@@ -108,32 +92,6 @@ public class ScheduleFacade {
 	public List<ScheduleResponse.GetScheduleDto> getAllMoimSchedulesByUser(Long userId) {
 		User user = userService.getUser(userId);
 		return scheduleService.getAllMoimSchedulesByUser(user);
-	}
-
-	public ScheduleResponse.SliceDiaryDto getMonthDiary(
-		Long userId,
-		List<LocalDateTime> localDateTimes,
-		Pageable pageable
-	) {
-		User user = userService.getUser(userId);
-		return scheduleService.getScheduleDiaryByUser(user, localDateTimes.get(0), localDateTimes.get(1), pageable);
-	}
-
-	@Transactional(readOnly = true)
-	public List<ScheduleResponse.GetDiaryByUserDto> getAllDiariesByUser(Long userId) {
-		User user = userService.getUser(userId);
-		return scheduleService.getAllDiariesByUser(user);
-	}
-
-	@Transactional(readOnly = true)
-	public ScheduleResponse.GetDiaryByScheduleDto getDiaryBySchedule(Long scheduleId) {
-		Schedule schedule = scheduleService.getScheduleById(scheduleId);
-		schedule.existDairy(); //다이어리 없으면 exception발생
-		List<String> imgUrls = schedule.getImages().stream()
-			.map(Image::getImgUrl)
-			.collect(Collectors.toList());
-
-		return ScheduleResponseConverter.toGetDiaryByScheduleRes(schedule, imgUrls);
 	}
 
 	@Transactional
@@ -164,17 +122,6 @@ public class ScheduleFacade {
 		);
 
 		return ScheduleResponseConverter.toScheduleIdRes(schedule);
-	}
-
-	@Transactional
-	public void removeDiary(Long scheduleId) {
-		Schedule schedule = scheduleService.getScheduleById(scheduleId);
-		schedule.deleteDiary();
-		List<String> urls = schedule.getImages().stream()
-			.map(Image::getImgUrl)
-			.collect(Collectors.toList());
-		imageService.removeImgsBySchedule(schedule);
-		fileUtils.deleteImages(urls);
 	}
 
 	@Transactional
