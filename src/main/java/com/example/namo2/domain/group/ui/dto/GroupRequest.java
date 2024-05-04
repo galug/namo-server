@@ -7,18 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class MoimRequest {
-	private MoimRequest() {
+public class GroupRequest {
+	private GroupRequest() {
 		throw new IllegalStateException("Utils Class");
 	}
 
 	@Getter
 	@AllArgsConstructor
 	@NoArgsConstructor
-	public static class PatchMoimNameDto {
+	public static class PatchGroupNameDto {
 		@NotNull
-		private Long moimId;
+		private Long groupId;
 		@NotBlank
-		private String moimName;
+		private String groupName;
 	}
 }

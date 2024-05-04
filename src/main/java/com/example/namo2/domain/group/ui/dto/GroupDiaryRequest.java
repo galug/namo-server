@@ -7,15 +7,20 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class MoimMemoRequest {
-	@NoArgsConstructor
+public class GroupDiaryRequest {
+
+	private GroupDiaryRequest() {
+		throw new IllegalStateException("Utill Classes");
+	}
+
 	@Getter
-	public static class MoimMemoLocationDtos {
+	@NoArgsConstructor
+	public static class GroupDiaryLocationDtos {
 		List<LocationDto> locationDtos;
 	}
 
-	@NoArgsConstructor
 	@Getter
+	@NoArgsConstructor
 	public static class LocationDto {
 		private String name;
 		private Integer money;
@@ -26,7 +31,7 @@ public class MoimMemoRequest {
 			this.money = Integer.valueOf(money);
 			this.participants = Arrays.stream(participants.replace(" ", "").split(","))
 				.map(Long::valueOf)
-				.collect(Collectors.toList());
+				.toList();
 		}
 	}
 }

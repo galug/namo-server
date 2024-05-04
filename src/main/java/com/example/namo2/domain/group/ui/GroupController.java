@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.namo2.domain.group.application.MoimFacade;
-import com.example.namo2.domain.group.ui.dto.MoimRequest;
-import com.example.namo2.domain.group.ui.dto.MoimResponse;
+import com.example.namo2.domain.group.ui.dto.GroupRequest;
+import com.example.namo2.domain.group.ui.dto.GroupResponse;
 import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
@@ -43,13 +43,13 @@ public class GroupController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<MoimResponse.MoimIdDto> createMoim(
+	public BaseResponse<GroupResponse.GroupIdDto> createMoim(
 			@RequestPart(required = false) MultipartFile img,
 			@RequestPart(required = true) String groupName,
 			HttpServletRequest request
 	) {
-		MoimResponse.MoimIdDto moimIdDto = moimFacade.createMoim((Long)request.getAttribute("userId"), groupName, img);
-		return new BaseResponse(moimIdDto);
+		GroupResponse.GroupIdDto groupIdDto = moimFacade.createMoim((Long)request.getAttribute("userId"), groupName, img);
+		return new BaseResponse(groupIdDto);
 	}
 
 	@Operation(summary = "그룹 조회", description = "유저가 참여중인 그룹 조회 API")
@@ -60,10 +60,10 @@ public class GroupController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<List<MoimResponse.MoimDto>> findMoims(
+	public BaseResponse<List<GroupResponse.GroupDto>> findMoims(
 			HttpServletRequest request
 	) {
-		List<MoimResponse.MoimDto> moims = moimFacade.getMoims((Long)request.getAttribute("userId"));
+		List<GroupResponse.GroupDto> moims = moimFacade.getMoims((Long)request.getAttribute("userId"));
 		return new BaseResponse(moims);
 	}
 
@@ -76,10 +76,10 @@ public class GroupController {
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Long> modifyMoimName(
-			@Valid @RequestBody MoimRequest.PatchMoimNameDto patchMoimNameDto,
+			@Valid @RequestBody GroupRequest.PatchGroupNameDto patchGroupNameDto,
 			HttpServletRequest request
 	) {
-		Long moimId = moimFacade.modifyMoimName(patchMoimNameDto, (Long)request.getAttribute("userId"));
+		Long moimId = moimFacade.modifyMoimName(patchGroupNameDto, (Long)request.getAttribute("userId"));
 		return new BaseResponse(moimId);
 	}
 
@@ -91,18 +91,18 @@ public class GroupController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<MoimResponse.MoimParticipantDto> createMoimAndUser(
+	public BaseResponse<GroupResponse.GroupParticipantDto> createMoimAndUser(
 			@PathVariable("code") String code,
 			HttpServletRequest request
 	) {
-		MoimResponse.MoimParticipantDto moimParticipantDto = moimFacade.createMoimAndUser(
+		GroupResponse.GroupParticipantDto groupParticipantDto = moimFacade.createMoimAndUser(
 				(Long)request.getAttribute("userId"),
 				code);
-		return new BaseResponse(moimParticipantDto);
+		return new BaseResponse(groupParticipantDto);
 	}
 
 	@Operation(summary = "그룹 탈퇴", description = "그룹 탈퇴 API")
-	@DeleteMapping("/withdraw/{moimId}")
+	@DeleteMapping("/withdraw/{groupId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -110,10 +110,10 @@ public class GroupController {
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse removeMoimAndUser(
-			@PathVariable("moimId") Long moimId,
+			@PathVariable("groupId") Long groupId,
 			HttpServletRequest request
 	) {
-		moimFacade.removeMoimAndUser((Long)request.getAttribute("userId"), moimId);
+		moimFacade.removeMoimAndUser((Long)request.getAttribute("userId"), groupId);
 		return BaseResponse.ok();
 	}
 }

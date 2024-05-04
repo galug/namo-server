@@ -15,6 +15,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.example.namo2.domain.group.domain.constant.MoimStatus;
+
 import com.example.namo2.domain.user.domain.User;
 
 import com.example.namo2.global.common.entity.BaseTimeEntity;

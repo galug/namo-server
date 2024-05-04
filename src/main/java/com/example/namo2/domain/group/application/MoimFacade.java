@@ -12,13 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.namo2.domain.group.application.converter.MoimAndUserConverter;
 import com.example.namo2.domain.group.application.converter.MoimConverter;
-import com.example.namo2.domain.group.application.converter.MoimResponseConverter;
+import com.example.namo2.domain.group.application.converter.GroupResponseConverter;
 import com.example.namo2.domain.group.application.impl.MoimAndUserService;
 import com.example.namo2.domain.group.application.impl.MoimService;
 import com.example.namo2.domain.group.domain.Moim;
 import com.example.namo2.domain.group.domain.MoimAndUser;
-import com.example.namo2.domain.group.ui.dto.MoimRequest;
-import com.example.namo2.domain.group.ui.dto.MoimResponse;
+import com.example.namo2.domain.group.ui.dto.GroupRequest;
+import com.example.namo2.domain.group.ui.dto.GroupResponse;
 
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
@@ -49,7 +49,7 @@ public class MoimFacade {
 	private String BASE_URL;
 
 	@Transactional(readOnly = false)
-	public MoimResponse.MoimIdDto createMoim(Long userId, String groupName, MultipartFile img) {
+	public GroupResponse.GroupIdDto createMoim(Long userId, String groupName, MultipartFile img) {
 		User user = userService.getUser(userId);
 		String url = BASE_URL;
 		if (img != null && !img.isEmpty()) {
@@ -61,11 +61,11 @@ public class MoimFacade {
 		MoimAndUser moimAndUser = MoimAndUserConverter
 			.toMoimAndUser(groupName, MOIM_USERS_COLOR[0], user, moim);
 		moimAndUserService.create(moimAndUser, moim);
-		return MoimResponseConverter.toMoimIdDto(moim);
+		return GroupResponseConverter.toMoimIdDto(moim);
 	}
 
 	@Transactional(readOnly = true)
-	public List<MoimResponse.MoimDto> getMoims(Long userId) {
+	public List<GroupResponse.GroupDto> getMoims(Long userId) {
 		User user = userService.getUser(userId);
 		List<MoimAndUser> curUsersMoimAndUsers = moimAndUserService.getMoimAndUsers(user);
 		List<Moim> moimsInUser = curUsersMoimAndUsers
@@ -74,27 +74,27 @@ public class MoimFacade {
 
 		List<MoimAndUser> moimAndUsersInMoims = moimAndUserService
 			.getMoimAndUsers(moimsInUser);
-		return MoimResponseConverter.toMoimDtos(moimAndUsersInMoims, curUsersMoimAndUsers);
+		return GroupResponseConverter.toMoimDtos(moimAndUsersInMoims, curUsersMoimAndUsers);
 	}
 
 	@Transactional(readOnly = false)
-	public Long modifyMoimName(MoimRequest.PatchMoimNameDto patchMoimNameDto, Long userId) {
+	public Long modifyMoimName(GroupRequest.PatchGroupNameDto patchGroupNameDto, Long userId) {
 		User user = userService.getUser(userId);
-		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(patchMoimNameDto.getMoimId());
+		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(patchGroupNameDto.getGroupId());
 		MoimAndUser moimAndUser = moimAndUserService.getMoimAndUser(moim, user);
-		moimAndUser.updateCustomName(patchMoimNameDto.getMoimName());
+		moimAndUser.updateCustomName(patchGroupNameDto.getGroupName());
 		return moim.getId();
 	}
 
 	@Transactional(readOnly = false)
-	public MoimResponse.MoimParticipantDto createMoimAndUser(Long userId, String code) {
+	public GroupResponse.GroupParticipantDto createMoimAndUser(Long userId, String code) {
 		User user = userService.getUser(userId);
 		Moim moim = moimService.getMoimWithMoimAndUsersByCode(code);
 
 		MoimAndUser moimAndUser = MoimAndUserConverter
 			.toMoimAndUser(moim.getName(), selectColor(moim), user, moim);
 		moimAndUserService.create(moimAndUser, moim);
-		return MoimResponseConverter.toMoimParticipantDto(moim);
+		return GroupResponseConverter.toMoimParticipantDto(moim);
 	}
 
 	private int selectColor(Moim moim) {

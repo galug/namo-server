@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.namo2.domain.group.application.MoimMemoFacade;
-import com.example.namo2.domain.group.ui.dto.MoimMemoRequest;
-import com.example.namo2.domain.group.ui.dto.MoimMemoResponse;
-import com.example.namo2.domain.group.ui.dto.MoimScheduleRequest;
+import com.example.namo2.domain.group.ui.dto.GroupDiaryRequest;
+import com.example.namo2.domain.group.ui.dto.GroupDiaryResponse;
+import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
 import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
@@ -55,13 +55,13 @@ public class GroupDiaryController {
 			@RequestParam(defaultValue = "0") String money,
 			@RequestPart(required = true) String participants
 	) {
-		MoimMemoRequest.LocationDto locationDto = new MoimMemoRequest.LocationDto(name, money, participants);
+		GroupDiaryRequest.LocationDto locationDto = new GroupDiaryRequest.LocationDto(name, money, participants);
 		moimMemoFacade.create(moimScheduleId, locationDto, imgs);
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "모임 기록 장소 수정", description = "모임 기록 장소 수정 API")
-	@PatchMapping("/{memoLocationId}")
+	@PatchMapping("/{activityId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -70,13 +70,13 @@ public class GroupDiaryController {
 	})
 	public BaseResponse<Object> updateMoimMemo(
 			@RequestPart(required = false) List<MultipartFile> imgs,
-			@PathVariable Long memoLocationId,
+			@PathVariable Long activityId,
 			@RequestPart(required = true) String name,
 			@RequestPart(required = true) String money,
 			@RequestPart(required = true) String participants
 	) {
-		MoimMemoRequest.LocationDto locationDto = new MoimMemoRequest.LocationDto(name, money, participants);
-		moimMemoFacade.modifyMoimMemoLocation(memoLocationId, locationDto, imgs);
+		GroupDiaryRequest.LocationDto locationDto = new GroupDiaryRequest.LocationDto(name, money, participants);
+		moimMemoFacade.modifyMoimMemoLocation(activityId, locationDto, imgs);
 		return BaseResponse.ok();
 	}
 
@@ -91,8 +91,8 @@ public class GroupDiaryController {
 	public BaseResponse<Object> getMoimMemo(
 			@PathVariable("moimScheduleId") Long moimScheduleId
 	) {
-		MoimMemoResponse.MoimMemoDto moimMemoDto = moimMemoFacade.getMoimMemoWithLocations(moimScheduleId);
-		return new BaseResponse(moimMemoDto);
+		GroupDiaryResponse.MoimDiaryDto moimDiaryDto = moimMemoFacade.getMoimMemoWithLocations(moimScheduleId);
+		return new BaseResponse(moimDiaryDto);
 	}
 
 	@Operation(summary = "월간 모임 기록 조회", description = "월간 모임 기록 조회 API")
@@ -103,13 +103,13 @@ public class GroupDiaryController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto>> findMonthMoimMemo(
+	public BaseResponse<GroupDiaryResponse.SliceDiaryDto<GroupDiaryResponse.DiaryDto>> findMonthMoimMemo(
 			@PathVariable("month") String month,
 			Pageable pageable,
 			HttpServletRequest request
 	) {
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-		MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> diaryDto = moimMemoFacade
+		GroupDiaryResponse.SliceDiaryDto<GroupDiaryResponse.DiaryDto> diaryDto = moimMemoFacade
 				.getMonthMonthMoimMemo((Long)request.getAttribute("userId"), localDateTimes, pageable);
 		return new BaseResponse(diaryDto);
 	}
@@ -132,7 +132,7 @@ public class GroupDiaryController {
 	}
 
 	@Operation(summary = "모임 기록 전체 삭제", description = "모임 기록 전체 삭제 API")
-	@DeleteMapping("/all/{memoId}")
+	@DeleteMapping("/all/{moimDiaryId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -140,14 +140,14 @@ public class GroupDiaryController {
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Object> removeMoimMemo(
-			@PathVariable Long memoId
+			@PathVariable Long moimDiaryId
 	) {
-		moimMemoFacade.removeMoimMemo(memoId);
+		moimMemoFacade.removeMoimMemo(moimDiaryId);
 		return BaseResponse.ok();
 	}
 
 	@Operation(summary = "모임 기록 장소 삭제", description = "모임 기록 장소 삭제 API")
-	@DeleteMapping("/{memoLocationId}")
+	@DeleteMapping("/{activityId}")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -155,9 +155,9 @@ public class GroupDiaryController {
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Object> removeMoimMemoLocation(
-			@PathVariable Long memoLocationId
+			@PathVariable Long activityId
 	) {
-		moimMemoFacade.removeMoimMemoLocation(memoLocationId);
+		moimMemoFacade.removeMoimMemoLocation(activityId);
 		return BaseResponse.ok();
 	}
 
@@ -172,7 +172,7 @@ public class GroupDiaryController {
 	public BaseResponse<Object> createMoimScheduleText(
 			@PathVariable Long moimScheduleId,
 			HttpServletRequest request,
-			@RequestBody MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText
+			@RequestBody GroupScheduleRequest.PostGroupScheduleTextDto moimScheduleText
 	) {
 		moimMemoFacade.createMoimScheduleText(moimScheduleId,
 				(Long)request.getAttribute("userId"),

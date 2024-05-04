@@ -10,7 +10,7 @@ import com.example.namo2.domain.group.domain.Moim;
 import com.example.namo2.domain.group.domain.MoimSchedule;
 import com.example.namo2.domain.group.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.group.ui.dto.MoimScheduleRequest;
+import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
 
 import com.example.namo2.domain.individual.domain.constant.Location;
 import com.example.namo2.domain.individual.domain.constant.Period;
@@ -22,7 +22,7 @@ public class MoimScheduleConverter {
 		throw new IllegalStateException("Util Classes");
 	}
 
-	public static Period toPeriod(MoimScheduleRequest.PostMoimScheduleDto moimScheduleDto) {
+	public static Period toPeriod(GroupScheduleRequest.PostGroupScheduleDto moimScheduleDto) {
 		return Period.builder()
 			.startDate(moimScheduleDto.getStartDate())
 			.endDate(moimScheduleDto.getEndDate())
@@ -30,7 +30,7 @@ public class MoimScheduleConverter {
 			.build();
 	}
 
-	public static Period toPeriod(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
+	public static Period toPeriod(GroupScheduleRequest.PatchGroupScheduleDto moimScheduleDto) {
 		return Period.builder()
 			.startDate(moimScheduleDto.getStartDate())
 			.endDate(moimScheduleDto.getEndDate())
@@ -38,7 +38,7 @@ public class MoimScheduleConverter {
 			.build();
 	}
 
-	public static Location toLocation(MoimScheduleRequest.PostMoimScheduleDto moimScheduleDto) {
+	public static Location toLocation(GroupScheduleRequest.PostGroupScheduleDto moimScheduleDto) {
 		return Location.builder()
 			.x(moimScheduleDto.getX())
 			.y(moimScheduleDto.getY())
@@ -47,7 +47,7 @@ public class MoimScheduleConverter {
 			.build();
 	}
 
-	public static Location toLocation(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
+	public static Location toLocation(GroupScheduleRequest.PatchGroupScheduleDto moimScheduleDto) {
 		return Location.builder()
 			.x(moimScheduleDto.getX())
 			.y(moimScheduleDto.getY())
@@ -56,7 +56,7 @@ public class MoimScheduleConverter {
 	}
 
 	public static MoimSchedule toMoimSchedule(Moim moim, Period period, Location location,
-		MoimScheduleRequest.PostMoimScheduleDto moimScheduleDto) {
+		GroupScheduleRequest.PostGroupScheduleDto moimScheduleDto) {
 		return MoimSchedule.builder()
 			.name(moimScheduleDto.getName())
 			.period(period)

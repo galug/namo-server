@@ -12,8 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class MoimScheduleResponse {
-	private MoimScheduleResponse() {
+public class GroupScheduleResponse {
+	private GroupScheduleResponse() {
 		throw new IllegalStateException("Util Class");
 	}
 
@@ -28,7 +28,7 @@ public class MoimScheduleResponse {
 		private Integer interval;
 
 		private List<MoimScheduleUserDto> users = new ArrayList<>();
-		private Long moimId;
+		private Long groupId;
 		private Long moimScheduleId;
 		private boolean isCurMoimSchedule = false;
 		private Double x;
@@ -39,8 +39,18 @@ public class MoimScheduleResponse {
 
 		@QueryProjection
 		@Builder
-		public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval,
-			Long moimId, Long moimScheduleId, Double x, Double y, String locationName, String kakaoLocationId) {
+		public MoimScheduleDto(
+			String name,
+			LocalDateTime startDate,
+			LocalDateTime endDate,
+			Integer interval,
+			Long groupId,
+			Long moimScheduleId,
+			Double x,
+			Double y,
+			String locationName,
+			String kakaoLocationId
+		) {
 			this.name = name;
 			this.startDate = startDate.atZone(ZoneId.systemDefault())
 				.toInstant()
@@ -49,7 +59,7 @@ public class MoimScheduleResponse {
 				.toInstant()
 				.getEpochSecond();
 			this.interval = interval;
-			this.moimId = moimId;
+			this.groupId = groupId;
 			this.moimScheduleId = moimScheduleId;
 			this.x = x;
 			this.y = y;
@@ -59,8 +69,15 @@ public class MoimScheduleResponse {
 
 		@QueryProjection
 		@Builder
-		public MoimScheduleDto(String name, LocalDateTime startDate, LocalDateTime endDate, Integer interval,
-			Long userId, String userName, Integer color) {
+		public MoimScheduleDto(
+			String name,
+			LocalDateTime startDate,
+			LocalDateTime endDate,
+			Integer interval,
+			Long userId,
+			String userName,
+			Integer color
+		) {
 			this.name = name;
 			this.startDate = startDate.atZone(ZoneId.systemDefault())
 				.toInstant()
@@ -73,7 +90,11 @@ public class MoimScheduleResponse {
 			this.hasDiaryPlace = false;
 		}
 
-		public void setUsers(List<MoimScheduleUserDto> users, boolean isCurMoimSchedule, boolean hasDiaryPlace) {
+		public void setUsers(
+			List<MoimScheduleUserDto> users,
+			boolean isCurMoimSchedule,
+			boolean hasDiaryPlace
+		) {
 			this.users = users;
 			this.isCurMoimSchedule = isCurMoimSchedule;
 			this.hasDiaryPlace = hasDiaryPlace;
