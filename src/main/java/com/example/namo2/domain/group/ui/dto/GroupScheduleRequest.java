@@ -9,17 +9,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class MoimScheduleRequest {
-	private MoimScheduleRequest() {
+public class GroupScheduleRequest {
+	private GroupScheduleRequest() {
 		throw new IllegalStateException("Util class");
 	}
 
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Getter
-	public static class PostMoimScheduleDto {
+	public static class PostGroupScheduleDto {
 		@NotNull
-		private Long moimId;
+		private Long groupId;
 		@NotBlank
 		private String name;
 
@@ -44,7 +44,7 @@ public class MoimScheduleRequest {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Getter
-	public static class PatchMoimScheduleDto {
+	public static class PatchGroupScheduleDto {
 		@NotNull
 		private Long moimScheduleId;
 		@NotBlank
@@ -69,7 +69,7 @@ public class MoimScheduleRequest {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Getter
-	public static class PatchMoimScheduleCategoryDto {
+	public static class PatchGroupScheduleCategoryDto {
 		@NotNull
 		private Long moimScheduleId;
 
@@ -79,7 +79,7 @@ public class MoimScheduleRequest {
 
 	@NoArgsConstructor
 	@Getter
-	public static class PostMoimScheduleAlarmDto {
+	public static class PostGroupScheduleAlarmDto {
 		private Long moimScheduleId;
 		private List<Integer> alarmDates;
 	}
@@ -87,7 +87,7 @@ public class MoimScheduleRequest {
 	@Getter
 	@AllArgsConstructor
 	@NoArgsConstructor
-	public static class PostMoimScheduleTextDto {
+	public static class PostGroupScheduleTextDto {
 		private String text;
 	}
 }

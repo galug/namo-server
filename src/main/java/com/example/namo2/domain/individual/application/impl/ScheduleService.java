@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.namo2.domain.individual.dao.repository.schedule.ScheduleRepository;
 import com.example.namo2.domain.individual.domain.Schedule;
+import com.example.namo2.domain.individual.ui.dto.DiaryResponse;
 import com.example.namo2.domain.individual.ui.dto.ScheduleResponse;
 
 import com.example.namo2.domain.user.domain.User;
@@ -55,7 +56,7 @@ public class ScheduleService {
 		return scheduleRepository.findMoimSchedulesByUserId(user, null, null);
 	}
 
-	public ScheduleResponse.SliceDiaryDto getScheduleDiaryByUser(
+	public DiaryResponse.SliceDiaryDto getScheduleDiaryByUser(
 		User user,
 		LocalDateTime startDate,
 		LocalDateTime endDate,
@@ -64,7 +65,7 @@ public class ScheduleService {
 		return scheduleRepository.findScheduleDiaryByMonthDto(user, startDate, endDate, pageable);
 	}
 
-	public List<ScheduleResponse.GetDiaryByUserDto> getAllDiariesByUser(User user) {
+	public List<DiaryResponse.GetDiaryByUserDto> getAllDiariesByUser(User user) {
 		return scheduleRepository.findAllScheduleDiary(user);
 	}
 

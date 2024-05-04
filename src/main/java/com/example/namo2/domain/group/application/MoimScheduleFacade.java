@@ -28,8 +28,8 @@ import com.example.namo2.domain.group.domain.MoimAndUser;
 import com.example.namo2.domain.group.domain.MoimSchedule;
 import com.example.namo2.domain.group.domain.MoimScheduleAlarm;
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.group.ui.dto.MoimScheduleRequest;
-import com.example.namo2.domain.group.ui.dto.MoimScheduleResponse;
+import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
+import com.example.namo2.domain.group.ui.dto.GroupScheduleResponse;
 
 import com.example.namo2.domain.individual.application.impl.ScheduleService;
 import com.example.namo2.domain.individual.domain.constant.Location;
@@ -63,8 +63,8 @@ public class MoimScheduleFacade {
 	 * categories 수정시 모임과 기본 카테고리에 대해서는 수정이 불가능하게 해야함
 	 */
 	@Transactional(readOnly = false)
-	public Long createSchedule(MoimScheduleRequest.PostMoimScheduleDto moimScheduleDto) {
-		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimScheduleDto.getMoimId());
+	public Long createSchedule(GroupScheduleRequest.PostGroupScheduleDto moimScheduleDto) {
+		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimScheduleDto.getGroupId());
 		Period period = MoimScheduleConverter.toPeriod(moimScheduleDto);
 		Location location = MoimScheduleConverter.toLocation(moimScheduleDto);
 		MoimSchedule moimSchedule = MoimScheduleConverter
@@ -86,7 +86,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void modifyMoimSchedule(MoimScheduleRequest.PatchMoimScheduleDto moimScheduleDto) {
+	public void modifyMoimSchedule(GroupScheduleRequest.PatchGroupScheduleDto moimScheduleDto) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleDto.getMoimScheduleId());
 		Period period = MoimScheduleConverter.toPeriod(moimScheduleDto);
 		Location location = MoimScheduleConverter.toLocation(moimScheduleDto);
@@ -96,7 +96,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void modifyMoimScheduleCategory(MoimScheduleRequest.PatchMoimScheduleCategoryDto scheduleCategoryDto,
+	public void modifyMoimScheduleCategory(GroupScheduleRequest.PatchGroupScheduleCategoryDto scheduleCategoryDto,
 		Long userId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(scheduleCategoryDto.getMoimScheduleId());
 		User user = userService.getUser(userId);
@@ -145,7 +145,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void createMoimScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto moimScheduleAlarmDto,
+	public void createMoimScheduleAlarm(GroupScheduleRequest.PostGroupScheduleAlarmDto moimScheduleAlarmDto,
 		Long userId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleAlarmDto.getMoimScheduleId());
 		User user = userService.getUser(userId);
@@ -159,7 +159,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void modifyMoimScheduleAlarm(MoimScheduleRequest.PostMoimScheduleAlarmDto moimScheduleAlarmDto,
+	public void modifyMoimScheduleAlarm(GroupScheduleRequest.PostGroupScheduleAlarmDto moimScheduleAlarmDto,
 		Long userId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleAlarmDto.getMoimScheduleId());
 		User user = userService.getUser(userId);
@@ -174,7 +174,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MoimScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(Long moimId,
+	public List<GroupScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(Long moimId,
 		List<LocalDateTime> localDateTimes, Long userId) {
 		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
 		existMoimAndUser(userId, moim);
@@ -189,7 +189,7 @@ public class MoimScheduleFacade {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MoimScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId, Long userId) {
+	public List<GroupScheduleResponse.MoimScheduleDto> getAllMoimSchedules(Long moimId, Long userId) {
 		Moim moim = moimService.getMoimWithMoimAndUsersByMoimId(moimId);
 		existMoimAndUser(userId, moim);
 		List<MoimAndUser> moimAndUsersInMoim = moimAndUserService.getMoimAndUsers(moim);

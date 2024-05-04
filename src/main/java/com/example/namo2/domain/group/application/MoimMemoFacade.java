@@ -11,21 +11,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.namo2.domain.group.application.converter.MoimMemoConverter;
 import com.example.namo2.domain.group.application.converter.MoimMemoLocationConverter;
-import com.example.namo2.domain.group.application.converter.MoimMemoResponseConverter;
+import com.example.namo2.domain.group.application.converter.MoimDiaryResponseConverter;
 import com.example.namo2.domain.group.application.impl.MoimMemoLocationService;
 import com.example.namo2.domain.group.application.impl.MoimMemoService;
 import com.example.namo2.domain.group.domain.MoimMemoLocation;
 import com.example.namo2.domain.group.domain.MoimMemo;
 import com.example.namo2.domain.group.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.group.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.group.ui.dto.MoimMemoRequest;
-import com.example.namo2.domain.group.ui.dto.MoimMemoResponse;
+import com.example.namo2.domain.group.ui.dto.GroupDiaryRequest;
+import com.example.namo2.domain.group.ui.dto.GroupDiaryResponse;
 
 import com.example.namo2.domain.group.application.impl.MoimScheduleAndUserService;
 import com.example.namo2.domain.group.application.impl.MoimScheduleService;
 import com.example.namo2.domain.group.domain.MoimSchedule;
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.group.ui.dto.MoimScheduleRequest;
+import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
 
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
@@ -49,7 +49,7 @@ public class MoimMemoFacade {
 	private final FileUtils fileUtils;
 
 	@Transactional(readOnly = false)
-	public void create(Long moimScheduleId, MoimMemoRequest.LocationDto locationDto, List<MultipartFile> imgs) {
+	public void create(Long moimScheduleId, GroupDiaryRequest.LocationDto locationDto, List<MultipartFile> imgs) {
 		MoimMemo moimMemo = getMoimMemo(moimScheduleId);
 		MoimMemoLocation moimMemoLocation = createMoimMemoLocation(moimMemo, locationDto);
 
@@ -65,12 +65,12 @@ public class MoimMemoFacade {
 			);
 	}
 
-	private MoimMemoLocation createMoimMemoLocation(MoimMemo moimMemo, MoimMemoRequest.LocationDto locationDto) {
+	private MoimMemoLocation createMoimMemoLocation(MoimMemo moimMemo, GroupDiaryRequest.LocationDto locationDto) {
 		MoimMemoLocation moimMemoLocation = MoimMemoLocationConverter.toMoimMemoLocation(moimMemo, locationDto);
 		return moimMemoLocationService.createMoimMemoLocation(moimMemoLocation);
 	}
 
-	private void createMoimMemoLocationAndUsers(MoimMemoRequest.LocationDto locationDto,
+	private void createMoimMemoLocationAndUsers(GroupDiaryRequest.LocationDto locationDto,
 		MoimMemoLocation moimMemoLocation) {
 		List<User> users = userService.getUsersInMoimSchedule(locationDto.getParticipants());
 		List<MoimMemoLocationAndUser> moimMemoLocationAndUsers = MoimMemoLocationConverter
@@ -98,7 +98,7 @@ public class MoimMemoFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public void modifyMoimMemoLocation(Long memoLocationId, MoimMemoRequest.LocationDto locationDto,
+	public void modifyMoimMemoLocation(Long memoLocationId, GroupDiaryRequest.LocationDto locationDto,
 		List<MultipartFile> imgs) {
 		MoimMemoLocation moimMemoLocation = moimMemoLocationService.getMoimMemoLocationWithImgs(memoLocationId);
 		moimMemoLocation.update(locationDto.getName(), locationDto.getMoney());
@@ -129,27 +129,27 @@ public class MoimMemoFacade {
 	}
 
 	@Transactional(readOnly = false)
-	public MoimMemoResponse.MoimMemoDto getMoimMemoWithLocations(Long moimScheduleId) {
+	public GroupDiaryResponse.MoimDiaryDto getMoimMemoWithLocations(Long moimScheduleId) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
 		MoimMemo moimMemo = moimMemoService.getMoimMemoWithUsers(moimSchedule);
 		List<MoimMemoLocation> moimMemoLocations = moimMemoLocationService.getMoimMemoLocations(moimSchedule);
 		List<MoimMemoLocationAndUser> moimMemoLocationAndUsers
 			= moimMemoLocationService.getMoimMemoLocationAndUsers(moimMemoLocations);
-		return MoimMemoResponseConverter.toMoimMemoDto(moimMemo, moimMemoLocations, moimMemoLocationAndUsers);
+		return MoimDiaryResponseConverter.toMoimMemoDto(moimMemo, moimMemoLocations, moimMemoLocationAndUsers);
 	}
 
 	@Transactional(readOnly = true)
-	public MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> getMonthMonthMoimMemo(Long userId,
+	public GroupDiaryResponse.SliceDiaryDto<GroupDiaryResponse.DiaryDto> getMonthMonthMoimMemo(Long userId,
 		List<LocalDateTime> dates, Pageable page) {
 		User user = userService.getUser(userId);
 		List<MoimScheduleAndUser> moimScheduleAndUsersForMonthMoimMemo
 			= moimScheduleAndUserService.getMoimScheduleAndUsersForMonthMoimMemo(user, dates, page);
-		return MoimMemoResponseConverter.toSliceDiaryDto(moimScheduleAndUsersForMonthMoimMemo, page);
+		return MoimDiaryResponseConverter.toSliceDiaryDto(moimScheduleAndUsersForMonthMoimMemo, page);
 	}
 
 	@Transactional(readOnly = false)
 	public void createMoimScheduleText(Long moimScheduleId, Long userId,
-		MoimScheduleRequest.PostMoimScheduleTextDto moimScheduleText) {
+		GroupScheduleRequest.PostGroupScheduleTextDto moimScheduleText) {
 		MoimSchedule moimSchedule = moimScheduleService.getMoimSchedule(moimScheduleId);
 		User user = userService.getUser(userId);
 		MoimScheduleAndUser moimScheduleAndUser = moimScheduleAndUserService.getMoimScheduleAndUser(moimSchedule, user);

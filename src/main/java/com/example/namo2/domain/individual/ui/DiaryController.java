@@ -3,6 +3,8 @@ package com.example.namo2.domain.individual.ui;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +16,17 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.namo2.domain.individual.application.ScheduleFacade;
-import com.example.namo2.domain.individual.ui.dto.ScheduleResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import com.example.namo2.domain.individual.application.DiaryFacade;
+import com.example.namo2.domain.individual.ui.dto.DiaryResponse;
+
 import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.Converter;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/diaries")
 public class DiaryController {
-	private final ScheduleFacade scheduleFacade;
+	private final DiaryFacade diaryFacade;
 	private final Converter converter;
 
 	@Operation(summary = "기록 생성", description = "기록 생성 API")
@@ -44,12 +47,12 @@ public class DiaryController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<ScheduleResponse.ScheduleIdDto> createDiary(
+	public BaseResponse<DiaryResponse.ScheduleIdDto> createDiary(
 			@RequestPart(required = false) List<MultipartFile> imgs,
 			@RequestPart String scheduleId,
 			@RequestPart(required = false) String content
 	) {
-		ScheduleResponse.ScheduleIdDto dto = scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
+		DiaryResponse.ScheduleIdDto dto = diaryFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
 		return new BaseResponse<>(dto);
 	}
 
@@ -61,14 +64,14 @@ public class DiaryController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<ScheduleResponse.SliceDiaryDto> findDiaryByMonth(
+	public BaseResponse<DiaryResponse.SliceDiaryDto> findDiaryByMonth(
 			@PathVariable("month") String month,
 			Pageable pageable,
 			HttpServletRequest request
 	) {
 		Long userId = (Long)request.getAttribute("userId");
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
-		ScheduleResponse.SliceDiaryDto diaries = scheduleFacade.getMonthDiary(userId, localDateTimes, pageable);
+		DiaryResponse.SliceDiaryDto diaries = diaryFacade.getMonthDiary(userId, localDateTimes, pageable);
 		return new BaseResponse<>(diaries);
 	}
 
@@ -80,11 +83,11 @@ public class DiaryController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<List<ScheduleResponse.GetDiaryByUserDto>> findAllDiary(
+	public BaseResponse<List<DiaryResponse.GetDiaryByUserDto>> findAllDiary(
 			HttpServletRequest request
 	) {
 		Long userId = (Long)request.getAttribute("userId");
-		List<ScheduleResponse.GetDiaryByUserDto> diaries = scheduleFacade.getAllDiariesByUser(userId);
+		List<DiaryResponse.GetDiaryByUserDto> diaries = diaryFacade.getAllDiariesByUser(userId);
 		return new BaseResponse<>(diaries);
 	}
 
@@ -97,10 +100,10 @@ public class DiaryController {
 			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
-	public BaseResponse<ScheduleResponse.GetDiaryByScheduleDto> findDiaryById(
+	public BaseResponse<DiaryResponse.GetDiaryByScheduleDto> findDiaryById(
 			@PathVariable("scheduleId") Long scheduleId
 	) {
-		ScheduleResponse.GetDiaryByScheduleDto diary = scheduleFacade.getDiaryBySchedule(scheduleId);
+		DiaryResponse.GetDiaryByScheduleDto diary = diaryFacade.getDiaryBySchedule(scheduleId);
 		return new BaseResponse<>(diary);
 	}
 
@@ -117,8 +120,8 @@ public class DiaryController {
 			@RequestPart String scheduleId,
 			@RequestPart(required = false) String content
 	) {
-		scheduleFacade.removeDiary(Long.valueOf(scheduleId));
-		scheduleFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
+		diaryFacade.removeDiary(Long.valueOf(scheduleId));
+		diaryFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
 		return new BaseResponse<>("수정에 성공하셨습니다.");
 	}
 
@@ -133,7 +136,7 @@ public class DiaryController {
 	public BaseResponse<String> deleteDiary(
 			@PathVariable("scheduleId") Long scheduleId
 	) {
-		scheduleFacade.removeDiary(scheduleId);
+		diaryFacade.removeDiary(scheduleId);
 		return new BaseResponse<>("삭제에 성공하셨습니다.");
 	}
 }

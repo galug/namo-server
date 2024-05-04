@@ -6,20 +6,20 @@ import java.util.stream.Collectors;
 
 import com.example.namo2.domain.group.domain.Moim;
 import com.example.namo2.domain.group.domain.MoimAndUser;
-import com.example.namo2.domain.group.ui.dto.MoimResponse;
+import com.example.namo2.domain.group.ui.dto.GroupResponse;
 
-public class MoimResponseConverter {
-	private MoimResponseConverter() {
+public class GroupResponseConverter {
+	private GroupResponseConverter() {
 		throw new IllegalStateException("Util Class");
 	}
 
-	public static MoimResponse.MoimIdDto toMoimIdDto(Moim moim) {
-		return MoimResponse.MoimIdDto.builder()
-			.moimId(moim.getId())
+	public static GroupResponse.GroupIdDto toMoimIdDto(Moim moim) {
+		return GroupResponse.GroupIdDto.builder()
+			.groupId(moim.getId())
 			.build();
 	}
 
-	public static List<MoimResponse.MoimDto> toMoimDtos(List<MoimAndUser> moimAndUsers,
+	public static List<GroupResponse.GroupDto> toMoimDtos(List<MoimAndUser> moimAndUsers,
 		List<MoimAndUser> curUserMoimsInUser) {
 		Map<Moim, List<MoimAndUser>> moimMappingMoimAndUsers = moimAndUsers.stream()
 			.collect(
@@ -32,24 +32,24 @@ public class MoimResponseConverter {
 			.collect(Collectors.toList());
 	}
 
-	public static MoimResponse.MoimDto toMoimDto(MoimAndUser moimAndUser, List<MoimAndUser> moimAndUsers) {
-		return MoimResponse.MoimDto.builder()
+	public static GroupResponse.GroupDto toMoimDto(MoimAndUser moimAndUser, List<MoimAndUser> moimAndUsers) {
+		return GroupResponse.GroupDto.builder()
 			.groupId(moimAndUser.getMoim().getId())
 			.groupName(moimAndUser.getMoimCustomName())
 			.groupImgUrl(moimAndUser.getMoim().getImgUrl())
 			.groupCode(moimAndUser.getMoim().getCode())
-			.moimUsers(toMoimUserDtos(moimAndUsers))
+			.groupUsers(toMoimUserDtos(moimAndUsers))
 			.build();
 	}
 
-	private static List<MoimResponse.MoimUserDto> toMoimUserDtos(List<MoimAndUser> moimAndUsers) {
+	private static List<GroupResponse.GroupUserDto> toMoimUserDtos(List<MoimAndUser> moimAndUsers) {
 		return moimAndUsers.stream()
-			.map(MoimResponseConverter::toMoimUserDto)
+			.map(GroupResponseConverter::toMoimUserDto)
 			.collect(Collectors.toList());
 	}
 
-	private static MoimResponse.MoimUserDto toMoimUserDto(MoimAndUser moimAndUser) {
-		return MoimResponse.MoimUserDto
+	private static GroupResponse.GroupUserDto toMoimUserDto(MoimAndUser moimAndUser) {
+		return GroupResponse.GroupUserDto
 			.builder()
 			.userId(moimAndUser.getUser().getId())
 			.userName(moimAndUser.getUser().getName())
@@ -57,9 +57,9 @@ public class MoimResponseConverter {
 			.build();
 	}
 
-	public static MoimResponse.MoimParticipantDto toMoimParticipantDto(Moim moim) {
-		return MoimResponse.MoimParticipantDto.builder()
-			.moimId(moim.getId())
+	public static GroupResponse.GroupParticipantDto toMoimParticipantDto(Moim moim) {
+		return GroupResponse.GroupParticipantDto.builder()
+			.groupId(moim.getId())
 			.code(moim.getCode())
 			.build();
 	}

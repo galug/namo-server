@@ -16,6 +16,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.example.namo2.domain.group.domain.constant.VisibleStatus;
+
 import com.example.namo2.domain.individual.domain.Category;
 
 import com.example.namo2.domain.user.domain.User;

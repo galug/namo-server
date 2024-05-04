@@ -18,6 +18,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import com.example.namo2.domain.group.domain.constant.MoimScheduleStatus;
+
 import com.example.namo2.domain.individual.domain.constant.Location;
 import com.example.namo2.domain.individual.domain.constant.Period;
 

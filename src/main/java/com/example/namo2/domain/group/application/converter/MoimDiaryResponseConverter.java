@@ -12,69 +12,63 @@ import com.example.namo2.domain.group.domain.MoimMemo;
 import com.example.namo2.domain.group.domain.MoimMemoLocation;
 import com.example.namo2.domain.group.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.group.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.group.ui.dto.MoimMemoResponse;
-
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
+import com.example.namo2.domain.group.ui.dto.GroupDiaryResponse;
 
-public class MoimMemoResponseConverter {
-	private MoimMemoResponseConverter() {
+public class MoimDiaryResponseConverter {
+	private MoimDiaryResponseConverter() {
 		throw new IllegalStateException("Utill Classes");
 	}
 
-	public static MoimMemoResponse.MoimMemoDto toMoimMemoDto(
+	public static GroupDiaryResponse.MoimDiaryDto toMoimMemoDto(
 		MoimMemo moimMemo,
 		List<MoimMemoLocation> moimMemoLocations,
 		List<MoimMemoLocationAndUser> moimMemoLocationAndUsers) {
-		MoimMemoResponse.MoimMemoDto moimMemoDtos = MoimMemoResponse.MoimMemoDto
+		return GroupDiaryResponse.MoimDiaryDto
 			.builder()
 			.moimMemo(moimMemo)
-			.moimMemoLocationDtos(toMoimMemoLocationDtos(moimMemoLocations, moimMemoLocationAndUsers))
+			.moimActivityDtos(toMoimActivityDtos(moimMemoLocations, moimMemoLocationAndUsers))
 			.build();
-
-		return moimMemoDtos;
 	}
 
-	private static List<MoimMemoResponse.MoimMemoLocationDto> toMoimMemoLocationDtos(
+	private static List<GroupDiaryResponse.MoimActivityDto> toMoimActivityDtos(
 		List<MoimMemoLocation> moimMemoLocations,
 		List<MoimMemoLocationAndUser> moimMemoLocationAndUsers) {
-		Map<MoimMemoLocation, List<MoimMemoLocationAndUser>> moimMemoLocationMappingUsers = moimMemoLocationAndUsers
+		Map<MoimMemoLocation, List<MoimMemoLocationAndUser>> moimActivityMappingUsers = moimMemoLocationAndUsers
 			.stream()
-			.collect(Collectors.groupingBy(moimMemoLocationAndUser -> moimMemoLocationAndUser.getMoimMemoLocation()));
+			.collect(Collectors.groupingBy(MoimMemoLocationAndUser::getMoimMemoLocation));
 
-		List<MoimMemoResponse.MoimMemoLocationDto> moimMemoLocationDtos = moimMemoLocations.stream()
-			.map(
-				moimMemoLocation -> toMoimMemoLocationDto(moimMemoLocationMappingUsers, moimMemoLocation)
-			)
+		return moimMemoLocations.stream()
+			.map(moimMemoLocation -> toMoimActivateDto(moimActivityMappingUsers, moimMemoLocation))
 			.collect(Collectors.toList());
-		return moimMemoLocationDtos;
 	}
 
-	private static MoimMemoResponse.MoimMemoLocationDto toMoimMemoLocationDto(
+	private static GroupDiaryResponse.MoimActivityDto toMoimActivateDto(
 		Map<MoimMemoLocation, List<MoimMemoLocationAndUser>> moimMemoLocationMappingUsers,
 		MoimMemoLocation moimMemoLocation) {
-		return MoimMemoResponse.MoimMemoLocationDto
+		return GroupDiaryResponse.MoimActivityDto
 			.builder()
-			.moimMemoLocationId(moimMemoLocation.getId())
+			.moimActivityId(moimMemoLocation.getId())
 			.name(moimMemoLocation.getName())
 			.money(moimMemoLocation.getTotalAmount())
-			.urls(moimMemoLocation.getMoimMemoLocationImgs()
-				.stream()
+			.urls(moimMemoLocation.getMoimMemoLocationImgs().stream()
 				.map(MoimMemoLocationImg::getUrl)
-				.collect(Collectors.toList()))
+				.toList())
 			.participants(moimMemoLocationMappingUsers.get(moimMemoLocation))
 			.build();
 	}
 
-	public static MoimMemoResponse.SliceDiaryDto<MoimMemoResponse.DiaryDto> toSliceDiaryDto(
+	public static GroupDiaryResponse.SliceDiaryDto<GroupDiaryResponse.DiaryDto> toSliceDiaryDto(
 		List<MoimScheduleAndUser> moimScheduleAndUsers,
-		Pageable page) {
+		Pageable page
+	) {
 		boolean hasNext = false;
 		if (moimScheduleAndUsers.size() > page.getPageSize()) {
 			moimScheduleAndUsers.remove(page.getPageSize());
 			hasNext = true;
 		}
 		SliceImpl<MoimScheduleAndUser> moimSchedulesSlice = new SliceImpl<>(moimScheduleAndUsers, page, hasNext);
-		Slice<MoimMemoResponse.DiaryDto> diarySlices = moimSchedulesSlice.map(MoimMemoResponse.DiaryDto::new);
-		return new MoimMemoResponse.SliceDiaryDto(diarySlices);
+		Slice<GroupDiaryResponse.DiaryDto> diarySlices = moimSchedulesSlice.map(GroupDiaryResponse.DiaryDto::new);
+		return new GroupDiaryResponse.SliceDiaryDto<>(diarySlices);
 	}
 }

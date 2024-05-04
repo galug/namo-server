@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import com.example.namo2.domain.group.domain.MoimAndUser;
 import com.example.namo2.domain.group.domain.MoimSchedule;
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
-import com.example.namo2.domain.group.ui.dto.MoimScheduleResponse;
+import com.example.namo2.domain.group.ui.dto.GroupScheduleResponse;
 
 import com.example.namo2.domain.individual.domain.Schedule;
 
@@ -18,43 +18,46 @@ public class MoimScheduleResponseConverter {
 		throw new IllegalStateException("Util Classes");
 	}
 
-	public static List<MoimScheduleResponse.MoimScheduleDto> toMoimScheduleDtos(
+	public static List<GroupScheduleResponse.MoimScheduleDto> toMoimScheduleDtos(
 		List<Schedule> indivisualsSchedules,
 		List<MoimScheduleAndUser> moimScheduleAndUsers,
-		List<MoimAndUser> moimAndUsers) {
-		List<MoimScheduleResponse.MoimScheduleDto> result = getMoimScheduleDtos(indivisualsSchedules, moimAndUsers);
+		List<MoimAndUser> moimAndUsers
+	) {
+		List<GroupScheduleResponse.MoimScheduleDto> result = getMoimScheduleDtos(indivisualsSchedules, moimAndUsers);
 
-		Map<User, MoimScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap = getMoimScheduleUserDtoMap(
+		Map<User, GroupScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap = getMoimScheduleUserDtoMap(
 			moimAndUsers);
-		Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap
+		Map<MoimSchedule, List<GroupScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap
 			= getMoimScheduleMappingUserDtoMap(moimScheduleAndUsers, moimScheduleUserDtoMap);
 		addMoimSchedulesToResult(moimAndUsers, result, moimScheduleMappingUserDtoMap);
 		return result;
 	}
 
-	private static List<MoimScheduleResponse.MoimScheduleDto> getMoimScheduleDtos(List<Schedule> indivisualsSchedules,
-		List<MoimAndUser> moimAndUsers) {
+	private static List<GroupScheduleResponse.MoimScheduleDto> getMoimScheduleDtos(
+		List<Schedule> indivisualsSchedules,
+		List<MoimAndUser> moimAndUsers
+	) {
 		Map<User, Integer> usersColor = moimAndUsers.stream().collect(
 			Collectors.toMap(
 				MoimAndUser::getUser, MoimAndUser::getColor
 			));
-		List<MoimScheduleResponse.MoimScheduleDto> result = indivisualsSchedules.stream()
+		return indivisualsSchedules.stream()
 			.map((schedule -> toMoimScheduleDto(schedule, usersColor.get(schedule.getUser()))))
 			.collect(Collectors.toList());
-		return result;
 	}
 
-	private static Map<User, MoimScheduleResponse.MoimScheduleUserDto> getMoimScheduleUserDtoMap(
-		List<MoimAndUser> moimAndUsers) {
+	private static Map<User, GroupScheduleResponse.MoimScheduleUserDto> getMoimScheduleUserDtoMap(
+		List<MoimAndUser> moimAndUsers
+	) {
 		return moimAndUsers.stream()
 			.collect(Collectors.toMap(
 				MoimAndUser::getUser,
-				(moimAndUser -> toMoimScheduleUserDto(moimAndUser))
+				(MoimScheduleResponseConverter::toMoimScheduleUserDto)
 			));
 	}
 
-	private static MoimScheduleResponse.MoimScheduleUserDto toMoimScheduleUserDto(MoimAndUser moimAndUser) {
-		return MoimScheduleResponse.MoimScheduleUserDto
+	private static GroupScheduleResponse.MoimScheduleUserDto toMoimScheduleUserDto(MoimAndUser moimAndUser) {
+		return GroupScheduleResponse.MoimScheduleUserDto
 			.builder()
 			.userId(moimAndUser.getUser().getId())
 			.userName(moimAndUser.getUser().getName())
@@ -62,9 +65,9 @@ public class MoimScheduleResponseConverter {
 			.build();
 	}
 
-	private static Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> getMoimScheduleMappingUserDtoMap(
+	private static Map<MoimSchedule, List<GroupScheduleResponse.MoimScheduleUserDto>> getMoimScheduleMappingUserDtoMap(
 		List<MoimScheduleAndUser> moimScheduleAndUsers,
-		Map<User, MoimScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap) {
+		Map<User, GroupScheduleResponse.MoimScheduleUserDto> moimScheduleUserDtoMap) {
 		return moimScheduleAndUsers.stream().collect(
 			Collectors.groupingBy(
 				(MoimScheduleAndUser::getMoimSchedule),
@@ -77,10 +80,10 @@ public class MoimScheduleResponseConverter {
 	}
 
 	private static void addMoimSchedulesToResult(List<MoimAndUser> moimAndUsers,
-		List<MoimScheduleResponse.MoimScheduleDto> result,
-		Map<MoimSchedule, List<MoimScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap) {
+		List<GroupScheduleResponse.MoimScheduleDto> result,
+		Map<MoimSchedule, List<GroupScheduleResponse.MoimScheduleUserDto>> moimScheduleMappingUserDtoMap) {
 		for (MoimSchedule moimSchedule : moimScheduleMappingUserDtoMap.keySet()) {
-			MoimScheduleResponse.MoimScheduleDto moimScheduleDto = toMoimScheduleDto(moimSchedule);
+			GroupScheduleResponse.MoimScheduleDto moimScheduleDto = toMoimScheduleDto(moimSchedule);
 			moimScheduleDto.setUsers(
 				moimScheduleMappingUserDtoMap.get(moimSchedule),
 				moimSchedule.getMoim() == moimAndUsers.get(0).getMoim(),
@@ -90,8 +93,8 @@ public class MoimScheduleResponseConverter {
 		}
 	}
 
-	public static MoimScheduleResponse.MoimScheduleDto toMoimScheduleDto(Schedule schedule, Integer color) {
-		return new MoimScheduleResponse.MoimScheduleDto(
+	public static GroupScheduleResponse.MoimScheduleDto toMoimScheduleDto(Schedule schedule, Integer color) {
+		return new GroupScheduleResponse.MoimScheduleDto(
 			schedule.getName(),
 			schedule.getPeriod().getStartDate(),
 			schedule.getPeriod().getEndDate(),
@@ -102,8 +105,8 @@ public class MoimScheduleResponseConverter {
 		);
 	}
 
-	public static MoimScheduleResponse.MoimScheduleDto toMoimScheduleDto(MoimSchedule moimSchedule) {
-		return new MoimScheduleResponse.MoimScheduleDto(
+	public static GroupScheduleResponse.MoimScheduleDto toMoimScheduleDto(MoimSchedule moimSchedule) {
+		return new GroupScheduleResponse.MoimScheduleDto(
 			moimSchedule.getName(),
 			moimSchedule.getPeriod().getStartDate(),
 			moimSchedule.getPeriod().getEndDate(),

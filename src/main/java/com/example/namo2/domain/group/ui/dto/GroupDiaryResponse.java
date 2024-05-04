@@ -9,7 +9,6 @@ import org.springframework.data.domain.Slice;
 import com.example.namo2.domain.group.domain.MoimMemo;
 import com.example.namo2.domain.group.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.group.domain.MoimMemoLocationImg;
-
 import com.example.namo2.domain.group.domain.MoimScheduleAndUser;
 
 import com.example.namo2.domain.individual.domain.Image;
@@ -19,62 +18,73 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class MoimMemoResponse {
+public class GroupDiaryResponse {
+
+	private GroupDiaryResponse() {
+		throw new IllegalStateException("Utill Classes");
+	}
 
 	@NoArgsConstructor
 	@Getter
-	public static class MoimMemoDto {
+	public static class MoimDiaryDto {
 		private String name;
 		private Long startDate;
 		private String locationName;
-		private List<MoimUserDto> users;
-		private List<MoimMemoLocationDto> locationDtos;
+		private List<GroupUserDto> users;
+		private List<MoimActivityDto> moimActivityDtos;
 
 		@Builder
-		public MoimMemoDto(MoimMemo moimMemo, List<MoimMemoLocationDto> moimMemoLocationDtos) {
+		public MoimDiaryDto(MoimMemo moimMemo, List<MoimActivityDto> moimActivityDtos) {
 			this.name = moimMemo.getMoimSchedule().getName();
-			this.startDate = moimMemo.getMoimSchedule().getPeriod().getStartDate().atZone(ZoneId.systemDefault())
-				.toInstant()
-				.getEpochSecond();
+			this.startDate = moimMemo
+				.getMoimSchedule()
+				.getPeriod()
+				.getStartDate().atZone(ZoneId.systemDefault())
+				.toInstant().getEpochSecond();
 			this.locationName = moimMemo.getMoimSchedule().getLocation().getLocationName();
 			this.users = moimMemo.getMoimSchedule().getMoimScheduleAndUsers().stream()
-				.map(MoimUserDto::new)
-				.collect(Collectors.toList());
-			this.locationDtos = moimMemoLocationDtos;
+				.map(GroupUserDto::new)
+				.toList();
+			this.moimActivityDtos = moimActivityDtos;
 		}
 	}
 
 	@Getter
 	@NoArgsConstructor
-	public static class MoimUserDto {
+	public static class GroupUserDto {
 		private Long userId;
 		private String userName;
 
-		public MoimUserDto(MoimScheduleAndUser moimScheduleAndUser) {
+		public GroupUserDto(MoimScheduleAndUser moimScheduleAndUser) {
 			this.userId = moimScheduleAndUser.getUser().getId();
 			this.userName = moimScheduleAndUser.getUser().getName();
 		}
 	}
 
-	@NoArgsConstructor
 	@Getter
-	public static class MoimMemoLocationDto {
-		private Long moimMemoLocationId;
+	@NoArgsConstructor
+	public static class MoimActivityDto {
+		private Long moimActivityId;
 		private String name;
 		private Integer money;
 		private List<Long> participants;
 		private List<String> urls;
 
 		@Builder
-		public MoimMemoLocationDto(Long moimMemoLocationId, String name, Integer money, List<String> urls,
-			List<MoimMemoLocationAndUser> participants) {
-			this.moimMemoLocationId = moimMemoLocationId;
+		public MoimActivityDto(
+			Long moimActivityId,
+			String name,
+			Integer money,
+			List<String> urls,
+			List<MoimMemoLocationAndUser> participants
+		) {
+			this.moimActivityId = moimActivityId;
 			this.name = name;
 			this.money = money;
 			this.urls = urls;
 			this.participants = participants.stream()
 				.map(moimMemoLocationAndUser -> moimMemoLocationAndUser.getUser().getId())
-				.collect(Collectors.toList());
+				.toList();
 		}
 	}
 
@@ -97,6 +107,7 @@ public class MoimMemoResponse {
 	}
 
 	@Getter
+	@NoArgsConstructor
 	public static class DiaryDto {
 		private Long scheduleId;
 		private String name;
@@ -107,6 +118,7 @@ public class MoimMemoResponse {
 		private Long color;
 		private String placeName;
 
+		@Builder
 		public DiaryDto(Schedule schedule) {
 			this.scheduleId = schedule.getId();
 			this.name = schedule.getName();
@@ -119,7 +131,7 @@ public class MoimMemoResponse {
 			this.placeName = schedule.getLocation().getLocationName();
 			this.urls = schedule.getImages().stream()
 				.map(Image::getImgUrl)
-				.collect(Collectors.toList());
+				.toList();
 		}
 
 		public DiaryDto(MoimScheduleAndUser moimScheduleAndUser) {

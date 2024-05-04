@@ -7,7 +7,7 @@ import com.example.namo2.domain.group.domain.MoimMemo;
 import com.example.namo2.domain.group.domain.MoimMemoLocation;
 import com.example.namo2.domain.group.domain.MoimMemoLocationAndUser;
 import com.example.namo2.domain.group.domain.MoimMemoLocationImg;
-import com.example.namo2.domain.group.ui.dto.MoimMemoRequest;
+import com.example.namo2.domain.group.ui.dto.GroupDiaryRequest;
 
 import com.example.namo2.domain.user.domain.User;
 
@@ -16,7 +16,7 @@ public class MoimMemoLocationConverter {
 		throw new IllegalArgumentException("Util Class");
 	}
 
-	public static MoimMemoLocation toMoimMemoLocation(MoimMemo moimMemo, MoimMemoRequest.LocationDto locationDto) {
+	public static MoimMemoLocation toMoimMemoLocation(MoimMemo moimMemo, GroupDiaryRequest.LocationDto locationDto) {
 		return MoimMemoLocation.builder()
 			.moimMemo(moimMemo)
 			.name(locationDto.getName())
