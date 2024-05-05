@@ -77,7 +77,8 @@ public class JwtUtils {
 		if (accessToken == null || accessToken.length() == 0) {
 			throw new BaseException(BaseResponseStatus.EMPTY_ACCESS_KEY);
 		}
-		return accessToken;
+
+		return accessToken.replace("Bearer ", "");
 	}
 
 	private Long resolveToken(String accessToken) throws BaseException {
