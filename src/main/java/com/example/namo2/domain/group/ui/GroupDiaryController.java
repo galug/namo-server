@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -41,7 +42,7 @@ public class GroupDiaryController {
 	private final Converter converter;
 
 	@Operation(summary = "모임 기록 생성", description = "모임 기록 생성 API")
-	@PostMapping("/{moimScheduleId}")
+	@PostMapping(value = "/{moimScheduleId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
@@ -61,7 +62,7 @@ public class GroupDiaryController {
 	}
 
 	@Operation(summary = "모임 기록 장소 수정", description = "모임 기록 장소 수정 API")
-	@PatchMapping("/{activityId}")
+	@PatchMapping(value = "/{activityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,

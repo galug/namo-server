@@ -2,6 +2,7 @@ package com.example.namo2.domain.group.ui;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,7 +37,7 @@ public class GroupController {
 	private final MoimFacade moimFacade;
 
 	@Operation(summary = "그룹 생성", description = "그룹 생성 API")
-	@PostMapping("")
+	@PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
 			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
