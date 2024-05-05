@@ -23,12 +23,15 @@ import com.example.namo2.domain.group.ui.dto.GroupResponse;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 
+import com.example.namo2.global.common.constant.FilePath;
 import com.example.namo2.global.common.exception.BaseException;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MoimFacade {
@@ -52,9 +55,11 @@ public class MoimFacade {
 	public GroupResponse.GroupIdDto createMoim(Long userId, String groupName, MultipartFile img) {
 		User user = userService.getUser(userId);
 		String url = BASE_URL;
+
 		if (img != null && !img.isEmpty()) {
-			url = fileUtils.uploadImage(img);
+			url = fileUtils.uploadImage(img, FilePath.GROUP_PROFILE_IMG);
 		}
+
 		Moim moim = MoimConverter.toMoim(groupName, url);
 		moimService.create(moim);
 

@@ -19,6 +19,7 @@ import com.example.namo2.domain.individual.ui.dto.DiaryResponse;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 
+import com.example.namo2.global.common.constant.FilePath;
 import com.example.namo2.global.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class DiaryFacade {
 		Schedule schedule = scheduleService.getScheduleById(scheduleId);
 		schedule.updateDiaryContents(content);
 		if (imgs != null) {
-			List<String> urls = fileUtils.uploadImages(imgs);
+			List<String> urls = fileUtils.uploadImages(imgs, FilePath.INVITATION_ACTIVITY_IMG);
 			List<Image> imgList = urls.stream().map(url -> ImageConverter.toImage(url, schedule)).toList();
 			imageService.createImgs(imgList);
 		}

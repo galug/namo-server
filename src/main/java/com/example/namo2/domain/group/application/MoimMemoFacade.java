@@ -30,6 +30,7 @@ import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
 import com.example.namo2.domain.user.application.impl.UserService;
 import com.example.namo2.domain.user.domain.User;
 
+import com.example.namo2.global.common.constant.FilePath;
 import com.example.namo2.global.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -89,7 +90,7 @@ public class MoimMemoFacade {
 		 * imgs 에 대한 validation 처리 필요
 		 * 값이 3개 이상일 경우 OVER_IMAGES_FAILURE 필요
 		 */
-		List<String> urls = fileUtils.uploadImages(imgs);
+		List<String> urls = fileUtils.uploadImages(imgs, FilePath.GROUP_ACTIVITY_IMG);
 		for (String url : urls) {
 			MoimMemoLocationImg moimMemoLocationImg = MoimMemoLocationConverter
 				.toMoimMemoLocationLocationImg(moimMemoLocation, url);
