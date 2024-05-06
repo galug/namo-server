@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final UserFacade userFacade;
 
-	@Operation(summary = "kakao 회원가입", description = "kakao 소셜 로그인을 통한 회원가입")
+	@Operation(summary = "카카오 회원가입", description = "카카오 소셜 로그인을 통한 회원가입")
 	@PostMapping(value = "/kakao/signup")
 	@ApiErrorCodes({
 			BaseResponseStatus.USER_POST_ERROR,
@@ -47,7 +47,7 @@ public class AuthController {
 		return new BaseResponse<>(signupDto);
 	}
 
-	@Operation(summary = "naver 회원가입", description = "naver 소셜 로그인을 통한 회원가입")
+	@Operation(summary = "네이버 회원가입", description = "네이버 소셜 로그인을 통한 회원가입")
 	@PostMapping(value = "/naver/signup")
 	@ApiErrorCodes({
 			BaseResponseStatus.USER_POST_ERROR,
@@ -66,7 +66,7 @@ public class AuthController {
 		return new BaseResponse<>(signupDto);
 	}
 
-	@Operation(summary = "apple 회원가입", description = "apple 소셜 로그인을 통한 회원가입.")
+	@Operation(summary = "애플 회원가입", description = "애플 소셜 로그인을 통한 회원가입.")
 	@PostMapping(value = "/apple/signup")
 	@ApiErrorCodes({
 			BaseResponseStatus.USER_POST_ERROR,
@@ -117,7 +117,7 @@ public class AuthController {
 		return BaseResponse.ok();
 	}
 
-	@Operation(summary = "kakao 회원 탈퇴", description = "kakao 회원 탈퇴")
+	@Operation(summary = "카카오 회원 탈퇴", description = "카카오 회원 탈퇴")
 	@PostMapping("/kakao/delete")
 	@ApiErrorCodes({
 			BaseResponseStatus.EMPTY_ACCESS_KEY,
