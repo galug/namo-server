@@ -3,6 +3,8 @@ package com.example.namo2.domain.group.ui;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,18 +22,19 @@ import com.example.namo2.domain.group.application.MoimMemoFacade;
 import com.example.namo2.domain.group.ui.dto.GroupDiaryRequest;
 import com.example.namo2.domain.group.ui.dto.GroupDiaryResponse;
 import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.Converter;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "8. Diary (그룹)", description = "모임 기록 관련 API")
+@Tag(name = "8. Diary (모임)", description = "모임 기록 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -50,11 +52,11 @@ public class GroupDiaryController {
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Void> createMoimMemo(
-			@RequestPart(required = false) List<MultipartFile> imgs,
 			@PathVariable Long moimScheduleId,
-			@RequestPart(required = true) String name,
-			@RequestParam(defaultValue = "0") String money,
-			@RequestPart(required = true) String participants
+			@RequestPart(required = false) List<MultipartFile> imgs,
+			@RequestPart String name,
+			@RequestPart String money,
+			@RequestPart String participants
 	) {
 		GroupDiaryRequest.LocationDto locationDto = new GroupDiaryRequest.LocationDto(name, money, participants);
 		moimMemoFacade.create(moimScheduleId, locationDto, imgs);
@@ -70,11 +72,11 @@ public class GroupDiaryController {
 			BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Object> updateMoimMemo(
-			@RequestPart(required = false) List<MultipartFile> imgs,
 			@PathVariable Long activityId,
-			@RequestPart(required = true) String name,
-			@RequestPart(required = true) String money,
-			@RequestPart(required = true) String participants
+			@RequestPart(required = false) List<MultipartFile> imgs,
+			@RequestPart String name,
+			@RequestPart String money,
+			@RequestPart String participants
 	) {
 		GroupDiaryRequest.LocationDto locationDto = new GroupDiaryRequest.LocationDto(name, money, participants);
 		moimMemoFacade.modifyMoimMemoLocation(activityId, locationDto, imgs);
@@ -172,8 +174,8 @@ public class GroupDiaryController {
 	})
 	public BaseResponse<Object> createMoimScheduleText(
 			@PathVariable Long moimScheduleId,
-			HttpServletRequest request,
-			@RequestBody GroupScheduleRequest.PostGroupScheduleTextDto moimScheduleText
+			@RequestBody GroupScheduleRequest.PostGroupScheduleTextDto moimScheduleText,
+			HttpServletRequest request
 	) {
 		moimMemoFacade.createMoimScheduleText(moimScheduleId,
 				(Long)request.getAttribute("userId"),
