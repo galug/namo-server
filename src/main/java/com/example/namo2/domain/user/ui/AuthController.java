@@ -27,18 +27,18 @@ public class AuthController {
 
 	@Operation(summary = "카카오 회원가입", description = "카카오 소셜 로그인을 통한 회원가입")
 	@PostMapping(value = "/kakao/signup")
-	@ApiErrorCodes({
-			BaseResponseStatus.USER_POST_ERROR,
-			BaseResponseStatus.KAKAO_UNAUTHORIZED,
-			BaseResponseStatus.KAKAO_FORBIDDEN,
-			BaseResponseStatus.KAKAO_BAD_GATEWAY,
-			BaseResponseStatus.KAKAO_SERVICE_UNAVAILABLE,
-			BaseResponseStatus.KAKAO_INTERNAL_SERVER_ERROR,
-			BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.USER_POST_ERROR,
+		BaseResponseStatus.KAKAO_UNAUTHORIZED,
+		BaseResponseStatus.KAKAO_FORBIDDEN,
+		BaseResponseStatus.KAKAO_BAD_GATEWAY,
+		BaseResponseStatus.KAKAO_SERVICE_UNAVAILABLE,
+		BaseResponseStatus.KAKAO_INTERNAL_SERVER_ERROR,
+		BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<UserResponse.SignUpDto> kakaoSignup(
 		@Valid @RequestBody UserRequest.SocialSignUpDto signUpDto
@@ -49,15 +49,15 @@ public class AuthController {
 
 	@Operation(summary = "네이버 회원가입", description = "네이버 소셜 로그인을 통한 회원가입")
 	@PostMapping(value = "/naver/signup")
-	@ApiErrorCodes({
-			BaseResponseStatus.USER_POST_ERROR,
-			BaseResponseStatus.NAVER_UNAUTHORIZED,
-			BaseResponseStatus.NAVER_FORBIDDEN,
-			BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.USER_POST_ERROR,
+		BaseResponseStatus.NAVER_UNAUTHORIZED,
+		BaseResponseStatus.NAVER_FORBIDDEN,
+		BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<UserResponse.SignUpDto> naverSignup(
 		@Valid @RequestBody UserRequest.SocialSignUpDto signUpDto
@@ -68,13 +68,13 @@ public class AuthController {
 
 	@Operation(summary = "애플 회원가입", description = "애플 소셜 로그인을 통한 회원가입.")
 	@PostMapping(value = "/apple/signup")
-	@ApiErrorCodes({
-			BaseResponseStatus.USER_POST_ERROR,
-			BaseResponseStatus.MAKE_PUBLIC_KEY_FAILURE,
-			BaseResponseStatus.APPLE_REQUEST_ERROR,
-			BaseResponseStatus.APPLE_UNAUTHORIZED,
-			BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
-			BaseResponseStatus.FEIGN_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.USER_POST_ERROR,
+		BaseResponseStatus.MAKE_PUBLIC_KEY_FAILURE,
+		BaseResponseStatus.APPLE_REQUEST_ERROR,
+		BaseResponseStatus.APPLE_UNAUTHORIZED,
+		BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
+		BaseResponseStatus.FEIGN_SERVER_ERROR
 	})
 	public BaseResponse<UserResponse.SignUpDto> appleSignup(
 		@Valid @RequestBody UserRequest.AppleSignUpDto dto
@@ -85,13 +85,13 @@ public class AuthController {
 
 	@Operation(summary = "토큰 재발급", description = "토큰 재발급")
 	@PostMapping(value = "/reissuance")
-	@ApiErrorCodes({
-			BaseResponseStatus.USER_POST_ERROR,
-			BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.USER_POST_ERROR,
+		BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<UserResponse.ReissueDto> reissueAccessToken(
 		@Valid @RequestBody UserRequest.SignUpDto signUpDto
@@ -102,13 +102,13 @@ public class AuthController {
 
 	@Operation(summary = "로그아웃", description = "로그아웃")
 	@PostMapping(value = "/logout")
-	@ApiErrorCodes({
-			BaseResponseStatus.USER_POST_ERROR,
-			BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.USER_POST_ERROR,
+		BaseResponseStatus.SOCIAL_LOGIN_FAILURE,
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Void> logout(
 		@Valid @RequestBody UserRequest.LogoutDto logoutDto
@@ -119,11 +119,11 @@ public class AuthController {
 
 	@Operation(summary = "카카오 회원 탈퇴", description = "카카오 회원 탈퇴")
 	@PostMapping("/kakao/delete")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<?> removeKakaoUser(
 		HttpServletRequest request,
@@ -135,11 +135,11 @@ public class AuthController {
 
 	@Operation(summary = "네이버 회원 탈퇴", description = "네이버 회원 탈퇴")
 	@PostMapping("/naver/delete")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<?> removeNaverUser(
 		HttpServletRequest request,
@@ -152,11 +152,11 @@ public class AuthController {
 	@SuppressWarnings({"checkstyle:WhitespaceAround", "checkstyle:RegexpMultiline"})
 	@Operation(summary = "애플 회원 탈퇴", description = "애플 회원 탈퇴")
 	@PostMapping("/apple/delete")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<?> removeAppleUser(
 		HttpServletRequest request,
