@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.example.namo2.domain.individual.application.DiaryFacade;
@@ -42,16 +43,16 @@ public class DiaryController {
 
 	@Operation(summary = "기록 생성", description = "기록 생성 API")
 	@PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<DiaryResponse.ScheduleIdDto> createDiary(
-			@RequestPart(required = false) List<MultipartFile> imgs,
-			@RequestPart String scheduleId,
-			@RequestPart(required = false) String content
+		@Parameter(description = "기록용 이미지") @RequestPart(required = false) List<MultipartFile> imgs,
+		@Parameter(description = "일정 ID") @RequestPart String scheduleId,
+		@Parameter(description = "기록 내용") @RequestPart(required = false) String content
 	) {
 		DiaryResponse.ScheduleIdDto dto = diaryFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
 		return new BaseResponse<>(dto);
@@ -59,16 +60,16 @@ public class DiaryController {
 
 	@Operation(summary = "일정 기록 월간 조회", description = "일정 기록 월간 조회 API")
 	@GetMapping("/{month}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<DiaryResponse.SliceDiaryDto> findDiaryByMonth(
-			@PathVariable("month") String month,
-			Pageable pageable,
-			HttpServletRequest request
+		@Parameter(description = "조회 일자", example = "{년},{월}") @PathVariable("month") String month,
+		Pageable pageable,
+		HttpServletRequest request
 	) {
 		Long userId = (Long)request.getAttribute("userId");
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
@@ -78,14 +79,14 @@ public class DiaryController {
 
 	@Operation(summary = "개인 일정 기록 전체 조회", description = "개인 일정 기록 전체 조회 API")
 	@GetMapping("/all")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<List<DiaryResponse.GetDiaryByUserDto>> findAllDiary(
-			HttpServletRequest request
+		HttpServletRequest request
 	) {
 		Long userId = (Long)request.getAttribute("userId");
 		List<DiaryResponse.GetDiaryByUserDto> diaries = diaryFacade.getAllDiariesByUser(userId);
@@ -95,14 +96,14 @@ public class DiaryController {
 	//일정 별 기록 조회 == 1개 조회
 	@Operation(summary = "일정 기록 개별 조회", description = "일정 기록 개별 조회 API")
 	@GetMapping("/{scheduleId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<DiaryResponse.GetDiaryByScheduleDto> findDiaryById(
-			@PathVariable("scheduleId") Long scheduleId
+		@Parameter(description = "일정 ID") @PathVariable("scheduleId") Long scheduleId
 	) {
 		DiaryResponse.GetDiaryByScheduleDto diary = diaryFacade.getDiaryBySchedule(scheduleId);
 		return new BaseResponse<>(diary);
@@ -110,16 +111,16 @@ public class DiaryController {
 
 	@Operation(summary = "일정 기록 수정", description = "일정 기록 수정 API")
 	@PatchMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<String> updateDiary(
-			@RequestPart(required = false) List<MultipartFile> imgs,
-			@RequestPart String scheduleId,
-			@RequestPart(required = false) String content
+		@Parameter(description = "기록 이미지") @RequestPart(required = false) List<MultipartFile> imgs,
+		@Parameter(description = "일정 ID") @RequestPart String scheduleId,
+		@Parameter(description = "기록 내용") @RequestPart(required = false) String content
 	) {
 		diaryFacade.removeDiary(Long.valueOf(scheduleId));
 		diaryFacade.createDiary(Long.valueOf(scheduleId), content, imgs);
@@ -128,14 +129,14 @@ public class DiaryController {
 
 	@Operation(summary = "일정 기록 삭제", description = "일정 기록 삭제 API")
 	@DeleteMapping("/{scheduleId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<String> deleteDiary(
-			@PathVariable("scheduleId") Long scheduleId
+		@Parameter(description = "일정 ID") @PathVariable("scheduleId") Long scheduleId
 	) {
 		diaryFacade.removeDiary(scheduleId);
 		return new BaseResponse<>("삭제에 성공하셨습니다.");

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.example.namo2.domain.individual.application.CategoryFacade;
@@ -36,11 +38,11 @@ public class CategoryController {
 
 	@Operation(summary = "카테고리 생성", description = "카테고리 생성 API")
 	@PostMapping("")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<CategoryResponse.CategoryIdDto> createCategory(
 			@Valid @RequestBody CategoryRequest.PostCategoryDto postcategoryDto,
@@ -53,11 +55,11 @@ public class CategoryController {
 
 	@Operation(summary = "카테고리 조회", description = "카테고리 조회 API")
 	@GetMapping("")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<List<CategoryResponse.CategoryDto>> findAllCategory(
 			HttpServletRequest request
@@ -69,14 +71,14 @@ public class CategoryController {
 
 	@Operation(summary = "카테고리 수정", description = "카테고리 수정 API")
 	@PatchMapping("/{categoryId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<CategoryResponse.CategoryIdDto> updateCategory(
-			@PathVariable("categoryId") Long categoryId,
+			@Parameter(description = "카테고리 ID") @PathVariable("categoryId") Long categoryId,
 			@Valid @RequestBody CategoryRequest.PostCategoryDto postcategoryDto,
 			HttpServletRequest request
 	) {
@@ -88,14 +90,14 @@ public class CategoryController {
 
 	@Operation(summary = "카테고리 삭제", description = "카테고리 삭제 API")
 	@DeleteMapping("/{categoryId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<String> deleteCategory(
-			@PathVariable("categoryId") Long categoryId,
+			@Parameter(description = "카테고리 ID") @PathVariable("categoryId") Long categoryId,
 			HttpServletRequest request
 	) {
 		Long userId = (Long)request.getAttribute("userId");
