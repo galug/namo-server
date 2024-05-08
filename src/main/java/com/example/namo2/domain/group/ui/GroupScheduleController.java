@@ -3,6 +3,9 @@ package com.example.namo2.domain.group.ui;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,15 +19,15 @@ import com.example.namo2.domain.group.application.MoimScheduleFacade;
 import com.example.namo2.domain.group.ui.dto.GroupScheduleRequest;
 import com.example.namo2.domain.group.ui.dto.GroupScheduleResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.example.namo2.global.annotation.swagger.ApiErrorCodes;
 import com.example.namo2.global.common.response.BaseResponse;
 import com.example.namo2.global.common.response.BaseResponseStatus;
 import com.example.namo2.global.utils.Converter;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,14 +42,14 @@ public class GroupScheduleController {
 
 	@Operation(summary = "모임 일정 생성", description = "모임 일정 생성 API")
 	@PostMapping("")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Long> createMoimSchedule(
-			@Valid @RequestBody GroupScheduleRequest.PostGroupScheduleDto scheduleReq
+		@Valid @RequestBody GroupScheduleRequest.PostGroupScheduleDto scheduleReq
 	) {
 		Long scheduleId = moimScheduleFacade.createSchedule(scheduleReq);
 		return new BaseResponse(scheduleId);
@@ -54,14 +57,14 @@ public class GroupScheduleController {
 
 	@Operation(summary = "모임 일정 수정", description = "모임 일정 수정 API")
 	@PatchMapping("")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Long> modifyMoimSchedule(
-			@Valid @RequestBody GroupScheduleRequest.PatchGroupScheduleDto scheduleReq
+		@Valid @RequestBody GroupScheduleRequest.PatchGroupScheduleDto scheduleReq
 	) {
 		moimScheduleFacade.modifyMoimSchedule(scheduleReq);
 		return BaseResponse.ok();
@@ -69,15 +72,15 @@ public class GroupScheduleController {
 
 	@Operation(summary = "모임 일정 카테고리 수정", description = "모임 일정 카테고리 수정 API")
 	@PatchMapping("/category")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Long> modifyMoimScheduleCategory(
-			@Valid @RequestBody GroupScheduleRequest.PatchGroupScheduleCategoryDto scheduleReq,
-			HttpServletRequest request
+		@Valid @RequestBody GroupScheduleRequest.PatchGroupScheduleCategoryDto scheduleReq,
+		HttpServletRequest request
 	) {
 		moimScheduleFacade.modifyMoimScheduleCategory(scheduleReq, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
@@ -85,15 +88,15 @@ public class GroupScheduleController {
 
 	@Operation(summary = "모임 일정 삭제", description = "모임 일정 삭제 API")
 	@DeleteMapping("/{moimScheduleId}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<Long> removeMoimSchedule(
-			@PathVariable Long moimScheduleId,
-			HttpServletRequest request
+		@Parameter(description = "모임 일정 ID") @PathVariable Long moimScheduleId,
+		HttpServletRequest request
 	) {
 		moimScheduleFacade.removeMoimSchedule(moimScheduleId, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
@@ -101,51 +104,51 @@ public class GroupScheduleController {
 
 	@Operation(summary = "월간 모임 일정 조회", description = "월간 모임 일정 조회 API")
 	@GetMapping("/{groupId}/{month}")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<GroupScheduleResponse.MoimScheduleDto> getMonthMoimSchedules(
-			@PathVariable("groupId") Long groupId,
-			@PathVariable("month") String month,
-			HttpServletRequest request
+		@Parameter(description = "그룹 ID") @PathVariable("groupId") Long groupId,
+		@Parameter(description = "조회 일자", example = "{년},{월}") @PathVariable("month") String month,
+		HttpServletRequest request
 	) {
 		List<LocalDateTime> localDateTimes = converter.convertLongToLocalDateTime(month);
 		List<GroupScheduleResponse.MoimScheduleDto> schedules = moimScheduleFacade.getMonthMoimSchedules(groupId,
-				localDateTimes, (Long)request.getAttribute("userId"));
+			localDateTimes, (Long)request.getAttribute("userId"));
 		return new BaseResponse(schedules);
 	}
 
 	@Operation(summary = "모든 모임 일정 조회", description = "모든 모임 일정 조회 API")
 	@GetMapping("/{groupId}/all")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse<GroupScheduleResponse.MoimScheduleDto> getAllMoimSchedules(
-			@PathVariable("groupId") Long groupId,
-			HttpServletRequest request
+		@Parameter(description = "그룹 ID") @PathVariable("groupId") Long groupId,
+		HttpServletRequest request
 	) {
 		List<GroupScheduleResponse.MoimScheduleDto> schedules
-				= moimScheduleFacade.getAllMoimSchedules(groupId, (Long)request.getAttribute("userId"));
+			= moimScheduleFacade.getAllMoimSchedules(groupId, (Long)request.getAttribute("userId"));
 		return new BaseResponse(schedules);
 	}
 
 	@Operation(summary = "모임 일정 생성 알람", description = "모임 일정 생성 알람 API")
 	@PostMapping("/alarm")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse createMoimScheduleAlarm(
-			@Valid @RequestBody GroupScheduleRequest.PostGroupScheduleAlarmDto postGroupScheduleAlarmDto,
-			HttpServletRequest request
+		@Valid @RequestBody GroupScheduleRequest.PostGroupScheduleAlarmDto postGroupScheduleAlarmDto,
+		HttpServletRequest request
 	) {
 		moimScheduleFacade.createMoimScheduleAlarm(postGroupScheduleAlarmDto, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
@@ -153,15 +156,15 @@ public class GroupScheduleController {
 
 	@Operation(summary = "모임 일정 변경 알람", description = "모임 일정 변경 알람 API")
 	@PatchMapping("/alarm")
-	@ApiErrorCodes({
-			BaseResponseStatus.EMPTY_ACCESS_KEY,
-			BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
-			BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
-			BaseResponseStatus.INTERNET_SERVER_ERROR
+	@ApiErrorCodes(value = {
+		BaseResponseStatus.EMPTY_ACCESS_KEY,
+		BaseResponseStatus.EXPIRATION_ACCESS_TOKEN,
+		BaseResponseStatus.EXPIRATION_REFRESH_TOKEN,
+		BaseResponseStatus.INTERNET_SERVER_ERROR
 	})
 	public BaseResponse modifyMoimScheduleAlarm(
-			@Valid @RequestBody GroupScheduleRequest.PostGroupScheduleAlarmDto postGroupScheduleAlarmDto,
-			HttpServletRequest request
+		@Valid @RequestBody GroupScheduleRequest.PostGroupScheduleAlarmDto postGroupScheduleAlarmDto,
+		HttpServletRequest request
 	) {
 		moimScheduleFacade.modifyMoimScheduleAlarm(postGroupScheduleAlarmDto, (Long)request.getAttribute("userId"));
 		return BaseResponse.ok();
