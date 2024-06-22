@@ -1,10 +1,5 @@
 # namo
 
-### ERD Cloud
-
-https://www.erdcloud.com/d/kdtBpLtftuRiBXdvc
-<div align="center">
-
 # Namo Server
 
 </div>
@@ -17,8 +12,6 @@ https://www.erdcloud.com/d/kdtBpLtftuRiBXdvc
     - [For Infra](#for-infra)
 - [🔎 나모의 서버 구조](#-나모의-서버-구조)
     - [1️⃣ Service Code](#1-service-code)
-    - [2️⃣ Infrastructure Architecture](#2-infrastructure-architecture)
-    - [3️⃣ Multi-Module Architecture](#3-multi-module-architecture)
 - [✍🏻 나모 서버 팀원들은 이렇게 작업해요](#-나모-서버-팀원들은-이렇게-작업해요)
     - [매실/김현재](#매실김현재)
     - [루카/최선규](#루카최선규)
